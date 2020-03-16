@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css?family=Oswald:200,400,600|Roboto:300,300i,400,400i,700,700i&display=swap');
+@import "mixins/loader";
+@import './globals.scss';
+// Add custom styles here
+
+html {
+  font-size: 14pt;
+}
+
+body, input, select, textarea {
+  color: $black;
+  font-family: $ffbody;
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+strong, b {
+  font-weight: 500;
+}
+
+em, i {
+  font-style: italic;
+}
+
+p {
+  margin: 0 0 var(--gutter) 0;
+}
+
+small {
+  font-size: 0.6rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $ffheadline;
+  color: $gray;
+  font-weight: 200;
+  line-height: 1.5;
+  margin: 0 0 var(--gutter) 0;
+  letter-spacing: 0.03em;
+  padding-top: 0.2rem;
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  &.major {
+    text-transform: uppercase;
+    width: -moz-max-content;
+    width: -webkit-max-content;
+    width: -ms-max-content;
+    width: max-content;
+    margin: 0 0 var(--gutter) 0;
+    z-index: 9;
+  }
+}
+
+h1 {
+  font-family: $ffheadline;
+  font-size: 1rem;
+  color: $lightgray;
+}
+
+h2 {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+h3 {
+  font-size: 0.7rem;
+}
+
+h4 {
+  font-size: 0.6rem;
+}
+
+h5 {
+  font-size: 0.5rem;
+}
+
+h6 {
+  font-size: 0.4rem;
+}
+
+p {
+  font-family: $ffbody;
+  line-height: 150%!important;
+  height: auto;
+  font-weight: 100!important;
+  letter-spacing: 0.03em;
+  font-size: 0.74rem!important;
+  opacity: 0.7;
+}
+
+/* Button */
+
+
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+button,
+a[role="button"],
+.button {
+  font-family: $ffheadline;
+  @include vendor('appearance', 'none');
+  @include vendor('transition', 'background-color 2s ease-in-out, color 2s ease-in-out');
+  background-color: transparent;
+  border: 0;
+  box-shadow: inset 0 0 0 1px $black;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 0.8rem;
+  outline: 0;
+  padding: 1rem;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  width: 100%;
+  letter-spacing: 0.09em;
+  
+  &:hover {
+  }
+
+  &:active {
+  }
+
+  &.icon {
+    &:before {
+      margin-right: 0.5em;
+    }
+  }
+
+  &.fit {
+    display: block;
+    margin: 0 0 1em 0;
+    width: 100%;
+  }
+
+  &.disabled,
+  &:disabled {
+    @include vendor('pointer-events', 'none');
+    cursor: default;
+    opacity: 0.25;
+  }
+}
+
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+a[role="button"],
+button {
+  line-height: calc(1em - 2px);
+}
+
+nav ul li {
+	list-style-type: none;
+}
+
+nav ul li a {
+	text-decoration: none;
+	color: $lightgray;
+}

@@ -1,0 +1,23 @@
+script(type="text/javascript").
+	Vue.prototype.$ = $;
+	Vue.prototype.window = window;
+	new Vue({
+		el: '#vue',
+		data: function data(){
+			return {
+				data: this.parseObj(JSON.stringify(data)),
+				menu: this.parseObj(JSON.stringify(menu))
+			}
+		},
+		mounted: function(){
+			$(document).ready(function(){
+				//- document.addEventListener('keydown', function(event) {
+				//- 	var keyName = event.key;
+				//- 	if (keyName === 'Enter') event.preventDefault()
+				//- });
+			})
+
+		},
+		methods: Object.assign({}, baseFunctions)
+	});
+

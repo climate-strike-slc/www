@@ -4,7 +4,8 @@
   "description": "",
   "main": "./bin/www",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "sass source/sass/main.scss public/stylesheets/style.css"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,11 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "pug": "^2.0.4",
     "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "node-sass": "^4.13.1",
+    "normalize-scss": "^7.0.1"
   }
 }
