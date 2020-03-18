@@ -13,5 +13,16 @@ var baseFunctions = {
 				--gutter: 36px;
 			}`
 		)
+	},
+	activate: function(k) {
+		// logic for when a div is active (mouseover, touchstart)
+		this.hov = k;
+	},
+	deactivate: function(k) {
+		// (mouseleave, touchend)
+		router.push({ path: '' });
+	},
+	dialog: function(k) {
+		router.push({ path: `#${k}` });
 	}
 }

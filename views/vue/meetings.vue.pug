@@ -5,6 +5,9 @@ script(type="text/javascript").
 		el: '#vue',
 		data: function data(){
 			return {
+				keys: '',
+				active: null,
+				hov: null,
 				data: this.parseObj(!{JSON.stringify(data)})
 			}
 		},
@@ -15,7 +18,9 @@ script(type="text/javascript").
 				//- 	if (keyName === 'Enter') event.preventDefault()
 				//- });
 			})
-
+			this.keys = this.data.meetings.map(function(doc) {
+				return doc.topic;
+			});
 		},
 		methods: Object.assign({}, baseFunctions)
 	});
