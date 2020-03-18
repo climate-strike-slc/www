@@ -1,0 +1,21 @@
+extends layout
+block page
+	- var menu = 'edit'
+block content
+	script(type="text/javascript", src="/scripts/basefunctions.js?v="+Math.random())
+	script(type="text/javascript", src="/scripts/adminfunctions.js?v="+Math.random())
+
+	div#vue
+		div.wrapper.row.nav
+			include partials/menu.pug
+		div.container.row
+			form.row(enctype="multipart/form-data" method="POST" action="/api/createMeeting" )
+				//- input(type="hidden", name="_csrf", value= csrfToken)
+
+				div.tb-10-m0
+					label(for="topic") Topic
+					input(type="text" name="topic" id="topic")
+				div.tb-10-m0
+					button(role="submit") Submit
+	include vue/edit.vue.pug
+

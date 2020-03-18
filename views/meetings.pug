@@ -1,0 +1,11 @@
+extends layout
+block page
+	- var menu = 'meetings'
+block content
+	script(type="text/javascript", src="/scripts/basefunctions.js?v="+Math.random())
+
+	div#vue
+		div.wrapper.row.nav
+			include partials/menu.pug
+		div.container
+	include vue/meetings.vue.pug

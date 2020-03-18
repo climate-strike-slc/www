@@ -1,0 +1,17 @@
+extends layout
+block page
+	- var menu = 'profile'
+block content
+	script(type="text/javascript", src="/scripts/basefunctions.js?v="+Math.random())
+
+	div#vue
+		div.wrapper.row.nav
+			include partials/menu.pug
+		div.container.row(v-if="user")
+			div.tb-05-m0
+				p(v-for="(key, i) in Object.keys(user)" v-text="key")
+			div.tb-05-m0
+				p(v-for="(key, i) in Object.keys(user)" v-text="user[key]")
+				
+	include vue/profile.vue.pug
+					

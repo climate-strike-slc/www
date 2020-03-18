@@ -1,0 +1,184 @@
+.row {
+	width: 100%;
+	left: 0;
+	right: 0;
+	height: auto;
+	overflow-y: hidden;
+	overflow-x: hidden;
+}
+
+*[class^='tb-1'], *[class^='tb-0'] {
+	padding-right: 10px;
+	display: inline-block;
+	margin: 0 auto;
+	width: auto;
+	height: auto;
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	vertical-align: top;
+} 
+
+*[class^='tb-10-'] {
+	width: 100%;
+}
+*[class^='tb-09-'] {
+	width: 90%;
+}
+*[class^='tb-08-'] {
+	width: 80%;
+}
+*[class^='tb-07-'] {
+	width: 70%;
+}
+*[class^='tb-06-'] {
+	width: 60%;
+}
+*[class^='tb-05-'] {
+	width: 50%;
+}
+*[class^='tb-04-'] {
+	width: 40%;
+}
+*[class^='tb-03-'] {
+	width: 30%;
+}
+*[class^='tb-02-'] {
+	width: 20%;
+}
+*[class^='tb-01-'] {
+	width: 10%;
+}
+
+@media (min-width: 420px) {
+	.tb-10-m1 {
+		width: 100%;
+	}
+	.tb-09-m1 {
+		width: 90%;
+	}
+	.tb-08-m1 {
+		width: 80%;
+	}
+	.tb-07-m1 {
+		width: 70%;
+	}
+	.tb-06-m1 {
+		width: 60%;
+	}
+	.tb-05-m1 {
+		width: 50%;
+	}
+	.tb-04-m1 {
+		width: 40%;
+	}
+	.tb-03-m1 {
+		width: 30%;
+	}
+	.tb-02-m1 {
+		width: 20%;
+	}
+	.tb-01-m1 {
+		width: 10%;
+	}
+
+}
+@media (min-width: 600px) {	
+	.tb-10-m2 {
+		width: 100%;
+	}
+	.tb-09-m2 {
+		width: 90%;
+	}
+	.tb-08-m2 {
+		width: 80%;
+	}
+	.tb-07-m2 {
+		width: 70%;
+	}
+	.tb-06-m2 {
+		width: 60%;
+	}
+	.tb-05-m2 {
+		width: 50%;
+	}
+	.tb-04-m2 {
+		width: 40%;
+	}
+	.tb-03-m2 {
+		width: 30%;
+	}
+	.tb-02-m2 {
+		width: 20%;
+	}
+	.tb-01-m2 {
+		width: 10%;
+	}
+}
+
+@media (min-width: 800px) {	
+	.tb-10-m3 {
+		width: 100%;
+	}
+	.tb-09-m3 {
+		width: 90%;
+	}
+	.tb-08-m3 {
+		width: 80%;
+	}
+	.tb-07-m3 {
+		width: 70%;
+	}
+	.tb-06-m3 {
+		width: 60%;
+	}
+	.tb-05-m3 {
+		width: 50%;
+	}
+	.tb-04-m3 {
+		width: 40%;
+	}
+	.tb-03-m3 {
+		width: 30%;
+	}
+	.tb-02-m3 {
+		width: 20%;
+	}
+	.tb-01-m3 {
+		width: 10%;
+	}
+}
+
+@media (min-width: 1000px) {
+	.tb-10-m4 {
+		width: 100%;
+	}
+	.tb-09-m4 {
+		width: 90%;
+	}
+	.tb-08-m4 {
+		width: 80%;
+	}
+	.tb-07-m4 {
+		width: 70%;
+	}
+	.tb-06-m4 {
+		width: 60%;
+	}
+	.tb-05-m4 {
+		width: 50%;
+	}
+	.tb-04-m4 {
+		width: 40%;
+	}
+	.tb-03-m4 {
+		width: 30%;
+	}
+	.tb-02-m4 {
+		width: 20%;
+	}
+	.tb-01-m4 {
+		width: 10%;
+	}
+}

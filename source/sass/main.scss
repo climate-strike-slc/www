@@ -154,11 +154,16 @@ button {
   line-height: calc(1em - 2px);
 }
 
-nav ul li {
-	list-style-type: none;
+nav {
+	ul {
+		li {
+			list-style-type: none;
+			a {
+				text-decoration: none;
+				color: $lightgray;
+			}
+		}
+	}
 }
 
-nav ul li a {
-	text-decoration: none;
-	color: $lightgray;
-}
+@import './grid.scss';

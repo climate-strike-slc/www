@@ -13,5 +13,5 @@ var baseFunctions = {
 				--gutter: 36px;
 			}`
 		)
-	});
+	}
 }
