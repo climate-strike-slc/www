@@ -9,15 +9,16 @@ block content
 			include partials/menu.pug
 		div.wrapper.main
 			div.container
-				div.ui.img(
-					v-if="keys && keys !== '' && keys.length > 0"
+				//- @mouseover="activate(k)"
+				//- @mouseleave="deactivate(k)"
+				a.ui.img(
+					v-if="data && data !== '' && data.meetings.length > 0"
 					v-for="(k, i) in keys"
-					@mouseover="activate(k)"
 					@touchstart="activate(k)"
-					@click="dialog(k)"
-					@touchend="dialog(k)"
-					@mouseleave="hov = null"
+					@click="dialog(k, i)"
+					@touchend="dialog(k, i)"
 					:class="k === active ? 'active' : ''"
+					:id="k"
 				)
 					//- embed(v-if="data.meetings" :src="data.meetings[i].URL")
 					p(v-if="data.meetings" v-text="data.meetings[i].topic")

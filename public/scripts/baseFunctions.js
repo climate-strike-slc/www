@@ -16,13 +16,17 @@ var baseFunctions = {
 	},
 	activate: function(k) {
 		// logic for when a div is active (mouseover, touchstart)
-		this.hov = k;
+		this.active = k;
 	},
 	deactivate: function(k) {
 		// (mouseleave, touchend)
-		router.push({ path: '' });
+		if (k !== this.active) {
+			// this.hov = null;
+			this.active = null;
+			router.push({ path: '' });
+		}
 	},
-	dialog: function(k) {
+	dialog: function(k, i) {
 		router.push({ path: `#${k}` });
 	}
 }

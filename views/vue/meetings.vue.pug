@@ -1,13 +1,32 @@
+script(src="https://unpkg.com/vue-router/dist/vue-router.js")
 script(type="text/javascript").
 	Vue.prototype.$ = $;
 	Vue.prototype.window = window;
+	var router = new VueRouter({
+		mode: 'history',
+		scrollBehavior: function(to, from, savedPosition) {
+			if (to.hash) {
+				this.app.active = to.hash.slice(1);
+				//- this.app.hov = to.hash.slice(1);
+			} else {
+				this.app.active = null;
+				//- this.app.hov = null;
+			}
+			//- console.log(to.hash)
+			return false;
+		},
+		routes: [
+				{path: '/meetings'},
+		]
+	})
 	new Vue({
+		router,
 		el: '#vue',
 		data: function data(){
 			return {
 				keys: '',
 				active: null,
-				hov: null,
+				//- hov: null,
 				data: this.parseObj(!{JSON.stringify(data)})
 			}
 		},

@@ -255,7 +255,7 @@ router.get('/group', getAuthCode, (req, res, next) => {
 		if (error) {
 			console.log('API Response Error: ', error)
 		} else {
-			// console.log(body)
+			console.log(groups)
 			groups = JSON.parse(groups);
 			const grp = await groups.groups.map(group => {
 				const uOptions = {
