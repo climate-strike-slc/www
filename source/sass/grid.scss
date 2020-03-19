@@ -2,6 +2,7 @@
 	&.main {
 		@include vendor('display', 'grid');
 		@include vendor('grid-template-columns', '16.5vw');
+		overflow: hidden;
 		// @include vendor('grid-template-rows', '16.5vw');
 	}
 }
@@ -36,14 +37,14 @@
 	margin: 0 auto;
 }
 .container {
-	@include vendor('display', 'grid');
 	@include vendor('grid-column-start', '2');
 	@include vendor('grid-row-start', '2');
 	@include vendor('grid-column-end', '3');
 	@include vendor('grid-row-end', '3');
-	@include vendor('grid-template-columns', 'repeat(auto-fit, 68vw)');
-	@include vendor('grid-template-rows', 'repeat(auto-fit, 68vw)');
-	width: 100%;
+	@include vendor('display', 'flex');
+	@include vendor('flex-wrap', 'wrap');
+	@include vendor('align-content', 'center');
+	width: 70.998vw;
 	height: 100%;
 	margin: auto;
 }
@@ -51,7 +52,7 @@
 	width: 66vw;
 	height: 66vw;
 	overflow: hidden;
-	margin: 20px auto;
+	margin: 2vw auto;
 	transition-property: width,height;
 	transition-duration: 0.4s;
 	transition-delay: 0.1s;
@@ -84,12 +85,12 @@
 		max-height: 100vw;
 		transform-origin: top left;
 		background-color: #fff;
-		margin: 20px auto;
+		margin: 2vw auto;
 		overflow: hidden;
 	}
 }
 *[class^='tb-1'], *[class^='tb-0'] {
-	padding-right: 10px;
+	padding-right: 1vw;
 	display: inline-block;
 	margin: 0 auto;
 	width: auto;
@@ -105,7 +106,7 @@
 	grid-column: 1 / 4;
 	grid-row: 3 / 4;
 	display: table;
-	padding: 8px;
+	padding: 2vw;
 	margin: auto;
 	width: 100%;
 	height: 36px;
@@ -259,12 +260,12 @@
 
 @media (min-width: 1000px) {
 	.ui {
-		width: 16vw;
-		height: 16vw;
-		margin: 0 8px 0 0;
+		width: 15.89vw;
+		height: 15.89vw;
+		margin: 2vw 2vw 0 0;
 		&:hover {
-			width: 34vw;
-			height: 34vw;
+			width: 33.1vw;
+			height: 33.1vw;
 		}
 		&.active {
 			width: 60vw!important;
@@ -279,7 +280,7 @@
 			min-width: 69vw;
 			min-height: 69vw;
 			transform: scale(0.5);
-			margin: 0 8px 8px 0;
+			margin: 0 2vw 2vw 0;
 		}
 	}	
 

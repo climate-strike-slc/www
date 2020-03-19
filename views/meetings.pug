@@ -9,18 +9,25 @@ block content
 			include partials/menu.pug
 		div.wrapper.main
 			div.container
-				//- @mouseover="activate(k)"
+				//- (:style="{'white-space': (!hov ? 'normal' : 'nowrap'), overflow: 'hidden'}")
+				//- (
+				//- 	:style="{width: (!hov ? '71vw' : '88vw')}"
+				//- )
 				//- @mouseleave="deactivate(k)"
 				a.ui.img(
 					v-if="data && data !== '' && data.meetings.length > 0"
 					v-for="(k, i) in keys"
-					@touchstart="activate(k)"
 					@click="dialog(k, i)"
+					@mouseover="hover"
+					@mouseleave="unhover"
+					@touchstart="hover"
 					@touchend="dialog(k, i)"
 					:class="k === active ? 'active' : ''"
 					:id="k"
+					:style="{'background-color': c[i]}"
 				)
 					//- embed(v-if="data.meetings" :src="data.meetings[i].URL")
-					p(v-if="data.meetings" v-text="data.meetings[i].topic")
+					p(v-if="data.meetings" v-text="data.meetings[i].agenda")
+					img(:src="'/images/icons/'+data.meetings[i].topic+'.svg'")
 
 	include vue/meetings.vue.pug

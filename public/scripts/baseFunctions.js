@@ -28,5 +28,15 @@ var baseFunctions = {
 	},
 	dialog: function(k, i) {
 		router.push({ path: `#${k}` });
+	},
+	hover: function() {
+		// setTimeout(function(){
+			this.hov = true;
+		// },1000)
+	},
+	unhover: function() {
+		// setTimeout(function(){
+			this.hov = false;
+		// },1000)
 	}
 }

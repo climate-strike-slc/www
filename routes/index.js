@@ -76,6 +76,25 @@ function getAuthCode(req, res, next) {
 	}
 }
 
+function deleteMeeting(id, token, next) {
+	
+	const dOptions = {
+		method: 'DELETE',
+		url: `https://api.zoom.us/v2/meetings/${id}`,
+		headers: {
+			Authorization: 'Bearer ' + token
+		}
+	};
+	request(dOptions, (error, response, data) => {
+		if (error) {
+			return next(error)
+		} else {
+			// console.log(data)
+			return next();
+		}
+	})
+}
+
 // Helper functions
 function getMe(token, next) {
 	const uOptions = {
@@ -179,13 +198,28 @@ router.get('/auth', getAuthCode, async (req, res, next) => {
 	}
 })
 
+router.get('/profile', getAuthCode, async (req, res, next) => {
+	if (req.session && req.session.token) {
+		getMe(req.session.token, (err, body) => {
+			if (err) {
+				return next(err)
+			} else {
+				return res.render('profile', {
+					user: body
+				})
+			}
+		})
+	}
+})
+
 router.get('/api/createMeeting', getAuthCode, function(req, res) {
 	res.render('edit', {title: 'Manage Meetings'});
 });
 
 router.post('/api/createMeeting', parseBody, upload.array(), function(req, res, next) {
 	// console.log(req.body);
-	// console.log("topic:", req.body.topic);
+	console.log("topic:", req.body.topic);
+	console.log("agenda:", '# ' +req.body.title + '  \n' + req.body.description);
 	if (req.session && req.session.token) {
 		getMe(req.session.token, (err, body) => {
 			if (err) {
@@ -196,6 +230,7 @@ router.post('/api/createMeeting', parseBody, upload.array(), function(req, res, 
 				url: `https://api.zoom.us/v2/users/me/meetings`,
 				json: {
 					'topic': req.body.topic,
+					'agenda': '# ' +req.body.title + '  \n' + req.body.description,
 					'start-time': moment().add(1, 'hours').utc().format(),
 					'duration': 30
 				},
@@ -289,5 +324,16 @@ router.get('/group', getAuthCode, (req, res, next) => {
 //   ]
 // }
 // })
+
+router.get('/api/deleteMeeting/:id', getAuthCode, (req, res, next) => {
+	// console.log(req.params.id, req.session.token)
+	deleteMeeting(req.params.id, req.session.token, (err) => {
+		if (err) {
+			return next(err)
+		}
+		return res.redirect('/meetings')
+	})
+})
+
 
 module.exports = router;
