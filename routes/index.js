@@ -193,10 +193,10 @@ router.post('/signature/:meetingnumber', (req, res, next) => {
 	const signature = generateSignature(process.env.clientID, process.env.clientSecret, meetingNumber, role);
 	// console.log(signature)
 	const key = process.env.clientID;
-	const pw = process.env.PW;
+	const pw = process.env.WT;
 	const ret = {
 		apiKey: key,
-		password: pw,
+		wt: pw,
 		signature: signature
 	}
 	return res.status(200).send(ret)
@@ -324,7 +324,7 @@ router.get('/meeting/:id', getAuthCode, (req, res, next) => {
 		} else {
 			// console.log(data)
 			return res.render('meeting', {
-				meeting: data
+				meeting: JSON.parse(data)
 			})
 		}
 	})

@@ -26,28 +26,38 @@ script(type="text/javascript").
 			//- ZoomMtg.setZoomJSLib('https://dmogdx0jrul3u.cloudfront.net/1.7.2/lib', '/av');
 			console.log('checkSystemRequirements');
 			console.log(JSON.stringify(ZoomMtg.checkSystemRequirements()));
+			ZoomMtg.setZoomJSLib('https://source.zoom.us/1.7.2/lib', '/av'); // CDN version default
+			//- else ZoomMtg.setZoomJSLib('https://jssdk.zoomus.cn/1.7.2/lib', '/av'); // china cdn option 
 			ZoomMtg.preLoadWasm()
 			ZoomMtg.prepareJssdk()
 			this.zoomMeeting = document.getElementById("zmmtg-root");
 			//- if (this.data && this.data.meetings) {
-				var meetingId = this.meeting.id;
-				console.log(meetingId)
+			//- console.log(this.meeting)
+			//- var thisMeeting = this.meeting;
+				var meetingId = this.meeting.id +'';
+				//- console.log(meetingId)
 				$.post(`/signature/${meetingId}`)
-					.then(function (result) { return result.text()})
+					//- .then(function (result) { 
+					//- 	console.log(result)
+					//- 	return result.text()
+					//- })
 					.then(function (response) {
+						//- console.log(response)
 						ZoomMtg.init({
 							leaveUrl: `/meetingEnd/${meetingId}`,
 							isSupportAV: true,
 							success: function() {
+								console.log('success')
+								console.log(response)
 								ZoomMtg.join({
 									signature: response.signature,
 									apiKey: response.apiKey,
 									meetingNumber: meetingId,
-									//- userName: '',
+									userName: 'Tracey Bushman',
 									// Email required for Webinars
 									userEmail: 'tbushman@pu.bli.sh', 
 									// password optional; set by Host
-									password: response.password,
+									password: response.wt,
 									success: function(success) {
 										console.log('success')
 									},
