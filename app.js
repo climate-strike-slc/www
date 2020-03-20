@@ -13,6 +13,8 @@ const parseBody = [parseJSONBody, parseForm];
 const router = require('./routes');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
+const csrf = require('csurf');
+const csrfProtection = csrf({ cookie: true });
 const app = express()
 
 app.use(function(req, res, next) {
@@ -31,7 +33,7 @@ app.set('views', './views');
 app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(parseBody);
+// app.use(parseBody);
 
 const store = new MongoDBStore(
 	{

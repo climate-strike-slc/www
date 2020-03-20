@@ -1,0 +1,69 @@
+script(src="https://source.zoom.us/1.7.2/lib/vendor/react.min.js")
+script(src="https://source.zoom.us/1.7.2/lib/vendor/react-dom.min.js")
+script(src="https://source.zoom.us/1.7.2/lib/vendor/redux.min.js")
+script(src="https://source.zoom.us/1.7.2/lib/vendor/redux-thunk.min.js")
+script(src="https://source.zoom.us/1.7.2/lib/vendor/jquery.min.js")
+script(src="https://source.zoom.us/1.7.2/lib/vendor/lodash.min.js")
+script(src="https://source.zoom.us/zoom-meeting-1.7.2.min.js")
+script(type="text/javascript").
+	Vue.prototype.$ = $;
+	Vue.prototype.window = window;
+	Vue.prototype.ZoomMtg = ZoomMtg;
+	new Vue({
+		el: '#vue',
+		data: function data(){
+			return {
+				meeting: this.parseObj(!{JSON.stringify(meeting)})
+			}
+		},
+		mounted: function(){
+			$(document).ready(function(){
+				//- document.addEventListener('keydown', function(event) {
+				//- 	var keyName = event.key;
+				//- 	if (keyName === 'Enter') event.preventDefault()
+				//- });
+			})
+			//- ZoomMtg.setZoomJSLib('https://dmogdx0jrul3u.cloudfront.net/1.7.2/lib', '/av');
+			console.log('checkSystemRequirements');
+			console.log(JSON.stringify(ZoomMtg.checkSystemRequirements()));
+			ZoomMtg.preLoadWasm()
+			ZoomMtg.prepareJssdk()
+			this.zoomMeeting = document.getElementById("zmmtg-root");
+			//- if (this.data && this.data.meetings) {
+				var meetingId = this.meeting.id;
+				console.log(meetingId)
+				$.post(`/signature/${meetingId}`)
+					.then(function (result) { return result.text()})
+					.then(function (response) {
+						ZoomMtg.init({
+							leaveUrl: `/meetingEnd/${meetingId}`,
+							isSupportAV: true,
+							success: function() {
+								ZoomMtg.join({
+									signature: response.signature,
+									apiKey: response.apiKey,
+									meetingNumber: meetingId,
+									//- userName: '',
+									// Email required for Webinars
+									userEmail: 'tbushman@pu.bli.sh', 
+									// password optional; set by Host
+									password: response.password,
+									success: function(success) {
+										console.log('success')
+									},
+									error: function(res) { 
+										console.log(res) 
+									}
+								})		
+							}
+						})
+					})
+				//- ZoomMtg.init({
+				//- 	leaveUrl: meetConfig.leaveUrl,
+				//- 	isSupportAV: true,
+				//- 	success: function() {
+			//- }
+			//- ZoomMtg.setZoomJSLib('node_modules/@zoomus/websdk/dist/lib', '/av');
+		},
+		methods: Object.assign({}, baseFunctions)
+	});

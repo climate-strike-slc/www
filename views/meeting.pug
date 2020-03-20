@@ -5,7 +5,9 @@ block content
 	script(type="text/javascript", src="/scripts/basefunctions.js?v="+Math.random())
 
 	div#vue
+		include partials/modal.pug
+
 		div.wrapper.row.nav
 			include partials/menu.pug
-		div.container
+
 	include vue/meeting.vue.pug

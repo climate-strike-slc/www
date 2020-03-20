@@ -10,6 +10,8 @@ const upload = multer({fieldSize: 25 * 1024 * 1024});
 const parseForm = bodyParser.urlencoded({ extended: false });
 const parseJSONBody = bodyParser.json();
 const parseBody = [parseJSONBody, parseForm];
+const csrf = require('csurf');
+const csrfProtection = csrf();
 // Use the request module to make HTTP requests from Node
 const request = require('request')
 
@@ -76,6 +78,8 @@ function getAuthCode(req, res, next) {
 	}
 }
 
+// Helper functions
+
 function deleteMeeting(id, token, next) {
 	
 	const dOptions = {
@@ -95,7 +99,6 @@ function deleteMeeting(id, token, next) {
 	})
 }
 
-// Helper functions
 function getMe(token, next) {
 	const uOptions = {
 		method: 'GET',
@@ -173,6 +176,32 @@ router.get('/logout', (req, res, next) => {
 	return res.redirect('/')
 })
 
+router.post('/signature/:meetingnumber', (req, res, next) => {
+	const crypto = require('crypto') // crypto comes with Node.js
+	const meetingNumber = req.params.meetingnumber;
+	const role = (req.session.token ? 1 : 0)
+	function generateSignature(apiKey, apiSecret, meetingNumber, role) {
+
+	  const timestamp = new Date().getTime()
+	  const msg = Buffer.from(apiKey + meetingNumber + timestamp + role).toString('base64')
+	  const hash = crypto.createHmac('sha256', apiSecret).update(msg).digest('base64')
+	  const signature = Buffer.from(`${apiKey}.${meetingNumber}.${timestamp}.${role}.${hash}`).toString('base64')
+
+	  return signature
+	}
+	// pass in your Zoom JWT API Key, Zoom JWT API Secret, Zoom Meeting Number, and 0 to join meeting or webinar or 1 to start meeting
+	const signature = generateSignature(process.env.clientID, process.env.clientSecret, meetingNumber, role);
+	// console.log(signature)
+	const key = process.env.clientID;
+	const pw = process.env.PW;
+	const ret = {
+		apiKey: key,
+		password: pw,
+		signature: signature
+	}
+	return res.status(200).send(ret)
+})
+
 router.get('/auth', getAuthCode, async (req, res, next) => {
 	if (req.session && req.session.token) {
 		// We can now use the access token to authenticate API calls
@@ -212,11 +241,14 @@ router.get('/profile', getAuthCode, async (req, res, next) => {
 	}
 })
 
-router.get('/api/createMeeting', getAuthCode, function(req, res) {
-	res.render('edit', {title: 'Manage Meetings'});
+router.get('/api/createMeeting', getAuthCode, csrfProtection, function(req, res) {
+	res.render('edit', {
+		csrfToken: req.csrfToken(),
+		title: 'Manage Meetings'
+	});
 });
 
-router.post('/api/createMeeting', parseBody, upload.array(), function(req, res, next) {
+router.post('/api/createMeeting', upload.array(), parseBody, csrfProtection, function(req, res, next) {
 	// console.log(req.body);
 	console.log("topic:", req.body.topic);
 	console.log("agenda:", '# ' +req.body.title + '  \n' + req.body.description);
@@ -277,6 +309,27 @@ router.get('/meetings', getAuthCode, function(req, res, next) {
 	})
 });
 
+router.get('/meeting/:id', getAuthCode, (req, res, next) => {
+	const meetingId = req.params.id;
+	const mOptions = {
+		method: 'GET',
+		url: `https://api.zoom.us/v2/meetings/${meetingId}`,
+		headers: {
+			Authorization: 'Bearer ' + req.session.token
+		}
+	};
+	request(mOptions, (error, response, data) => {
+		if (error) {
+			return next(error)
+		} else {
+			// console.log(data)
+			return res.render('meeting', {
+				meeting: data
+			})
+		}
+	})
+})
+
 router.get('/group', getAuthCode, (req, res, next) => {
 	const options = {
 		method: 'GET',
@@ -324,6 +377,28 @@ router.get('/group', getAuthCode, (req, res, next) => {
 //   ]
 // }
 // })
+
+router.get('/meetingEnd/:id', (req, res, next) => {
+	const meetingId = req.params.id;
+	const mOptions = {
+		method: 'PUT',
+		url: `https://api.zoom.us/v2/meetings/${meetingId}/status`,
+		json: {
+			'action': 'end'
+		},
+		headers: {
+			Authorization: 'Bearer ' + req.session.token
+		}
+	};
+	request(mOptions, (error, response, data) => {
+		if (error) {
+			return next(error)
+		} else {
+			// console.log(data)
+			return res.redirect('/meetings')
+		}
+	})
+})
 
 router.get('/api/deleteMeeting/:id', getAuthCode, (req, res, next) => {
 	// console.log(req.params.id, req.session.token)

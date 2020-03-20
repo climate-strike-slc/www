@@ -26,8 +26,11 @@ block content
 					:id="k"
 					:style="{'background-color': c[i]}"
 				)
-					//- embed(v-if="data.meetings" :src="data.meetings[i].URL")
+					embed(v-if="k === active" :src="'/meeting/'+data.meetings[i].id")
+					//- div#zmmtg-root(v-if="k === active")
+					//- div#aria-notify-area(v-if="k === active")
 					p(v-if="data.meetings" v-text="data.meetings[i].agenda")
 					img(:src="'/images/icons/'+data.meetings[i].topic+'.svg'")
+					
 
 	include vue/meetings.vue.pug
