@@ -2,6 +2,7 @@ extends layout
 block page
 	- var menu = 'meetings'
 block content
+	script(type="text/javascript" src="/scripts/jquery.min.js")
 	script(type="text/javascript", src="/scripts/basefunctions.js?v="+Math.random())
 
 	div#vue
@@ -14,7 +15,7 @@ block content
 				//- 	:style="{width: (!hov ? '71vw' : '88vw')}"
 				//- )
 				//- @mouseleave="deactivate(k)"
-				a.ui.img(
+				div.ui.img(
 					v-if="data && data !== '' && data.meetings.length > 0"
 					v-for="(k, i) in keys"
 					@click="dialog(k, i)"
@@ -24,13 +25,15 @@ block content
 					@touchend="dialog(k, i)"
 					:class="k === active ? 'active' : ''"
 					:id="k"
-					:style="{'background-color': c[i]}"
+					:style="{'background-color': c[i], padding: '10px', position: 'relative'}"
 				)
-					embed(v-if="k === active" :src="'/meeting/'+data.meetings[i].id")
+					a(:href="'/api/deleteMeeting/'+data.meetings[i].id" v-text="'x'")
+					//- iframe(v-if="k === active" :src="'/meeting/'+data.meetings[i].id")
 					//- div#zmmtg-root(v-if="k === active")
 					//- div#aria-notify-area(v-if="k === active")
-					p(v-if="data.meetings" v-text="data.meetings[i].agenda")
-					img(:src="'/images/icons/'+data.meetings[i].topic+'.svg'")
+					p(v-if="data.meetings" v-html="marked(data.meetings[i].agenda)" style="position:absolute; color: #555;")
+					a(:href="'/meeting/'+data.meetings[i].id")
+						img(:src="'/images/icons/'+data.meetings[i].topic+'.svg'")
 					
 
 	include vue/meetings.vue.pug

@@ -1,73 +1,79 @@
-script(src="https://source.zoom.us/1.7.2/lib/vendor/react.min.js")
-script(src="https://source.zoom.us/1.7.2/lib/vendor/react-dom.min.js")
-script(src="https://source.zoom.us/1.7.2/lib/vendor/redux.min.js")
-script(src="https://source.zoom.us/1.7.2/lib/vendor/redux-thunk.min.js")
-script(src="https://source.zoom.us/1.7.2/lib/vendor/jquery.min.js")
-script(src="https://source.zoom.us/1.7.2/lib/vendor/lodash.min.js")
-script(src="https://source.zoom.us/zoom-meeting-1.7.2.min.js")
 script(type="text/javascript").
 	Vue.prototype.$ = $;
 	Vue.prototype.window = window;
 	Vue.prototype.ZoomMtg = ZoomMtg;
 	new Vue({
-		el: '#vue',
+		el: '#meetingvue',
 		data: function data(){
 			return {
 				meeting: this.parseObj(!{JSON.stringify(meeting)})
 			}
 		},
 		mounted: function(){
+			var self = this;
 			$(document).ready(function(){
-				//- document.addEventListener('keydown', function(event) {
-				//- 	var keyName = event.key;
-				//- 	if (keyName === 'Enter') event.preventDefault()
-				//- });
+				document.addEventListener('keydown', function(event) {
+					var keyName = event.key;
+					if (keyName === 'Enter') event.preventDefault()
+				});
 			})
-			//- ZoomMtg.setZoomJSLib('https://dmogdx0jrul3u.cloudfront.net/1.7.2/lib', '/av');
 			console.log('checkSystemRequirements');
 			console.log(JSON.stringify(ZoomMtg.checkSystemRequirements()));
 			ZoomMtg.setZoomJSLib('https://source.zoom.us/1.7.2/lib', '/av'); // CDN version default
-			//- else ZoomMtg.setZoomJSLib('https://jssdk.zoomus.cn/1.7.2/lib', '/av'); // china cdn option 
-			ZoomMtg.preLoadWasm()
-			ZoomMtg.prepareJssdk()
-			this.zoomMeeting = document.getElementById("zmmtg-root");
-			//- if (this.data && this.data.meetings) {
-			//- console.log(this.meeting)
-			//- var thisMeeting = this.meeting;
-				var meetingId = this.meeting.id +'';
-				//- console.log(meetingId)
-				$.post(`/signature/${meetingId}`)
-					//- .then(function (result) { 
-					//- 	console.log(result)
-					//- 	return result.text()
-					//- })
-					.then(function (response) {
-						//- console.log(response)
-						ZoomMtg.init({
-							leaveUrl: `/meetingEnd/${meetingId}`,
-							isSupportAV: true,
-							success: function() {
-								console.log('success')
-								console.log(response)
-								ZoomMtg.join({
-									signature: response.signature,
-									apiKey: response.apiKey,
-									meetingNumber: meetingId,
-									userName: 'Tracey Bushman',
-									// Email required for Webinars
-									userEmail: 'tbushman@pu.bli.sh', 
-									// password optional; set by Host
-									password: response.wt,
-									success: function(success) {
-										console.log('success')
-									},
-									error: function(res) { 
-										console.log(res) 
+			setTimeout(function(){
+				//- else ZoomMtg.setZoomJSLib('https://jssdk.zoomus.cn/1.7.2/lib', '/av'); // china cdn option 
+				//- ZoomMtg.setZoomJSLib('https://dmogdx0jrul3u.cloudfront.net/1.7.2/lib', '/av');
+				ZoomMtg.preLoadWasm()
+				ZoomMtg.prepareJssdk()
+				setTimeout(function() {
+
+					this.zoomMeeting = document.getElementById("zmmtg-root");
+					//- if (this.data && this.data.meetings) {
+					//- console.log(this.meeting)
+					//- var thisMeeting = this.meeting;
+					var meetingId = self.meeting.id;
+					console.log(meetingId)
+					$.post(`/signature/${meetingId}`)
+						//- .then(function (result) { 
+						//- 	console.log(result)
+						//- 	return result.text()
+						//- })
+						.then(function (response) {
+							console.log(response)
+								ZoomMtg.init({
+									leaveUrl: `/meetingEnd/${meetingId}`,
+									isSupportAV: true,
+									success: function() {
+										console.log('init success')
+										//- console.log(response)
+										//- setTimeout(function() {
+											ZoomMtg.join({
+												signature: response.signature,
+												apiKey: response.apiKey,
+												meetingNumber: meetingId,
+												userName: 'tb',
+												// Email required for Webinars
+												userEmail: 'tbushman@pu.bli.sh', 
+												// password optional; set by Host
+												//- password: '',
+												//- password: response.wt,
+												success: function() {
+													console.log('join success')
+												},
+												error: function(res) { 
+													console.log('join fail')
+													console.log(res) 
+												}
+											})		
+										//- }, 1000)
 									}
-								})		
-							}
+								})
+							
+							//- }, 1000)
 						})
-					})
+					}, 1000)
+			}, 1000)
+			
 				//- ZoomMtg.init({
 				//- 	leaveUrl: meetConfig.leaveUrl,
 				//- 	isSupportAV: true,

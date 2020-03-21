@@ -2,6 +2,7 @@ script(src="https://unpkg.com/vue-router/dist/vue-router.js")
 script(type="text/javascript").
 	Vue.prototype.$ = $;
 	Vue.prototype.window = window;
+	Vue.prototype.marked = marked;
 	var router = new VueRouter({
 		mode: 'history',
 		scrollBehavior: function(to, from, savedPosition) {
@@ -33,10 +34,10 @@ script(type="text/javascript").
 		},
 		mounted: function(){
 			$(document).ready(function(){
-				//- document.addEventListener('keydown', function(event) {
-				//- 	var keyName = event.key;
-				//- 	if (keyName === 'Enter') event.preventDefault()
-				//- });
+				document.addEventListener('keydown', function(event) {
+					var keyName = event.key;
+					if (keyName === 'Enter') event.preventDefault()
+				});
 			})
 			this.keys = this.data.meetings.map(function(doc) {
 				return doc.topic;

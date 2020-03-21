@@ -2,6 +2,7 @@ extends layout
 block page
 	- var menu = 'edit'
 block content
+	script(type="text/javascript" src="/scripts/jquery.min.js")
 	script(type="text/javascript", src="/scripts/basefunctions.js?v="+Math.random())
 	script(type="text/javascript", src="/scripts/adminfunctions.js?v="+Math.random())
 
@@ -9,24 +10,24 @@ block content
 		div.wrapper.row.nav
 			include partials/menu.pug
 		div.container.row
-			form.row(enctype="multipart/form-data" method="POST" action="/api/createMeeting" )
+			form.tb-10-m0(enctype="multipart/form-data" method="POST" action="/api/createMeeting" )
 				input(type="hidden", name="_csrf", value= csrfToken)
 
-				div.tb-10-m0
-					label(for="topic") Topic
-					select(name="topic" id="topic")
+				div.row(style="padding-left: 20px")
+					label.tb-10-m0(for="topic") Topic
+					select.tb-10-m0(name="topic" id="topic")
 						option(value="other" selected="") Other
 						option(value="ecology" selected="") Ecology
 						option(value="economy" selected="") Economy
 						option(value="politics" selected="") Politics
 						option(value="organizing" selected="") Organizing
-				div.tb-10-m0
-					label(for="title") Title
-					input(type="text" name="title" id="title")
-				div.tb-10-m0
-					label(for="description") Description
-					input(type="text" name="description" id="description")
-				div.tb-10-m0
-					button(role="submit") Submit
+				div.row(style="padding-left: 20px")
+					label.tb-10-m0(for="title") Title
+					input.tb-10-m0(type="text" name="title" id="title")
+				div.row(style="padding-left: 20px")
+					label.tb-10-m0(for="description") Description
+					input.tb-10-m0(type="text" name="description" id="description")
+				div.row(style="padding-left: 20px")
+					button.tb-10-m0(role="submit") Submit
 	include vue/edit.vue.pug
 
