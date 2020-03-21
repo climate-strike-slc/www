@@ -20,6 +20,8 @@ const app = express()
 app.use(function(req, res, next) {
 	app.disable('x-powered-by');
 	app.disable('Strict-Transport-Security');
+	res.cookie('site', 'cookie', {sameSite: 'None', secure: true});
+
 	res.set({
 		'Access-Control-Allow-Origin' : '*',
 		'Access-Control-Allow-Methods' : 'GET, POST, HEAD, OPTIONS',
@@ -58,7 +60,7 @@ const sess = {
 }
 
 app.use(session(sess));
-
+app.options('*', cors);
 app.use('/', router);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

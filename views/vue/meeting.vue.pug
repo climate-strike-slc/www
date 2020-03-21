@@ -11,75 +11,57 @@ script(type="text/javascript").
 		},
 		mounted: function(){
 			var self = this;
+			
+			console.log('checkSystemRequirements');
+			console.log(JSON.stringify(ZoomMtg.checkSystemRequirements()));
+			if (self.meeting) {
+				// Have tried both local and CDN ZoomJSLibs
+				//- ZoomMtg.setZoomJSLib('../node_modules/@zoomus/websdk/dist/lib', '/av');
+				ZoomMtg.setZoomJSLib('https://dmogdx0jrul3u.cloudfront.net/1.7.2/lib', '/av');
+				ZoomMtg.preLoadWasm()
+				ZoomMtg.prepareJssdk()
+				setTimeout(function(){
+
+					this.zoomMeeting = document.getElementById("zmmtg-root");
+					var meetingId = self.meeting.id;
+
+					$.post(`/signature/${meetingId}`)
+					.then(function(response) {
+						// This works (response contains signature):
+						console.log(response)
+						// This works:
+						ZoomMtg.init({
+							leaveUrl: `/meetingEnd/${meetingId}`,
+							isSupportAV: true,
+							success: function() {
+							// logs 'init success' every time
+							console.log('init success')
+							console.log(response)
+								ZoomMtg.join({
+									signature: response.signature,
+									apiKey: response.apiKey,
+									meetingNumber: meetingId,
+									userName: 'example username',
+									success: function() {
+										console.log('join success')
+									},
+									error: function(res) { 
+										// logs 'join fail' every time
+										console.log('join fail')
+										console.log(res) 
+									}
+								})
+							}
+						})
+					})
+				}, 1000)
+			}
 			$(document).ready(function(){
 				document.addEventListener('keydown', function(event) {
 					var keyName = event.key;
 					if (keyName === 'Enter') event.preventDefault()
 				});
 			})
-			console.log('checkSystemRequirements');
-			console.log(JSON.stringify(ZoomMtg.checkSystemRequirements()));
-			ZoomMtg.setZoomJSLib('https://source.zoom.us/1.7.2/lib', '/av'); // CDN version default
-			setTimeout(function(){
-				//- else ZoomMtg.setZoomJSLib('https://jssdk.zoomus.cn/1.7.2/lib', '/av'); // china cdn option 
-				//- ZoomMtg.setZoomJSLib('https://dmogdx0jrul3u.cloudfront.net/1.7.2/lib', '/av');
-				ZoomMtg.preLoadWasm()
-				ZoomMtg.prepareJssdk()
-				setTimeout(function() {
-
-					this.zoomMeeting = document.getElementById("zmmtg-root");
-					//- if (this.data && this.data.meetings) {
-					//- console.log(this.meeting)
-					//- var thisMeeting = this.meeting;
-					var meetingId = self.meeting.id;
-					console.log(meetingId)
-					$.post(`/signature/${meetingId}`)
-						//- .then(function (result) { 
-						//- 	console.log(result)
-						//- 	return result.text()
-						//- })
-						.then(function (response) {
-							console.log(response)
-								ZoomMtg.init({
-									leaveUrl: `/meetingEnd/${meetingId}`,
-									isSupportAV: true,
-									success: function() {
-										console.log('init success')
-										//- console.log(response)
-										//- setTimeout(function() {
-											ZoomMtg.join({
-												signature: response.signature,
-												apiKey: response.apiKey,
-												meetingNumber: meetingId,
-												userName: 'tb',
-												// Email required for Webinars
-												userEmail: 'tbushman@pu.bli.sh', 
-												// password optional; set by Host
-												//- password: '',
-												//- password: response.wt,
-												success: function() {
-													console.log('join success')
-												},
-												error: function(res) { 
-													console.log('join fail')
-													console.log(res) 
-												}
-											})		
-										//- }, 1000)
-									}
-								})
-							
-							//- }, 1000)
-						})
-					}, 1000)
-			}, 1000)
-			
-				//- ZoomMtg.init({
-				//- 	leaveUrl: meetConfig.leaveUrl,
-				//- 	isSupportAV: true,
-				//- 	success: function() {
-			//- }
-			//- ZoomMtg.setZoomJSLib('node_modules/@zoomus/websdk/dist/lib', '/av');
 		},
 		methods: Object.assign({}, baseFunctions)
 	});
