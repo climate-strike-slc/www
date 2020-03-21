@@ -17,6 +17,15 @@ const csrf = require('csurf');
 const csrfProtection = csrf({ cookie: true });
 const app = express()
 
+//CORS middleware
+var corsOpt = {
+	origin: '*',
+	methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+	allowedHeaders: ['Content-Type', 'Authorization']
+}
+
+app.use(cors(corsOpt));
+app.options('*', cors(corsOpt))
 app.use(function(req, res, next) {
 	app.disable('x-powered-by');
 	app.disable('Strict-Transport-Security');
