@@ -87,7 +87,7 @@ function getAuthCodeJWT(req, res, next) {
 		exp: ((new Date()).getTime() + 5000)
 	};
 	req.token = jwt.sign(payload, process.env.JWT_SECRET);
-	console.log(req.token)
+	// console.log(req.token)
 	return next();
 }
 
@@ -106,13 +106,10 @@ function generateSignature(apiKey, apiSecret, meetingNumber, role) {
 function deleteMeeting(id, token, next) {
 	
 	const dOptions = {
-		uri: `https://api.zoom.us/v2/meetings/${id}`,
-		auth: {
-			'bearer': token
-		},
+		method: 'DELETE',
+		url: `https://api.zoom.us/v2/meetings/${id}`,
 		headers: {
-			'User-Agent': 'Zoom-Jwt-Request',
-			'content-type': 'application/json'
+			Authorization: 'Bearer ' + token
 		}
 	};
 	request(dOptions, (error, response, data) => {
@@ -202,31 +199,19 @@ router.get('/logout', (req, res, next) => {
 	return res.redirect('/')
 })
 
-router.post('/signature/:meetingnumber', getAuthCodeJWT, (req, res, next) => {
-	const crypto = require('crypto') // crypto comes with Node.js
-	const meetingNumber = 
-		// parseInt(
-		req.params.meetingnumber +''
-		// , 10);
-	const role = (req.token ? 1 : 0);
-	console.log('role')
-	console.log(role)
-	
+router.post('/signature/:meetingnumber', async (req, res, next) => {
+	const meetingNumber = parseInt(req.params.meetingnumber);
+	const role = 0;
 	const timestamp = new Date().getTime()
   const msg = Buffer.from(process.env.JWT_KEY + meetingNumber + timestamp + role).toString('base64')
-  const hash = crypto.createHmac('sha256', process.env.JWT_SECRET).update(msg).digest('base64')
+  const hash = await crypto.createHmac('sha256', process.env.JWT_SECRET).update(msg).digest('base64')
   const signature = Buffer.from(`${process.env.JWT_KEY}.${meetingNumber}.${timestamp}.${role}.${hash}`).toString('base64')
-	// pass in your Zoom JWT API Key, Zoom JWT API Secret, Zoom Meeting Number, and 0 to join meeting or webinar or 1 to start meeting
-	// const signature = generateSignature(process.env.JWT_KEY, process.env.JWT_SECRET, meetingNumber, role);
-	// console.log(signature)
 	const key = process.env.JWT_KEY;
-	// const pw = process.env.WT;
 	const ret = {
 		apiKey: key,
-		// wt: pw,
+		wt: process.env.WT,
 		signature: signature
 	}
-	console.log(ret)
 	return res.json(ret)
 })
 
@@ -282,7 +267,7 @@ router.post('/api/createMeeting', getAuthCodeJWT, upload.array(), parseBody, csr
 	console.log("agenda:", '# ' +req.body.title + '  \n' + req.body.description);
 	if (req.token) {
 	// if (req.session && req.session.token) {
-		console.log(req.token)
+		// console.log(req.token)
 		const mOptions = {
 			method: 'POST',
 			uri: `https://api.zoom.us/v2/users/me/meetings`,
@@ -295,11 +280,14 @@ router.post('/api/createMeeting', getAuthCodeJWT, upload.array(), parseBody, csr
 				'settings': {
 					'host_video': true,
 					'participant_video': true,
+					'use_pmi': false,
 					'join_before_host': true,
 					'mute_upon_entry': true,
 					'enforce_login': false,
+					'enforce_login_domains': '*',
 					'meeting_authentication': false,
-					'authentication_domains': '*'
+					// Have tried with and without:
+					// 'authentication_domains': '*'
 				}
 			},
 			headers: {
@@ -374,7 +362,7 @@ router.get('/meeting/:id', getAuthCodeJWT, (req, res, next) => {
 // 		method: 'GET',
 // 		url: `https://api.zoom.us/v2/groups`,
 // 		headers: {
-// 			Authorization: 'Bearer ' + req.session.token
+// 			Authorization: 'Bearer ' + req.token
 // 		}
 // 	}
 // 	// console.log(req.session)
@@ -389,7 +377,7 @@ router.get('/meeting/:id', getAuthCodeJWT, (req, res, next) => {
 // 					method: 'GET',
 // 					url: `https://api.zoom.us/v2/groups/${group.id}/members`,
 // 					headers: {
-// 						Authorization: 'Bearer ' + req.session.token
+// 						Authorization: 'Bearer ' + req.token
 // 					}
 // 				}
 // 				request(uOptions, (err, response, members) => {
@@ -440,7 +428,7 @@ router.get('/meetingEnd/:id', (req, res, next) => {
 })
 
 router.get('/api/deleteMeeting/:id', getAuthCodeJWT, (req, res, next) => {
-	// console.log(req.params.id, req.session.token)
+	// console.log(req.params.id, req.token)
 	deleteMeeting(req.params.id, req.token, (err) => {
 		if (err) {
 			return next(err)

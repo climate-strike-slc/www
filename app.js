@@ -6,6 +6,7 @@ const express = require('express')
 const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
+const favicon = require('serve-favicon');
 const mongoose = require('mongoose');
 const parseForm = bodyParser.urlencoded({ extended: false });
 const parseJSONBody = bodyParser.json();
@@ -27,8 +28,8 @@ var corsOpt = {
 app.use(cors(corsOpt));
 app.options('*', cors(corsOpt))
 app.use(function(req, res, next) {
-	app.disable('x-powered-by');
-	app.disable('Strict-Transport-Security');
+	// app.disable('x-powered-by');
+	// app.disable('Strict-Transport-Security');
 	res.set({
 		'Access-Control-Allow-Origin' : '*',
 		'Access-Control-Allow-Methods' : 'GET, POST, HEAD, OPTIONS',
@@ -41,6 +42,7 @@ app.use(function(req, res, next) {
 app.set('views', './views');
 app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')));
 
 // app.use(parseBody);
 
