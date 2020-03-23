@@ -38,5 +38,14 @@ var baseFunctions = {
 		// setTimeout(function(){
 			this.hov = false;
 		// },1000)
+	},
+	userBase64: function() {
+		var self = this;
+		var user = (!self.userName || self.userName === '' ? '' : new Buffer.from(self.userName).toString('base64'));
+		return user;
+	},
+	drop: function(e) {
+		var dropped = this.dropped;
+		this.dropped = !dropped;
 	}
 }

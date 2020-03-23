@@ -6,7 +6,9 @@ script(type="text/javascript").
 		el: '#meetingvue',
 		data: function data(){
 			return {
-				meeting: this.parseObj(!{JSON.stringify(meeting)})
+				meeting: this.parseObj(!{JSON.stringify(meeting)}),
+				dropped: false,
+				res: window.innerWidth < 600
 			}
 		},
 		mounted: function(){

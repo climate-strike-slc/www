@@ -29,7 +29,10 @@ script(type="text/javascript").
 				keys: '',
 				active: null,
 				hov: false,
-				data: this.parseObj(!{JSON.stringify(data)})
+				data: this.parseObj(!{JSON.stringify(data)}),
+				userName: this.parseObj(!{JSON.stringify(userName)}),
+				dropped: false,
+				res: window.innerWidth < 600
 			}
 		},
 		mounted: function(){

@@ -87,7 +87,7 @@ function getAuthCodeJWT(req, res, next) {
 		exp: ((new Date()).getTime() + 5000)
 	};
 	req.token = jwt.sign(payload, process.env.JWT_SECRET);
-	// console.log(req.token)
+	// console.log(req.session.token)
 	return next();
 }
 
@@ -215,34 +215,35 @@ router.post('/signature/:meetingnumber', async (req, res, next) => {
 	return res.json(ret)
 })
 
-router.get('/auth', getAuthCodeJWT, async (req, res, next) => {
-	if (req.token) {
+router.get('/auth', getAuthCode, async (req, res, next) => {
+	if (req.session.token) {
 		// We can now use the access token to authenticate API calls
-		if (!req.session.referrer || /auth/.test(req.session.referrer)) {
-			// Send a request to get your user information using the /me context
-			// The `/me` context restricts an API call to the user the token belongs to
-			// This helps make calls to user-specific endpoints instead of storing the userID
-			getMe(req.token, (err, body) => {
-				if (err) {
-					return next(err)
-				} else {
+		getMe(req.session.token, (err, body) => {
+			if (err) {
+				return next(err)
+			} else {
+				req.session.userName = body.first_name + ' ' + body.last_name
+				if (!req.session.referrer || /auth/.test(req.session.referrer)) {
+					// Send a request to get your user information using the /me context
+					// The `/me` context restricts an API call to the user the token belongs to
+					// This helps make calls to user-specific endpoints instead of storing the userID
 					return res.render('profile', {
 						user: body
 					})
+				} else {
+					return res.redirect(req.session.referrer)
 				}
-			})
-		} else {
-			return res.redirect(req.session.referrer)
-		}
+			}
+		})
 	} else {
 		return res.redirect('/logout')
 		// something went wrong		
 	}
 })
 
-router.get('/profile', getAuthCodeJWT, async (req, res, next) => {
-	if (req.token) {
-		getMe(req.token, (err, body) => {
+router.get('/profile', getAuthCode, async (req, res, next) => {
+	if (req.session.token) {
+		getMe(req.session.token, (err, body) => {
 			if (err) {
 				return next(err)
 			} else {
@@ -254,20 +255,20 @@ router.get('/profile', getAuthCodeJWT, async (req, res, next) => {
 	}
 })
 
-router.get('/api/createMeeting', getAuthCodeJWT, csrfProtection, function(req, res) {
+router.get('/api/createMeeting', getAuthCode, csrfProtection, function(req, res) {
 	res.render('edit', {
 		csrfToken: req.csrfToken(),
 		title: 'Manage Meetings'
 	});
 });
 
-router.post('/api/createMeeting', getAuthCodeJWT, upload.array(), parseBody, csrfProtection, async function(req, res, next) {
+router.post('/api/createMeeting', getAuthCode, upload.array(), parseBody, csrfProtection, async function(req, res, next) {
 	console.log(req.body);
 	console.log("topic:", req.body.topic);
 	console.log("agenda:", '# ' +req.body.title + '  \n' + req.body.description);
-	if (req.token) {
+	if (req.session.token) {
 	// if (req.session && req.session.token) {
-		// console.log(req.token)
+		// console.log(req.session.token)
 		const mOptions = {
 			method: 'POST',
 			uri: `https://api.zoom.us/v2/users/me/meetings`,
@@ -291,7 +292,7 @@ router.post('/api/createMeeting', getAuthCodeJWT, upload.array(), parseBody, csr
 				}
 			},
 			headers: {
-				Authorization: 'Bearer ' + req.token
+				Authorization: 'Bearer ' + req.session.token
 			}
 			
 		};
@@ -301,12 +302,6 @@ router.post('/api/createMeeting', getAuthCodeJWT, upload.array(), parseBody, csr
 			}
 			return res.redirect('/meetings')
 		}) 
-		
-		// ).then(response => {
-		// 	console.log(response)
-		// 	return res.redirect('/meetings')
-		// }).catch(err => console.log(err));
-		
 	} else {
 		// console.log(req.session)
 		// something went wrong		
@@ -314,12 +309,12 @@ router.post('/api/createMeeting', getAuthCodeJWT, upload.array(), parseBody, csr
 	 
 });
 
-router.get('/meetings', getAuthCodeJWT, function(req, res, next) {
+router.get('/meetings', getAuthCode, function(req, res, next) {
 	const options = {
 		method: 'GET',
 		url: `https://api.zoom.us/v2/users/me/meetings`,
 		headers: {
-			Authorization: 'Bearer ' + req.token
+			Authorization: 'Bearer ' + req.session.token
 		}
 	}
 	// console.log(req.session)
@@ -330,19 +325,20 @@ router.get('/meetings', getAuthCodeJWT, function(req, res, next) {
 			// console.log(body)
 			body = JSON.parse(body);
 			return res.render('meetings', {
+				userName: req.session.userName,
 				data: body
 			})
 		}
 	})
 });
 
-router.get('/meeting/:id', getAuthCodeJWT, (req, res, next) => {
+router.get('/meeting/:id', getAuthCode, (req, res, next) => {
 	const meetingId = req.params.id;
 	const mOptions = {
 		method: 'GET',
 		url: `https://api.zoom.us/v2/meetings/${meetingId}`,
 		headers: {
-			Authorization: 'Bearer ' + req.token
+			Authorization: 'Bearer ' + req.session.token
 		}
 	};
 	request(mOptions, (error, response, data) => {
@@ -357,12 +353,12 @@ router.get('/meeting/:id', getAuthCodeJWT, (req, res, next) => {
 	})
 })
 
-// router.get('/group', getAuthCodeJWT, (req, res, next) => {
+// router.get('/group', getAuthCode, (req, res, next) => {
 // 	const options = {
 // 		method: 'GET',
 // 		url: `https://api.zoom.us/v2/groups`,
 // 		headers: {
-// 			Authorization: 'Bearer ' + req.token
+// 			Authorization: 'Bearer ' + req.session.token
 // 		}
 // 	}
 // 	// console.log(req.session)
@@ -377,7 +373,7 @@ router.get('/meeting/:id', getAuthCodeJWT, (req, res, next) => {
 // 					method: 'GET',
 // 					url: `https://api.zoom.us/v2/groups/${group.id}/members`,
 // 					headers: {
-// 						Authorization: 'Bearer ' + req.token
+// 						Authorization: 'Bearer ' + req.session.token
 // 					}
 // 				}
 // 				request(uOptions, (err, response, members) => {
@@ -394,7 +390,7 @@ router.get('/meeting/:id', getAuthCodeJWT, (req, res, next) => {
 // })
 
 // add group members
-// router.post('/group/:id', getAuthCodeJWT, (req, res, next) => {
+// router.post('/group/:id', getAuthCode, (req, res, next) => {
 // 	{
 //   "members": [
 //     {
@@ -405,7 +401,7 @@ router.get('/meeting/:id', getAuthCodeJWT, (req, res, next) => {
 // }
 // })
 
-router.get('/meetingEnd/:id', (req, res, next) => {
+router.get('/api/meetingEnd/:id', (req, res, next) => {
 	const meetingId = req.params.id;
 	const mOptions = {
 		method: 'PUT',
@@ -414,7 +410,7 @@ router.get('/meetingEnd/:id', (req, res, next) => {
 			'action': 'end'
 		},
 		headers: {
-			Authorization: 'Bearer ' + req.token
+			Authorization: 'Bearer ' + req.session.token
 		}
 	};
 	request(mOptions, (error, response, data) => {
@@ -427,9 +423,9 @@ router.get('/meetingEnd/:id', (req, res, next) => {
 	})
 })
 
-router.get('/api/deleteMeeting/:id', getAuthCodeJWT, (req, res, next) => {
-	// console.log(req.params.id, req.token)
-	deleteMeeting(req.params.id, req.token, (err) => {
+router.get('/api/deleteMeeting/:id', getAuthCode, (req, res, next) => {
+	// console.log(req.params.id, req.session.token)
+	deleteMeeting(req.params.id, req.session.token, (err) => {
 		if (err) {
 			return next(err)
 		}

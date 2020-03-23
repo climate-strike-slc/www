@@ -1,11 +1,18 @@
 nav
-	div
-	ul
-		li
-			a(href="/") Home  
-		li
-			a(href="/meetings") Meetings
-		li
-			a(href="/api/createMeeting") New Meeting
-		li
-			a(href="/profile") Profile
+	a.mainmenu(v-if="res" title="Menu" style="pointer-events: auto;" @click="drop")
+		
+		svg(version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30.1px" height="25px" viewBox="0 0 30.1 28" style="enable-background:new 0 0 30.1 28; padding: 0 0 0 8px;" xml:space="preserve")
+			path(d="M1.103,4.464c-0.606,0-1.1-0.493-1.1-1.1v-2.3c0-0.606,0.493-1.1,1.1-1.1h27.893  c0.607,0,1.1,0.494,1.1,1.1v2.3c0,0.606-0.492,1.1-1.1,1.1H1.103z")
+			path(d="M1.103,16.464c-0.606,0-1.1-0.493-1.1-1.1v-2.3c0-0.606,0.493-1.101,1.1-1.101h27.893  c0.607,0,1.1,0.494,1.1,1.101v2.3c0,0.606-0.492,1.1-1.1,1.1H1.103z")
+			path(d="M1.103,27.962c-0.606,0-1.1-0.494-1.1-1.1v-2.301c0-0.605,0.493-1.1,1.1-1.1h27.893  c0.607,0,1.1,0.494,1.1,1.1v2.301c0,0.605-0.492,1.1-1.1,1.1H1.103z")
+	
+	div.dropdown(v-cloak v-if="dropped || !res")
+		ul
+			li
+				a(href="/") Home  
+			li
+				a(href="/meetings") Meetings
+			li
+				a(href="/api/createMeeting") New Meeting
+			li
+				a(href="/profile") Profile

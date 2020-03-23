@@ -5,7 +5,9 @@ script(type="text/javascript").
 		el: '#vue',
 		data: function data(){
 			return {
-				user: this.parseObj(!{JSON.stringify(user)})
+				user: this.parseObj(!{JSON.stringify(user)}),
+				dropped: false,
+				res: window.innerWidth < 600
 			}
 		},
 		mounted: function(){

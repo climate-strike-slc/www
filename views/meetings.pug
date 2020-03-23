@@ -10,11 +10,6 @@ block content
 			include partials/menu.pug
 		div.wrapper.main
 			div.container
-				//- (:style="{'white-space': (!hov ? 'normal' : 'nowrap'), overflow: 'hidden'}")
-				//- (
-				//- 	:style="{width: (!hov ? '71vw' : '88vw')}"
-				//- )
-				//- @mouseleave="deactivate(k)"
 				div.ui.img(
 					v-if="data && data !== '' && data.meetings.length > 0"
 					v-for="(k, i) in keys"
@@ -29,10 +24,8 @@ block content
 				)
 					a(:href="'/api/deleteMeeting/'+data.meetings[i].id" v-text="'x'")
 					//- https://zoom.us/wc/{{ meetindID }}/join?prefer=1&un={{ base64Encoded Name }} 
-					iframe(v-if="k === active" :src="'https://zoom.us/wc/'+data.meetings[i].id+'/join?prefer=1&un=testname'")
+					iframe(v-if="k === active" :src="'https://zoom.us/wc/'+data.meetings[i].id+'/join?prefer=1&un='+userBase64")
 					//- iframe(v-if="k === active" :src="'/meeting/'+data.meetings[i].id")
-					//- div#zmmtg-root(v-if="k === active")
-					//- div#aria-notify-area(v-if="k === active")
 					p(v-if="data.meetings && data.meetings[i].agenda" v-html="marked(data.meetings[i].agenda)" style="position:absolute; color: #555;")
 					//- a(:href="'/meeting/'+data.meetings[i].id")
 					img(:src="'/images/icons/'+data.meetings[i].topic+'.svg'")

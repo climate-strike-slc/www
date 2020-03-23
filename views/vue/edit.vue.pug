@@ -5,6 +5,8 @@ script(type="text/javascript").
 		el: '#vue',
 		data: function data(){
 			return {
+				dropped: false,
+				res: window.innerWidth < 600
 			}
 		},
 		mounted: function(){
