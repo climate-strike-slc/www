@@ -9,9 +9,9 @@ block content
 		div.wrapper.nav
 			include partials/menu.pug
 		div.wrapper.main
-			div.container
+			div.container(style="pointer-events:none;")
 				div.ui.img(
-					v-if="data && data !== '' && data.meetings.length > 0"
+					v-if="data && data !== '' && data.length > 0"
 					v-for="(k, i) in keys"
 					@click="dialog(k, i)"
 					@mouseover="hover"
@@ -20,15 +20,15 @@ block content
 					@touchend="dialog(k, i)"
 					:class="k === active ? 'active' : ''"
 					:id="k"
-					:style="{'background-color': c[i], padding: '10px', position: 'relative'}"
+					:style="{'background-color': c[i], padding: '10px', position: 'relative', 'pointer-events': 'auto'}"
 				)
-					a(:href="'/api/deleteMeeting/'+data.meetings[i].id" v-text="'x'")
+					a(role="button" :href="'/api/deleteMeeting/'+data[i].id" v-text="'x'")
 					//- https://zoom.us/wc/{{ meetindID }}/join?prefer=1&un={{ base64Encoded Name }} 
-					iframe(v-if="k === active" :src="'https://zoom.us/wc/'+data.meetings[i].id+'/join?prefer=1&un='+userBase64")
-					//- iframe(v-if="k === active" :src="'/meeting/'+data.meetings[i].id")
-					p(v-if="data.meetings && data.meetings[i].agenda" v-html="marked(data.meetings[i].agenda)" style="position:absolute; color: #555;")
-					//- a(:href="'/meeting/'+data.meetings[i].id")
-					img(:src="'/images/icons/'+data.meetings[i].topic+'.svg'")
+					iframe(v-if="k === active" style="pointer-events:all;" :src="'https://zoom.us/wc/'+data[i].id+'/join?prefer=1&un='+userBase64")
+					//- iframe(v-if="k === active" :src="'/meeting/'+data[i].id")
+					p(v-if="data && data[i].agenda" v-html="marked(data[i].agenda)" style="position:absolute; color: #555;")
+					//- a(:href="'/meeting/'+data[i].id")
+					img(:src="'/images/icons/'+data[i].topic+'.svg'")
 					
 
 	include vue/meetings.vue.pug

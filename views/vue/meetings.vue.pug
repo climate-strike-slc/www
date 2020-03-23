@@ -42,7 +42,7 @@ script(type="text/javascript").
 					if (keyName === 'Enter') event.preventDefault()
 				});
 			})
-			this.keys = this.data.meetings.map(function(doc) {
+			this.keys = this.data.map(function(doc) {
 				return doc.topic;
 			});
 		},

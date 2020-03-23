@@ -18,6 +18,8 @@ const csrfProtection = csrf();
 // Use the request module to make HTTP requests from Node
 const request = require('request')
 
+const Meeting = require('../models');
+
 function ensureAdmin(req, res, next) {
 	
 }
@@ -300,6 +302,8 @@ router.post('/api/createMeeting', getAuthCode, upload.array(), parseBody, csrfPr
 			if (error) {
 				return next(error)
 			}
+			const meeting = new Meeting(body);
+			meeting.save(err => next(err));
 			return res.redirect('/meetings')
 		}) 
 	} else {
@@ -310,26 +314,36 @@ router.post('/api/createMeeting', getAuthCode, upload.array(), parseBody, csrfPr
 });
 
 router.get('/meetings', getAuthCode, function(req, res, next) {
-	const options = {
-		method: 'GET',
-		url: `https://api.zoom.us/v2/users/me/meetings`,
-		headers: {
-			Authorization: 'Bearer ' + req.session.token
+	Meeting.find({}).lean().exec((err, body) => {
+		if (err) {
+			return next(err)
 		}
-	}
-	// console.log(req.session)
-	request(options, (error, response, body) => {
-		if (error) {
-			console.log('API Response Error: ', error)
-		} else {
-			// console.log(body)
-			body = JSON.parse(body);
-			return res.render('meetings', {
-				userName: req.session.userName,
-				data: body
-			})
-		}
+		// console.log(body)
+		return res.render('meetings', {
+			userName: req.session.userName,
+			data: body
+		})
 	})
+	// const options = {
+	// 	method: 'GET',
+	// 	url: `https://api.zoom.us/v2/users/me/meetings`,
+	// 	headers: {
+	// 		Authorization: 'Bearer ' + req.session.token
+	// 	}
+	// }
+	// // console.log(req.session)
+	// request(options, (error, response, body) => {
+	// 	if (error) {
+	// 		console.log('API Response Error: ', error)
+	// 	} else {
+	// 		// console.log(body)
+	// 		body = JSON.parse(body);
+	// 		return res.render('meetings', {
+	// 			userName: req.session.userName,
+	// 			data: body
+	// 		})
+	// 	}
+	// })
 });
 
 router.get('/meeting/:id', getAuthCode, (req, res, next) => {
