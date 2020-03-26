@@ -319,8 +319,9 @@ router.get('/meetings', getAuthCode, function(req, res, next) {
 			return next(err)
 		}
 		// console.log(body)
+		const b64Name = Buffer.from(req.session.userName).toString('base64')
 		return res.render('meetings', {
-			userName: req.session.userName,
+			userName: b64Name,
 			data: body
 		})
 	})

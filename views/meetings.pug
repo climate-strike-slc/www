@@ -6,29 +6,44 @@ block content
 	script(type="text/javascript", src="/scripts/basefunctions.js?v="+Math.random())
 
 	div#vue
-		div.wrapper.nav
+		div.nav
 			include partials/menu.pug
-		div.wrapper.main
-			div.container(style="pointer-events:none;")
-				div.ui.img(
-					v-if="data && data !== '' && data.length > 0"
-					v-for="(k, i) in keys"
-					@click="dialog(k, i)"
-					@mouseover="hover"
-					@mouseleave="unhover"
-					@touchstart="hover"
-					@touchend="dialog(k, i)"
-					:class="k === active ? 'active' : ''"
-					:id="k"
-					:style="{'background-color': c[i], padding: '10px', position: 'relative', 'pointer-events': 'auto'}"
-				)
-					a(role="button" :href="'/api/deleteMeeting/'+data[i].id" v-text="'x'")
-					//- https://zoom.us/wc/{{ meetindID }}/join?prefer=1&un={{ base64Encoded Name }} 
-					iframe(v-if="k === active" style="pointer-events:all;" :src="'https://zoom.us/wc/'+data[i].id+'/join?prefer=1&un='+userBase64")
-					//- iframe(v-if="k === active" :src="'/meeting/'+data[i].id")
-					p(v-if="data && data[i].agenda" v-html="marked(data[i].agenda)" style="position:absolute; color: #555;")
-					//- a(:href="'/meeting/'+data[i].id")
-					img(:src="'/images/icons/'+data[i].topic+'.svg'")
+		div.wrapper(
+			v-if="data && data !== '' && data.length > 0"
+			v-for="(year, y) in data.map(function(doc){return new Date(doc.start_time).getFullYear()}).filter(function(v,i,a){return a.indexOf(v) === i})"
+		)
+			div.main(
+				v-for="(month, m) in data.map(function(doc){return new Date(doc.start_time).getMonth()}).filter(function(v,i,a){return a.indexOf(v) === i})"
+				
+			)
+				div.container(
+					v-for="(date, m) in data.map(function(doc){return new Date(doc.start_time).getDate()}).filter(function(v,i,a){return a.indexOf(v) === i})"
 					
+					:class="(!active ? '' : 'active')"
+					style="pointer-events:none;"
+				)
+					div.ui.img(
+						v-for="(doc, i) in data"
+						v-if="(new Date(doc.start_time).getDate() === date)"
+						@click="dialog(i)"
+						@mouseover="hover"
+						@mouseleave="unhover"
+						@touchstart="hover"
+						@touchend="dialog(i)"
+						:class="i === parseInt(active,10) ? 'active' : ''"
+						:id="i"
+						:style="{'background-color': c[i]}"
+					)
+						a.fit(v-if="admin" role="button" :href="'/api/deleteMeeting/'+data[i].id" v-text="'x'" style="z-index: 3; position: relative;")
+						//- https://zoom.us/wc/{{ meetindID }}/join?prefer=1&un={{ base64Encoded Name }} 
+						embed(:height="(!res ? ((wWidth * 0.66) * 0.72) : 400)" :width="(!res ? wWidth * 0.66 : wWidth)" type="text/html" v-if="i === parseInt(active,10)" style="pointer-events:all; z-index: 2; position: relative;" :src="'https://zoom.us/wc/'+data[i].id+'/join?prefer=1&un='+userName")
+						//- iframe(v-if="k === active" :src="'/meeting/'+data[i].id")
+						div.row(style="position:relative;z-index:1;")
+							p.tb-05-m0.tb-10-m2(v-if="data && data[i].agenda" v-html="marked(data[i].agenda)" style="color: #555;")
+							div.tb-05-m0.tb-10-m2
+								a.fit(@click="deactivate(i)" role="button" target="_blank" :href="data[i].join_url" v-text="'Join in Zoom app'")
+								//- a(:href="'/meeting/'+data[i].id")
+						img(:src="'/images/icons/'+data[i].topic+'.svg'" style="width:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.4;")
+						
 
 	include vue/meetings.vue.pug

@@ -538,7 +538,6 @@ a[role="button"],
   text-decoration: none;
   text-transform: uppercase;
   white-space: nowrap;
-  width: 100%;
   letter-spacing: 0.09em; }
   input[type="submit"].icon:before,
   input[type="reset"].icon:before,
@@ -554,8 +553,7 @@ a[role="button"],
   a[role="button"].fit,
   .button.fit {
     display: block;
-    margin: 0 0 1em 0;
-    width: 100%; }
+    margin: 0 0 1em 0; }
   input[type="submit"].disabled, input[type="submit"]:disabled,
   input[type="reset"].disabled,
   input[type="reset"]:disabled,
@@ -610,14 +608,22 @@ nav {
           display: inline-block;
           margin: 0 1.5rem; } }
 
-.wrapper.main {
-  display: -webkit-grid;
-  display: -ms-grid;
-  display: grid;
-  -webkit-grid-template-columns: 16.5vw;
-  -ms-grid-template-columns: 16.5vw;
-  grid-template-columns: 16.5vw;
-  overflow: hidden; }
+div[aria-label="Chat Message List"] {
+  height: auto;
+  min-height: 100px; }
+
+.wrapper {
+  position: static; }
+  .wrapper.main {
+    display: -webkit-grid;
+    display: -ms-grid;
+    display: grid;
+    -webkit-grid-template-columns: 16.5vw;
+    -ms-grid-template-columns: 16.5vw;
+    grid-template-columns: 16.5vw;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: scroll; }
 
 .row {
   width: 100%;
@@ -644,12 +650,12 @@ nav {
   margin: 0 auto; }
 
 .container {
-  -webkit-grid-column-start: 2;
-  -ms-grid-column-start: 2;
-  grid-column-start: 2;
-  -webkit-grid-row-start: 2;
-  -ms-grid-row-start: 2;
-  grid-row-start: 2;
+  -webkit-grid-column-start: 1;
+  -ms-grid-column-start: 1;
+  grid-column-start: 1;
+  -webkit-grid-row-start: 1;
+  -ms-grid-row-start: 1;
+  grid-row-start: 1;
   -webkit-grid-column-end: 3;
   -ms-grid-column-end: 3;
   grid-column-end: 3;
@@ -665,9 +671,11 @@ nav {
   -webkit-align-content: center;
   -ms-align-content: center;
   align-content: center;
-  width: 70.998vw;
-  height: 100%;
-  margin: 2rem auto; }
+  width: 85vw;
+  height: auto;
+  margin: 4rem auto; }
+  .container.active {
+    width: 100vw; }
 
 .ui {
   width: 66vw;
@@ -678,32 +686,26 @@ nav {
   transition-duration: 0.4s;
   transition-delay: 0.1s;
   cursor: pointer;
-  background-color: #555; }
+  background-color: #555;
+  padding: 1rem;
+  position: relative;
+  pointer-events: auto; }
   .ui.active {
+    padding: 0;
     pointer-events: none;
-    z-index: 100; }
+    width: 100vw; }
     .ui.active embed {
       pointer-events: all;
-      position: fixed;
       top: 0;
       left: 0;
       z-index: 100;
       margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      max-height: 100vh; }
+      padding: 0; }
   .ui:hover {
     z-index: 9; }
   .ui embed {
     position: relative;
     pointer-events: none;
-    min-width: 100vw;
-    min-height: 100vw;
-    max-width: 100vw;
-    max-height: 100vw;
-    transform-origin: top left;
-    background-color: #fff;
-    margin: 2vw auto;
     overflow: hidden; }
 
 *[class^='tb-1'], *[class^='tb-0'] {
@@ -803,8 +805,22 @@ nav {
   .tb-01-m1 {
     width: 10%; } }
 @media (min-width: 600px) {
+  .ui {
+    width: 15.89vw;
+    height: 15.89vw;
+    margin: 2vw 2vw 0 0; }
+    .ui:hover {
+      width: 33.1vw;
+      height: 33.1vw; }
+    .ui.active {
+      width: 66vw !important;
+      height: 55.2vh !important;
+      padding: 0; }
+
   .container {
-    margin: 4rem auto; }
+    width: 83vw; }
+    .container.active {
+      width: 83vw; }
 
   .tb-10-m2 {
     width: 100%; }
@@ -866,30 +882,6 @@ nav {
   .tb-01-m3 {
     width: 10%; } }
 @media (min-width: 1000px) {
-  .ui {
-    width: 15.89vw;
-    height: 15.89vw;
-    margin: 2vw 2vw 0 0; }
-    .ui:hover {
-      width: 33.1vw;
-      height: 33.1vw; }
-    .ui.active {
-      width: 60vw !important;
-      height: 55.2vh !important; }
-      .ui.active embed {
-        transform: scale(1);
-        width: 100vw;
-        height: 100vh; }
-    .ui embed {
-      min-width: 69vw;
-      min-height: 69vw;
-      transform: scale(0.5);
-      margin: 0 2vw 2vw 0; }
-
-  .container {
-    grid-template-columns: repeat(auto-fit, 18vw);
-    grid-template-rows: repeat(auto-fit, 18vw); }
-
   .tb-10-m4 {
     width: 100%; }
 

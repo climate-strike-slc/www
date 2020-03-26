@@ -25,6 +25,7 @@ script(type="text/javascript").
 		el: '#vue',
 		data: function data(){
 			return {
+				admin: this.parseObj(!{JSON.stringify(admin)}),
 				c: ["#a6cee3","#1f78b4","#b2df8a","#33a02c","#6a3d9a","#b15928","#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"],
 				keys: '',
 				active: null,
@@ -32,17 +33,25 @@ script(type="text/javascript").
 				data: this.parseObj(!{JSON.stringify(data)}),
 				userName: this.parseObj(!{JSON.stringify(userName)}),
 				dropped: false,
-				res: window.innerWidth < 600
+				wWidth: window.innerWidth,
+				wHeight: window.innerHeight,
+				res: window.innerWidth < 600,
 			}
 		},
+		beforeDestroy: function() {
+			var self = this;
+			window.removeEventListener('resize', self.handleResize);
+		},
 		mounted: function(){
+			var self = this;
+			window.addEventListener('resize', self.handleResize);
 			$(document).ready(function(){
 				document.addEventListener('keydown', function(event) {
 					var keyName = event.key;
 					if (keyName === 'Enter') event.preventDefault()
 				});
 			})
-			this.keys = this.data.map(function(doc) {
+			self.keys = self.data.map(function(doc) {
 				return doc.topic;
 			});
 		},
