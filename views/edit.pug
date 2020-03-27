@@ -46,10 +46,11 @@ block content
 						label.row(for="minute") Minute
 						select.row#minute(@change="formatDate('minute', $event)")
 							option(v-for="(mn, n) in minutes" v-text="(mn === 0 ? '00' : mn)" :value="mn" :selected="mn === minute")
-					div.tb-02-m0
-						label.row(for="pm") AM / PM
-						select.row#pm(@change="formatDate('pm', $event)")
-							option(v-for="(p, i) in [true,false]" v-text="(p ? 'pm' : 'am')" :value="p")
+					// TODO fix AM / PM
+					//- div.tb-02-m0
+					//- 	label.row(for="pm") AM / PM
+					//- 	select.row#pm(@change="formatDate('pm', $event)")
+					//- 		option(v-for="(p, i) in ['am','pm']" v-text="p" :value="i" :selected="(pm === i)")
 
 
 				input(type="hidden" name="start_time" :value="date")

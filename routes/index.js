@@ -271,6 +271,7 @@ router.post('/api/createMeeting', getAuthCode, upload.array(), parseBody, csrfPr
 	if (req.session.token) {
 	// if (req.session && req.session.token) {
 		// console.log(req.session.token)
+		console.log(req.body.start_time, moment(req.body.start_time).utc().format())
 		const mOptions = {
 			method: 'POST',
 			uri: `https://api.zoom.us/v2/users/me/meetings`,
@@ -278,7 +279,7 @@ router.post('/api/createMeeting', getAuthCode, upload.array(), parseBody, csrfPr
 				'topic': req.body.topic,
 				'type': 2,
 				'agenda': '# ' +req.body.title + '  \n' + req.body.description,
-				'start-time': req.body.start_time,//moment().add(5, 'minutes').utc().format(),
+				'start_time': moment(req.body.start_time).utc().format(),//moment().add(5, 'minutes').utc().format(),
 				'duration': 30,
 				'settings': {
 					'host_video': true,
@@ -303,8 +304,13 @@ router.post('/api/createMeeting', getAuthCode, upload.array(), parseBody, csrfPr
 				return next(error)
 			}
 			const meeting = new Meeting(body);
-			meeting.save(err => next(err));
-			return res.redirect('/meetings')
+			meeting.save(err => {
+				if (err) {
+					return next(err)
+				} else {
+					return res.redirect('/meetings')
+				}
+			});
 		}) 
 	} else {
 		// console.log(req.session)

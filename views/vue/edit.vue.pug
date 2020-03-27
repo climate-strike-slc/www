@@ -6,6 +6,8 @@ script(type="text/javascript").
 		el: '#vue',
 		data: function data(){
 			return {
+				new: (!this.parseObj(!{JSON.stringify(doc)})),
+				doc: this.parseObj(!{JSON.stringify(doc)}),
 				dropped: false,
 				res: window.innerWidth < 600,
 				year: null,
@@ -23,8 +25,7 @@ script(type="text/javascript").
 				thirtyone: [0,2,4,6,7,9,11],
 				twentyeight: [1],
 				monthstr: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-				am: false,
-				pm: false
+				pm: 0
 
 			}
 		},
@@ -37,6 +38,10 @@ script(type="text/javascript").
 				});
 			})
 			self.formatDate('year', new Date().getFullYear())
+			self.formatDate('month', new Date().getMonth())
+			self.formatDate('day', new Date().getDate())
+			self.formatDate('hour', new Date().getHours())
+			self.formatDate('minute', (new Date().getMinutes() >= 30 ? 30 : 0))
 		},
 		methods: Object.assign({}, adminFunctions, baseFunctions)
 	});

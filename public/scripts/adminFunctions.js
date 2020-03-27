@@ -17,15 +17,26 @@ var adminFunctions = {
 		// 	default:
 		// 
 		// }
-		var val = (!e.target ? e : e.target.value);
-		self[which] = val;
-		if (which === 'pm') {
-			if (val) {
-				self.am = false;
-			} else {
-				self.am = true;
-			}
-		}
+		var val = (!e.target ? parseInt(e,10) : parseInt(e.target.value,10));
+		// var hour; 
+		// var hr = new Date(self.date).getHours();
+		// if (which === 'pm') {
+		// 	console.log(which, val)
+		// 	if (val === 1) {
+		// 		// self.am = false;
+		// 		self.pm = 1;
+		// 		hr = (hr + 12 >= 24 ? hr : hr+12)
+		// 	} else {
+		// 		// self.am = true;
+		// 		self.pm = 0;
+		// 		// hr = (hr - 12 < 0 ? hr : hr-12)
+		// 	}
+		// 	self.hour = hr;
+		// } else {
+			
+			self[which] = val;
+		// }
+		// console.log(which, val)
 		var d = new Date().getDate();
 		var h = new Date().getHours();
 		var m = new Date().getMinutes();
@@ -33,19 +44,22 @@ var adminFunctions = {
 		var month = (!self.month ? new Date().getMonth() : self.month);
 		var day = (!self.day ? d : self.day);
 		var hour = (!self.hour ? h : self.hour);
-		if (self.pm) {
-			hour = (hour + 12 >= 24 ? 0 : hour+12)
-		}
+		
 		var minute = (!self.minute ? 0 : self.minute);
-		console.log(moment({ 
-			y:year,
-			M:month,
-			d:day,
-			h:hour,
-			m:minute,
-			s:0,
-			ms:0
-		}).utc().format())
+		// self.year = year;
+		// self.month = month;
+		// self.day = day;
+		// self.hour = hour;
+		// self.minute = minute;
+		// console.log(moment({ 
+		// 	y:year,
+		// 	M:month,
+		// 	d:day,
+		// 	h:hour,
+		// 	m:minute,
+		// 	s:0,
+		// 	ms:0
+		// }).utc().format())
 		self.date = moment({ 
 			y:year,
 			M:month,
@@ -55,6 +69,11 @@ var adminFunctions = {
 			s:0,
 			ms:0
 		}).utc().format();
+		self.years = self.getYrs();
+		self.months = self.getMos();
+		self.days = self.getDays();
+		self.hours = self.getHrs();
+		self.minutes = self.getMins();
 	},
 	getYrs: function() {
 		var thisYear = new Date().getFullYear();
@@ -64,8 +83,8 @@ var adminFunctions = {
 	getMos: function() {
 		var self = this;
 		var thisMonth = new Date().getMonth();
-		console.log('month');
-		console.log(thisMonth)
+		// console.log('month');
+		// console.log(thisMonth)
 		var nextMonth = (thisMonth+1 > 11 ? 0 : thisMonth+1);
 		var thirdMonth = (nextMonth + 1 > 11 ? 0 : nextMonth+1); 
 		return [thisMonth, nextMonth, thirdMonth]//self.range(thisMonth, thirdMonth);
@@ -75,7 +94,7 @@ var adminFunctions = {
 		var thisMonth = new Date().getMonth();
 		var mo = (!self.month ? thisMonth : self.month);
 		var splitDays = (mo === thisMonth);
-		var day = (!self.day ? new Date().getDate() : self.day);
+		var day = new Date().getDate();
 		var days = (self.twentyeight !== undefined && self.twentyeight.indexOf(mo) !== -1 ? self.range(1,28) : (self.twentyeight !== undefined && self.thirty !== undefined && self.thirty.indexOf(mo) !== -1 ? self.range(1,30) : self.range(1,31)));
 		if (splitDays) {
 			days = days.slice(days.indexOf(day))
@@ -85,19 +104,19 @@ var adminFunctions = {
 	},
 	getHrs: function() {
 		var self = this;
-		var hours = self.range(1,12);
-		var hr = new Date().getHours();
-		console.log(hr)
-		if (hr > 12) {
-			hr = hr - 12;
-			self.pm = true;
-			self.am = false;
-		} else {
-			self.pm = false;
-			self.am = true;
-		}
+		var hours = self.range(0,23);
+		var hr = (!self.hour ? new Date().getHours() : self.hour);
+		// console.log(hr)
+		// if (hr > 12) {
+		// 	hr = hr - 12;
+		// 	self.pm = true;
+		// 	self.am = false;
+		// } else {
+		// 	self.pm = false;
+		// 	self.am = true;
+		// }
 		var day = (!self.day ? new Date().getDate() : self.day);
-		console.log(self.day, new Date().getDate())
+		// console.log(self.day, new Date().getDate())
 		if (day === new Date().getDate() && self.pm) {
 			hours = hours.slice(hours.indexOf(hr))
 		}
@@ -111,7 +130,7 @@ var adminFunctions = {
 		if (hour === new Date().getHours() && day === new Date().getDate()) {
 			var nowMins = new Date().getMinutes();
 			if (nowMins >= 30) {
-				minutes = [0,30]
+				minutes = [30]
 			} else {
 				minutes = [0,30]
 			}
