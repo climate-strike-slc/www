@@ -54,5 +54,5 @@ var baseFunctions = {
 		self.wWidth = window.innerWidth;
 		self.wHeight = window.innerHeight;
 		self.res = self.wWidth < 600;
-	}
+	},
 }

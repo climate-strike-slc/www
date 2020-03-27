@@ -278,7 +278,7 @@ router.post('/api/createMeeting', getAuthCode, upload.array(), parseBody, csrfPr
 				'topic': req.body.topic,
 				'type': 2,
 				'agenda': '# ' +req.body.title + '  \n' + req.body.description,
-				'start-time': moment().add(5, 'minutes').utc().format(),
+				'start-time': req.body.start_time,//moment().add(5, 'minutes').utc().format(),
 				'duration': 30,
 				'settings': {
 					'host_video': true,
