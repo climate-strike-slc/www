@@ -1,21 +1,48 @@
 script(type="text/javascript").
 	Vue.prototype.$ = $;
 	Vue.prototype.window = window;
+	Vue.prototype.moment = moment;
 	new Vue({
 		el: '#vue',
 		data: function data(){
 			return {
+				new: (!this.parseObj(!{JSON.stringify(doc)})),
+				doc: this.parseObj(!{JSON.stringify(doc)}),
+				dropped: false,
+				res: window.innerWidth < 600,
+				year: null,
+				month: null,
+				day: null,
+				hour: null,
+				minute: null,
+				date: moment().utc().format(),
+				years: this.parseObj(this.getYrs()),
+				months: this.parseObj(this.getMos()),
+				days: this.parseObj(this.getDays()),
+				hours: this.parseObj(this.getHrs()),
+				minutes: this.parseObj(this.getMins()),
+				thirty: [8,3,5,10],
+				thirtyone: [0,2,4,6,7,9,11],
+				twentyeight: [1],
+				monthstr: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+				pm: 0
+
 			}
 		},
 		mounted: function(){
+			var self = this;
 			$(document).ready(function(){
 				document.addEventListener('keydown', function(event) {
 					var keyName = event.key;
 					if (keyName === 'Enter') event.preventDefault()
 				});
 			})
-
+			self.formatDate('year', new Date().getFullYear())
+			self.formatDate('month', new Date().getMonth())
+			self.formatDate('day', new Date().getDate())
+			self.formatDate('hour', new Date().getHours())
+			self.formatDate('minute', (new Date().getMinutes() >= 30 ? 30 : 0))
 		},
-		methods: Object.assign({}, baseFunctions)
+		methods: Object.assign({}, adminFunctions, baseFunctions)
 	});
 

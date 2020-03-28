@@ -3,31 +3,64 @@ block page
 	- var menu = 'edit'
 block content
 	script(type="text/javascript" src="/scripts/jquery.min.js")
-	script(type="text/javascript", src="/scripts/basefunctions.js?v="+Math.random())
-	script(type="text/javascript", src="/scripts/adminfunctions.js?v="+Math.random())
+	script(type="text/javascript", src="/scripts/adminFunctions.js?v="+Math.random())
+	script(type="text/javascript", src="/scripts/baseFunctions.js?v="+Math.random())
 
 	div#vue
 		div.wrapper.row.nav
 			include partials/menu.pug
 		div.container.row
-			form.tb-10-m0(enctype="multipart/form-data" method="POST" action="/api/createMeeting" )
+			form.tb-10-m0(enctype="multipart/form-data" method="POST" action="/api/createMeeting" style="padding: 20px")
 				input(type="hidden", name="_csrf", value= csrfToken)
 
-				div.row(style="padding-left: 20px")
+				div.row
 					label.tb-10-m0(for="topic") Topic
 					select.tb-10-m0(name="topic" id="topic")
 						option(value="other" selected="") Other
 						option(value="ecology" selected="") Ecology
 						option(value="economy" selected="") Economy
 						option(value="politics" selected="") Politics
-						option(value="organizing" selected="") Organizing
-				div.row(style="padding-left: 20px")
+						option(value="community" selected="") Community
+				div.row
+					p.tb-10-m0 Date and time
+					div.tb-02-m0
+						label.row(for="year") Year
+						select.row#year(@change="formatDate('year', $event)")
+							option(v-for="(yr, y) in years" v-text="yr" :value="yr" :selected="yr === year")
+					div.tb-02-m0
+						label.row(for="month") Month
+						select.row#month(@change="formatDate('month', $event)")
+							option(v-for="(mo, m) in months" v-text="monthstr[mo]" :value="mo" :selected="mo === month")
+					div.tb-02-m0
+						label.row(for="day") Day
+						select.row#day(@change="formatDate('day', $event)")
+							option(v-for="(dy, d) in days" v-text="dy" :value="dy" :selected="dy === day")
+					div.tb-02-m0
+						label.row(for="hour") Hour
+						div.row
+							select.tb-09-m0#hour(@change="formatDate('hour', $event)")
+								option(v-for="(hr, h) in hours" v-text="hr" :value="hr" :selected="hr === hour")
+							span.tb-01-m0
+								span.block(style="color: #fff;text-align:center;" v-text="':'")
+					div.tb-02-m0
+						label.row(for="minute") Minute
+						select.row#minute(@change="formatDate('minute', $event)")
+							option(v-for="(mn, n) in minutes" v-text="(mn === 0 ? '00' : mn)" :value="mn" :selected="mn === minute")
+					// TODO fix AM / PM
+					//- div.tb-02-m0
+					//- 	label.row(for="pm") AM / PM
+					//- 	select.row#pm(@change="formatDate('pm', $event)")
+					//- 		option(v-for="(p, i) in ['am','pm']" v-text="p" :value="i" :selected="(pm === i)")
+
+
+				input(type="hidden" name="start_time" :value="date")
+				div.row
 					label.tb-10-m0(for="title") Title
 					input.tb-10-m0(type="text" name="title" id="title")
-				div.row(style="padding-left: 20px")
+				div.row
 					label.tb-10-m0(for="description") Description
 					input.tb-10-m0(type="text" name="description" id="description")
-				div.row(style="padding-left: 20px")
+				div.row
 					button.tb-10-m0(role="submit") Submit
 	include vue/edit.vue.pug
 

@@ -14,20 +14,21 @@ var baseFunctions = {
 			}`
 		)
 	},
-	activate: function(k) {
+	activate: function(i) {
 		// logic for when a div is active (mouseover, touchstart)
-		this.active = k;
+		this.active = parseInt(i,10);
 	},
-	deactivate: function(k) {
+	deactivate: function(i) {
 		// (mouseleave, touchend)
-		if (k !== this.active) {
+		
+		if (parseInt(i, 10) !== this.active) {
 			// this.hov = null;
-			this.active = null;
 			router.push({ path: '' });
 		}
+		this.active = null;
 	},
-	dialog: function(k, i) {
-		router.push({ path: `#${k}` });
+	dialog: function(i) {
+		router.push({ path: `#${i}` });
 	},
 	hover: function() {
 		// setTimeout(function(){
@@ -38,5 +39,20 @@ var baseFunctions = {
 		// setTimeout(function(){
 			this.hov = false;
 		// },1000)
-	}
+	},
+	userBase64: function() {
+		var self = this;
+		var user = (!self.userName || self.userName === '' ? '' : new Buffer.from(self.userName).toString('base64'));
+		return user;
+	},
+	drop: function(e) {
+		var dropped = this.dropped;
+		this.dropped = !dropped;
+	},
+	handleResize: function() {
+		var self = this;
+		self.wWidth = window.innerWidth;
+		self.wHeight = window.innerHeight;
+		self.res = self.wWidth < 600;
+	},
 }
