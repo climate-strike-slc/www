@@ -703,6 +703,9 @@ div[aria-label="Chat Message List"] {
       padding: 0; }
   .ui:hover {
     z-index: 9; }
+    .ui:hover p {
+      color: #222 !important;
+      opacity: 1 !important; }
   .ui embed {
     position: relative;
     pointer-events: none;
@@ -814,7 +817,7 @@ div[aria-label="Chat Message List"] {
       height: 33.1vw; }
     .ui.active {
       width: 66vw !important;
-      height: 55.2vh !important;
+      height: calc(66vw * 0.72);
       padding: 0; }
 
   .container {

@@ -88,6 +88,10 @@
 	}
 	&:hover {
 		z-index: 9;
+		p {
+			color: #222!important;
+			opacity: 1!important;
+		}
 	}
 	embed {
 		position: relative;
@@ -211,7 +215,7 @@
 		}
 		&.active {
 			width: 66vw!important;
-			height: 55.2vh!important;
+			height: calc(66vw * 0.72);//55.2vh!important;
 			padding: 0;
 
 			embed {

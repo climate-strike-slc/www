@@ -27,7 +27,7 @@ script(type="text/javascript").
 		data: function data(){
 			return {
 				admin: this.parseObj(!{JSON.stringify(admin)}),
-				c: ["#a6cee3","#1f78b4","#b2df8a","#33a02c","#6a3d9a","#b15928","#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"],
+				c: ["#1f78b4","#b2df8a","#33a02c","#6a3d9a","#b15928","#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"],
 				keys: '',
 				active: null,
 				hov: false,
@@ -40,6 +40,7 @@ script(type="text/javascript").
 				isFirefox: (!navigator ? true : navigator.userAgent.includes('Firefox')),
 				isSafari: /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification)),
 				months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+				cats: ['ecology', 'economy', 'politics', 'community']
 			}
 		},
 		beforeDestroy: function() {

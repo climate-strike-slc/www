@@ -82,27 +82,27 @@ function getAuthCode(req, res, next) {
 
 	}
 }
-// JWT auth
-function getAuthCodeJWT(req, res, next) {
-	const payload = {
-		iss: process.env.JWT_KEY,
-		exp: ((new Date()).getTime() + 5000)
-	};
-	req.token = jwt.sign(payload, process.env.JWT_SECRET);
-	// console.log(req.session.token)
-	return next();
-}
-
-function generateSignature(apiKey, apiSecret, meetingNumber, role) {
-
-	const timestamp = new Date().getTime()
-	const msg = Buffer.from(apiKey + meetingNumber + timestamp + role).toString('base64')
-	const hash = crypto.createHmac('sha256', apiSecret).update(msg).digest('base64')
-	const signature = Buffer.from(`${apiKey}.${meetingNumber}.${timestamp}.${role}.${hash}`).toString('base64')
-
-	return signature
-}
-
+// // JWT auth
+// function getAuthCodeJWT(req, res, next) {
+// 	const payload = {
+// 		iss: process.env.JWT_KEY,
+// 		exp: ((new Date()).getTime() + 5000)
+// 	};
+// 	req.token = jwt.sign(payload, process.env.JWT_SECRET);
+// 	// console.log(req.session.token)
+// 	return next();
+// }
+// 
+// function generateSignature(apiKey, apiSecret, meetingNumber, role) {
+// 
+// 	const timestamp = new Date().getTime()
+// 	const msg = Buffer.from(apiKey + meetingNumber + timestamp + role).toString('base64')
+// 	const hash = crypto.createHmac('sha256', apiSecret).update(msg).digest('base64')
+// 	const signature = Buffer.from(`${apiKey}.${meetingNumber}.${timestamp}.${role}.${hash}`).toString('base64')
+// 
+// 	return signature
+// }
+// 
 // Helper functions
 
 function deleteMeeting(id, token, next) {
@@ -119,7 +119,13 @@ function deleteMeeting(id, token, next) {
 			return next(error)
 		} else {
 			// console.log(data)
-			return next();
+			Meeting.deleteOne({id: id}, (err, doc) => {
+				if (err) {
+					return next(err)
+				} else {
+					return next();
+				}
+			})
 		}
 	})
 }
@@ -201,30 +207,31 @@ router.get('/logout', (req, res, next) => {
 	return res.redirect('/')
 })
 
-router.post('/signature/:meetingnumber', async (req, res, next) => {
-	const meetingNumber = parseInt(req.params.meetingnumber);
-	const role = 0;
-	const timestamp = new Date().getTime()
-  const msg = Buffer.from(process.env.JWT_KEY + meetingNumber + timestamp + role).toString('base64')
-  const hash = await crypto.createHmac('sha256', process.env.JWT_SECRET).update(msg).digest('base64')
-  const signature = Buffer.from(`${process.env.JWT_KEY}.${meetingNumber}.${timestamp}.${role}.${hash}`).toString('base64')
-	const key = process.env.JWT_KEY;
-	const ret = {
-		apiKey: key,
-		wt: process.env.WT,
-		signature: signature
-	}
-	return res.json(ret)
-})
-
+// router.post('/signature/:meetingnumber', async (req, res, next) => {
+// 	const meetingNumber = parseInt(req.params.meetingnumber);
+// 	const role = 0;
+// 	const timestamp = new Date().getTime()
+//   const msg = Buffer.from(process.env.JWT_KEY + meetingNumber + timestamp + role).toString('base64')
+//   const hash = await crypto.createHmac('sha256', process.env.JWT_SECRET).update(msg).digest('base64')
+//   const signature = Buffer.from(`${process.env.JWT_KEY}.${meetingNumber}.${timestamp}.${role}.${hash}`).toString('base64')
+// 	const key = process.env.JWT_KEY;
+// 	const ret = {
+// 		apiKey: key,
+// 		wt: process.env.WT,
+// 		signature: signature
+// 	}
+// 	return res.json(ret)
+// })
+// 
 router.get('/auth', getAuthCode, async (req, res, next) => {
-	if (req.session.token) {
+	if (req.session && req.session.token) {
 		// We can now use the access token to authenticate API calls
 		getMe(req.session.token, (err, body) => {
 			if (err) {
 				return next(err)
 			} else {
 				req.session.userName = body.first_name + ' ' + body.last_name
+				req.session.admin = body.role_name === 'Admin' || body.role_name === 'Owner';
 				if (!req.session.referrer || /auth/.test(req.session.referrer)) {
 					// Send a request to get your user information using the /me context
 					// The `/me` context restricts an API call to the user the token belongs to
@@ -265,13 +272,13 @@ router.get('/api/createMeeting', getAuthCode, csrfProtection, function(req, res)
 });
 
 router.post('/api/createMeeting', getAuthCode, upload.array(), parseBody, csrfProtection, async function(req, res, next) {
-	console.log(req.body);
-	console.log("topic:", req.body.topic);
-	console.log("agenda:", '# ' +req.body.title + '  \n' + req.body.description);
-	if (req.session.token) {
+	// console.log(req.body);
+	// console.log("topic:", req.body.topic);
+	// console.log("agenda:", '# ' +req.body.title + '  \n' + req.body.description);
+	if (req.session && req.session.token) {
 	// if (req.session && req.session.token) {
 		// console.log(req.session.token)
-		console.log(req.body.start_time, moment(req.body.start_time).utc().format())
+		// console.log(req.body.start_time, moment(req.body.start_time).utc().format())
 		const mOptions = {
 			method: 'POST',
 			uri: `https://api.zoom.us/v2/users/me/meetings`,
@@ -319,14 +326,15 @@ router.post('/api/createMeeting', getAuthCode, upload.array(), parseBody, csrfPr
 	 
 });
 
-router.get('/meetings', getAuthCode, function(req, res, next) {
+router.get('/meetings'/*, getAuthCode*/, function(req, res, next) {
 	Meeting.find({}).lean().exec((err, body) => {
 		if (err) {
 			return next(err)
 		}
 		// console.log(body)
-		const b64Name = Buffer.from(req.session.userName).toString('base64')
+		const b64Name = (!req.session || !req.session.userName ? null : Buffer.from(req.session.userName).toString('base64'))
 		return res.render('meetings', {
+			admin: (!req.session || !req.session.token ? false : true),
 			userName: b64Name,
 			data: body
 		})
@@ -422,7 +430,7 @@ router.get('/meeting/:id', getAuthCode, (req, res, next) => {
 // }
 // })
 
-router.get('/api/meetingEnd/:id', (req, res, next) => {
+router.get('/api/meetingEnd/:id', getAuthCode, (req, res, next) => {
 	const meetingId = req.params.id;
 	const mOptions = {
 		method: 'PUT',
