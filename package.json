@@ -4,8 +4,10 @@
   "description": "",
   "main": "./bin/www",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "sass --watch source/sass/main.scss:public/stylesheets/style.css"
+    "test": "cross-env TEST_ENV=true RECORD_ENV=true mocha --require mocha-snapshots --update",
+    "test-lock": "cross-env TEST_ENV=true RECORD_ENV=false mocha --require mocha-snapshots",
+    "build": "cross-env TEST_ENV=false RECORD_ENV=false sass --watch utils/sass/main.scss:public/stylesheets/style.css",
+    "start": "cross-env TEST_ENV=false RECORD_ENV=false nodemon"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
+    "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "mongoose": "^5.9.5",
@@ -35,7 +38,19 @@
     "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "cross-env": "^7.0.2",
+    "enzyme": "^3.11.0",
+    "http": "0.0.1-security",
+    "mocha": "^7.1.1",
+    "mocha-snapshots": "^4.2.0",
+    "nock": "^12.0.3",
     "node-sass": "^4.13.1",
-    "normalize-scss": "^7.0.1"
+    "normalize-scss": "^7.0.1",
+    "proxyquire": "^2.1.3",
+    "sinon": "^9.0.1",
+    "sinon-chai": "^3.5.0",
+    "sinon-express-mock": "^2.2.1",
+    "supertest": "^4.0.2"
   }
 }
