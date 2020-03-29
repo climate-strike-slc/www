@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
@@ -17,7 +18,7 @@ const { getAuthCode } = require('../utils/middleware');
 // Use the request module to make HTTP requests from Node
 const request = require('request')
 
-const Meeting = require('../models');
+const { Meeting, MeetingTest } = require('../models');
 
 // Helper functions
 
@@ -152,10 +153,10 @@ router.get('/profile', getAuthCode, async (req, res, next) => {
 })
 
 router.get('/api/createMeeting', getAuthCode, csrfProtection, function(req, res) {
-	console.log(req.session)
-	console.log(req.csrfToken())
-	res.header('XSRF-TOKEN', req.csrfToken());
-	// console.log(res.header)
+	// console.log(req.session)
+	// console.log(req.csrfToken())
+	if (process.env.TEST_ENV && process.env.RECORD_ENV) res.header('XSRF-TOKEN', req.csrfToken());
+	// console.log(res.header['xsrf-token'])
 	res.render('edit', {
 		csrfToken: req.csrfToken(),
 		title: 'Manage Meetings'
@@ -201,11 +202,12 @@ router.post('/api/createMeeting', getAuthCode, upload.array(), parseBody, csrfPr
 			if (error) {
 				return next(error)
 			}
-			const meeting = new Meeting(body);
+			const meeting = (!process.env.TEST_ENV ? new Meeting(body) : new MeetingTest(body));
 			meeting.save(err => {
 				if (err) {
 					return next(err)
 				} else {
+					
 					return res.redirect('/meetings')
 				}
 			});
@@ -218,7 +220,8 @@ router.post('/api/createMeeting', getAuthCode, upload.array(), parseBody, csrfPr
 });
 
 router.get('/meetings'/*, getAuthCode*/, function(req, res, next) {
-	Meeting.find({}).lean().exec((err, body) => {
+	const Mtg = (!process.env.TEST_ENV ? Meeting : MeetingTest);
+	Mtg.find({}).lean().exec((err, body) => {
 		if (err) {
 			return next(err)
 		}

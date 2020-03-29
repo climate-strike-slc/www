@@ -39,8 +39,14 @@ script(type="text/javascript").
 				res: window.innerWidth < 600,
 				isFirefox: (!navigator ? true : navigator.userAgent.includes('Firefox')),
 				isSafari: /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification)),
-				months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-				cats: ['ecology', 'economy', 'politics', 'community']
+				monthtext: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+				cats: ['ecology', 'economy', 'politics', 'community'],
+				years: [],
+				months: [],
+				days: [],
+				hours: [],
+				minutes: [],
+				
 			}
 		},
 		beforeDestroy: function() {
@@ -59,6 +65,16 @@ script(type="text/javascript").
 			self.keys = self.data.map(function(doc) {
 				return doc.topic;
 			});
+			if (self.data) {
+				self.years = self.getDataDates('year');
+				self.months = self.getDataDates('month');
+				self.days = self.getDataDates('day');
+				self.hours = self.getDataDates('hour');
+				self.minutes = self.getDataDates('minute');
+				self.appendStyleRoot();
+			} else {
+				self.appendStyleRoot();
+			}
 		},
 		methods: Object.assign({}, baseFunctions)
 	});

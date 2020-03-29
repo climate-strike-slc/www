@@ -15,4 +15,4 @@ const MeetingTest = new Schema({
   start_url: String,
   join_url: String
 }, {collection: 'meetingstest'});
-module.exports = MeetingTest;
+module.exports = mongoose.model('MeetingTest', MeetingTest);

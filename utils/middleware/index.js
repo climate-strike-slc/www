@@ -58,7 +58,7 @@ function ensureAdmin(req, res, next) {
 // 
 
 // OAuth
-function getAuthCode(req, res, next) {
+const getAuthCode = async(req, res, next) => {
 	// Check if the code parameter is in the url 
 	// if an authorization code is available, the user has most likely been redirected from Zoom OAuth
 	// if not, the user needs to be redirected to Zoom OAuth to authorize

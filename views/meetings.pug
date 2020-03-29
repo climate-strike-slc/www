@@ -8,21 +8,45 @@ block content
 	div#vue
 		div.nav
 			include partials/menu.pug
+		//- div.tl(style="height: 100vh; width: 84px; width: calc(var(--thumbw) * 2); position: fixed; left: 0; right: auto; top: 0;background-color: red;")
+		//- 	div.tlyear(
+		//- 		v-if="data && data !== '' && data.length > 0"
+		//- 		v-for="(year, y) in years",
+		//- 		style="height: 100vh; height: var(--yearh);"
+		//- 	)
+		//- 		div.ui(v-text="year")
+		//- 		div.tlmonth(
+		//- 			v-for="(month, m) in months"
+		//- 			style="pointer-events: none; height: auto; height: var(--monthh);"
+		//- 		)
+		//- 			div.tlday(
+		//- 				v-for="(date, m) in days"
+		//- 				:class="(!active ? '' : 'active')"
+		//- 				style="pointer-events:none; height: auto; height: var(--dayh);"
+		//- 			)
+		//- 				//- div.tlitem(
+		//- 				//- 	v-for="(doc, i) in data"
+		//- 				//- 	v-if="(new Date(doc.start_time).getDate() === date)"
+		//- 				//- 	:class="i === parseInt(active,10) ? 'active' : ''"
+		//- 				//- 	style="background-color: blue;"
+		//- 				//- )
+		//- 				div.ui(v-text="monthtext[month]+' '+date")
+
 		div.wrapper(
 			v-if="data && data !== '' && data.length > 0"
-			v-for="(year, y) in data.map(function(doc){return new Date(doc.start_time).getFullYear()}).filter(function(v,i,a){return a.indexOf(v) === i})"
+			v-for="(year, y) in years",
 		)
 			div.main(
-				v-for="(month, m) in data.map(function(doc){return new Date(doc.start_time).getMonth()}).filter(function(v,i,a){return a.indexOf(v) === i})"
+				v-for="(month, m) in months"
 				style="pointer-events: none;"
 			)
 				div.container(
-					v-for="(date, m) in data.map(function(doc){return new Date(doc.start_time).getDate()}).filter(function(v,i,a){return a.indexOf(v) === i})"
+					v-for="(date, m) in days"
 					
 					:class="(!active ? '' : 'active')"
 					style="pointer-events:none;"
 				)
-					div.ui(v-text="months[month]+' '+date+', '+year")
+					div.ui(v-text="monthtext[month]+' '+date+', '+year")
 					div.ui.img(
 						v-for="(doc, i) in data"
 						v-if="(new Date(doc.start_time).getDate() === date)"
