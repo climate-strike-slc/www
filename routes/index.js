@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
 const path = require('path');
-const zoom_key = process.env.clientID;
-const zoom_sec = process.env.clientSecret;
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
@@ -154,8 +152,10 @@ router.get('/profile', getAuthCode, async (req, res, next) => {
 })
 
 router.get('/api/createMeeting', getAuthCode, csrfProtection, function(req, res) {
-	// console.log(req.session)
+	console.log(req.session)
+	console.log(req.csrfToken())
 	res.header('XSRF-TOKEN', req.csrfToken());
+	// console.log(res.header)
 	res.render('edit', {
 		csrfToken: req.csrfToken(),
 		title: 'Manage Meetings'

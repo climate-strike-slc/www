@@ -1,3 +1,4 @@
+require('dotenv').config();
 const config = require('../config');
 const moment = require('moment');
 const request = require('request')
@@ -57,7 +58,7 @@ function ensureAdmin(req, res, next) {
 // 
 
 // OAuth
-async function getAuthCode(req, res, next) {
+function getAuthCode(req, res, next) {
 	// Check if the code parameter is in the url 
 	// if an authorization code is available, the user has most likely been redirected from Zoom OAuth
 	// if not, the user needs to be redirected to Zoom OAuth to authorize
@@ -93,10 +94,10 @@ async function getAuthCode(req, res, next) {
 		});
 	} else {
 		const referrer = req.get('Referrer');
-		if (config.testenv && config.recordenv && req.session && req.session.token) {
-			console.log(req.session)
+		if (process.env.TEST_ENV && process.env.RECORD_ENV && req.session && req.session.token) {
+			// console.log(req.session)
 			return next();
-		} else if (!config.testenv && !config.recordenv && !req.session) {
+		} else if (!process.env.TEST_ENV && !process.env.RECORD_ENV) {
 			req.session.referrer = referrer;
 			
 		}
@@ -121,4 +122,4 @@ async function getAuthCode(req, res, next) {
 
 	}
 }
-exports.getAuthCode = getAuthCode
+module.exports = { getAuthCode }

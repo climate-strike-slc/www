@@ -77,18 +77,21 @@ describe('API calls', () => {
   it(key, async () => {
     const snapKey = ('API calls '+key+' 1');
     const { nockDone } = await nockBack(
-      'editContent.csrf.json'
+      'editContent.header.json'
     );
+    const { getAuthCode } = authMiddleware;
     nock.enableNetConnect('127.0.0.1');
     header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
-    
+  
     if (!recording) {
       expect(header).to.matchSnapshot();
       nockDone()
-
+  
     } else {
       request(app)
       .get('/auth')
+      // .expect(getAuthCode)
+      .expect(302)
       .expect('Location', `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
       .then(async(res)=>{
         header = res.header;
@@ -96,44 +99,60 @@ describe('API calls', () => {
       })
     }
   })
-  
-  key = 'should require authentication redirect';
-  it(key, async() => {
-    const snapKey = ('API calls '+key+' 1');
-    const { nockDone } = await nockBack(
-      'editContent.csrf.json'
-    );
-    nock.enableNetConnect('127.0.0.1');
-    
-    if (!recording) {
-      expect(header).to.matchSnapshot();
-      nockDone()
-
-    } else {
-      const { getAuthCode } = authMiddleware;
-      const request = {
-        headers: header
-      };
-      const req = mockReq(request);
-      const res = mockRes({ req });
-      const next = sinon.spy();
-      
-      getAuthCode(req, res, next)
-        .then(() => {
-          expect(next.called).to.equal(true)
-        })
-    }
-    // request(app)
-    // .get('/auth')
-    // .expect(getAuthCode)
-    // .end(done)
-    // agent.get('/api/createMeeting')
-    // .expect(302)
-    // .expect('Location', `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
-    // // .expect(200)
-    // console.log(agent)
-
-  })
+  // 
+  // key = 'should require authentication redirect';
+  // it(key, async() => {
+  //   const snapKey = ('API calls '+key+' 1');
+  //   const { nockDone } = await nockBack(
+  //     'editContent.auth.json'
+  //   );
+  //   nock.enableNetConnect('127.0.0.1');
+  // 
+  //   if (!recording) {
+  //     expect(header).to.matchSnapshot();
+  //     nockDone()
+  // 
+  //   } else {
+  //     // const rq = {
+  //     //   headers: header
+  //     // };
+  //     // const req = mockReq(rq);
+  //     // const res = mockRes({ req });
+  //     // const next = sinon.spy();
+  //     await request(app)
+  //     .get('/auth')
+  //     .expect(302)
+  //     .expect('Location', `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
+  //     .then(async(res)=>{
+  //       // console.log(res)
+  //       nock.enableNetConnect('zoom.us');
+  //       await request(app)
+  //       .get(`https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
+  //       .expect(302)
+  //       .expect('Location', `${config.redirectURL}`)
+  //     })
+  //     // .expect(getAuthCode(req, res))
+  //     // .end(done)
+  // 
+  //     // const { getAuthCode } = authMiddleware;
+  // 
+  //     // getAuthCode(req, res, next)
+  //     //   .then((err) => {
+  //     //     if (err) console.log(err)
+  //     //     expect(next.called).to.equal(true)
+  //     //   })
+  //   }
+  //   // request(app)
+  //   // .get('/auth')
+  //   // .expect(getAuthCode)
+  //   // .end(done)
+  //   // agent.get('/api/createMeeting')
+  //   // .expect(302)
+  //   // .expect('Location', `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
+  //   // // .expect(200)
+  //   // console.log(agent)
+  // 
+  // })
   
   key = 'edit page should contain a well-configured csrf token';
   it(key, async() => {
@@ -160,10 +179,10 @@ describe('API calls', () => {
         console.log(csf)
         if (!csf) throw new Error('missing csrf token');
         expect(csf).to.matchSnapshot();
-        
+      
         await agent
         .post('/api/createMeeting')
-        .set('Cookie', cookies(res))
+        .set({cookie: cookies(res)})
         .send({
           _csrf: csf,
           topic: 'ecology',
