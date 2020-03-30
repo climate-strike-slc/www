@@ -5,7 +5,8 @@ script(type="text/javascript").
 		el: '#vue',
 		data: function data(){
 			return {
-				users: this.parseObj(!{JSON.stringify(users)}),
+				valid: {},
+				groups: this.parseObj(!{JSON.stringify(groups)}),
 				dropped: false,
 				res: window.innerWidth < 600
 			}
@@ -19,6 +20,6 @@ script(type="text/javascript").
 			})
 
 		},
-		methods: Object.assign({}, baseFunctions)
+		methods: Object.assign({}, baseFunctions, adminFunctions)
 	});
 

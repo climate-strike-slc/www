@@ -10,9 +10,15 @@ block content
 			include partials/menu.pug
 		div.container.row(v-if="user")
 			div.tb-05-m0
-				p(v-for="(key, i) in Object.keys(user)" v-text="key")
-			div.tb-05-m0
-				p(v-for="(key, i) in Object.keys(user)" v-text="user[key]")
-				
+				div.ui.img
+					img(:src="user.pic_url" style="width: 100%;height: 100%;")
+			div.tb-01-m0
+				h1 &nbsp
+				h4(style="height:1.5rem;" v-for="(key, i) in ['first_name','last_name','email','role_name','created_at','last_login_time','status']" v-text="key.replace(/\_/g,' ')")
+			div.tb-04-m0
+				h1 &nbsp
+				h2(style="height:1.5rem;" v-for="(key, i) in ['first_name','last_name','email','role_name','created_at','last_login_time','status']" v-text="user[key] +' '")
+		div.row(v-if="groups")
+			
 	include vue/profile.vue.pug
 					

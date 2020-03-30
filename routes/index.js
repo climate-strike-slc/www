@@ -60,6 +60,7 @@ function getMe(token, next) {
 			return next(error)
 		} else {
 			body = JSON.parse(body);
+			console.log(body)
 			return next(null, body);
 		}
 	})
@@ -276,41 +277,102 @@ router.get('/meeting/:id', getAuthCode, (req, res, next) => {
 	})
 })
 
-// router.get('/group', getAuthCode, (req, res, next) => {
-// 	const options = {
-// 		method: 'GET',
-// 		url: `https://api.zoom.us/v2/groups`,
-// 		headers: {
-// 			Authorization: 'Bearer ' + req.session.token
-// 		}
-// 	}
-// 	// console.log(req.session)
-// 	request(options, async (error, response, groups) => {
-// 		if (error) {
-// 			console.log('API Response Error: ', error)
-// 		} else {
-// 			console.log(groups)
-// 			groups = JSON.parse(groups);
-// 			const grp = await groups.groups.map(group => {
-// 				const uOptions = {
-// 					method: 'GET',
-// 					url: `https://api.zoom.us/v2/groups/${group.id}/members`,
-// 					headers: {
-// 						Authorization: 'Bearer ' + req.session.token
-// 					}
-// 				}
-// 				request(uOptions, (err, response, members) => {
-// 					members = JSON.parse(members).members;
-// 					group.members = members;
-// 					return group;
-// 				})
-// 			})
-// 			return res.render('users', {
-// 				data: grp
-// 			})
-// 		}
-// 	})
+router.get('/api/groups', getAuthCode, csrfProtection, (req, res, next) => {
+	const Grp = (!process.env.TEST_ENV ? Group : GroupTest);
+	Grp.find({}).lean().exec((err, groups) => {
+		if (err) {
+			return next(err)
+		}
+		return res.render('groups', {
+			csrfToken: req.csrfToken(),
+			groups: groups
+		})
+	})
+	// const options = {
+	// 	method: 'GET',
+	// 	url: `https://api.zoom.us/v2/groups`,
+	// 	headers: {
+	// 		Authorization: 'Bearer ' + req.session.token
+	// 	}
+	// }
+	// request(options, async (error, response, groups) => {
+	// 	if (error) {
+	// 		console.log('API Response Error: ', error)
+	// 	} else {
+	// 		console.log(groups)
+	// 		groups = JSON.parse(groups);
+	// 		const grp = await groups.groups.map(group => {
+	// 			let g = group;
+	// 			const uOptions = {
+	// 				method: 'GET',
+	// 				url: `https://api.zoom.us/v2/groups/${group.id}/members`,
+	// 				headers: {
+	// 					Authorization: 'Bearer ' + req.session.token
+	// 				}
+	// 			}
+	// 			request(uOptions, (err, response, members) => {
+	// 				members = JSON.parse(members).members;
+	// 				g.members = members;
+	// 				console.log(members)
+	// 			})
+	// 			if (g.members) return g;
+	// 
+	// 		})
+	// 		console.log(grp)
+	// 		return res.render('users', {
+	// 			users: grp
+	// 		})
+	// 	}
+	// })
+})
+// 
+// router.post('/api/addGroup', getAuthCode, csrfProtection, async (req, res, next) => {
+// 
 // })
+
+router.post('/api/checkgroup/:name', (req, res, next) => {
+	Group.findOne({name: req.params.name}).lean().exec((err, group) => {
+		if (err) {
+			return next(err)
+		}
+		return res.status(200).send(group)
+	})
+})
+
+//add group
+router.post('/api/createGroup', getAuthCode, upload.array(), parseBody, csrfProtection, async (req, res, next) => {
+	if (req.session && req.session.token) {
+		const mOptions = {
+			method: 'POST',
+			uri: `https://api.zoom.us/v2/groups`,
+			json: {
+				'name': req.body.topic
+			},
+			headers: {
+				Authorization: 'Bearer ' + req.session.token
+			}
+			
+		};
+		request(mOptions, (error, response, body) => {
+			if (error) {
+				return next(error)
+			}
+			const group = (!process.env.TEST_ENV ? new Group(body) : new GroupTest(body));
+			group.save(err => {
+				if (err) {
+					return next(err)
+				} else {
+					
+					return res.redirect('/meetings')
+				}
+			});
+		}) 
+	} else {
+		// console.log(req.session)
+		// something went wrong		
+	}
+
+})
 
 // add group members
 // router.post('/group/:id', getAuthCode, (req, res, next) => {

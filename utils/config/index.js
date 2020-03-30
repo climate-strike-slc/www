@@ -13,6 +13,9 @@ const envVarsSchema = Joi.object({
 	redirectURL:Joi.string(),
 	clientID: Joi.string(),
 	clientSecret: Joi.string(),
+	redirectURLTest:Joi.string(),
+	clientIDTest: Joi.string(),
+	clientSecretTest: Joi.string(),
 	TEST_ENV: Joi.boolean().default(false),
 	RECORD_ENV: Joi.boolean().default(false)
 })
@@ -32,6 +35,9 @@ const config = {
 	clientID: envVars.clientID,
 	clientSecret: envVars.clientSecret,
 	redirectURL: envVars.redirectURL,
+	clientIDTest: envVars.clientIDTest,
+	clientSecretTest: envVars.clientSecretTest,
+	redirectURLTest: envVars.redirectURLTest,
 	db: envVars.DB,
 	secret: envVars.SECRET
 };
