@@ -33,7 +33,13 @@ function deleteMeeting(id, token, next) {
 	};
 	request(dOptions, (error, response, data) => {
 		if (error) {
-			return next(error)
+			if (error.status === 429) {
+				var referrer = '/meetings';
+				return res.redirect(referrer)
+			} else {
+				return next(error)
+			}
+
 		} else {
 			// console.log(data)
 			Meeting.deleteOne({id: id}, (err, doc) => {
@@ -57,7 +63,13 @@ function getMe(token, next) {
 	}
 	request(uOptions, (error, response, body) => {
 		if (error) {
-			return next(error)
+			if (error.status === 429) {
+				var referrer = '/meetings';
+				return res.redirect(referrer)
+			} else {
+				return next(error)
+			}
+
 		} else {
 			body = JSON.parse(body);
 			console.log(body)
@@ -153,6 +165,37 @@ router.get('/profile', getAuthCode, async (req, res, next) => {
 	}
 })
 
+router.get('/webinars', getAuthCode, (req, res, next) => {
+	const userId = encodeURIComponent('tbushman@pu.bli.sh')
+	const mOptions = {
+		method: 'GET',
+		url: `https://api.zoom.us/v2/users/${userId}/webinars`,
+		headers: {
+			Authorization: 'Bearer ' + req.session.token
+		}
+	};
+	request(mOptions, (error, response, data) => {
+		if (error) {
+			if (error.status === 429) {
+				var referrer = (!req.session.referrer ? '/meetings' : req.session.referrer);
+				return res.redirect(referrer)
+			} else {
+				return next(error)
+			}
+		} else {
+			const body = JSON.parse(data)
+			console.log(body)
+			const b64Name = (!req.session || !req.session.userName ? null : Buffer.from(req.session.userName).toString('base64'))
+			return res.render('meetings', {
+				admin: (!req.session || !req.session.token ? false : true),
+				userName: b64Name,
+				data: body
+			})
+		}
+	})
+
+})
+
 router.get('/api/createMeeting', getAuthCode, csrfProtection, function(req, res) {
 	// console.log(req.session)
 	// console.log(req.csrfToken())
@@ -201,7 +244,12 @@ router.post('/api/createMeeting', getAuthCode, upload.array(), parseBody, csrfPr
 		};
 		request(mOptions, (error, response, body) => {
 			if (error) {
-				return next(error)
+				if (error.status === 429) {
+					var referrer = (!req.session.referrer ? '/api/createMeeting' : req.session.referrer);
+					return res.redirect(referrer)
+				} else {
+					return next(error)
+				}
 			}
 			const meeting = (!process.env.TEST_ENV ? new Meeting(body) : new MeetingTest(body));
 			meeting.save(err => {
@@ -244,7 +292,13 @@ router.get('/meetings'/*, getAuthCode*/, function(req, res, next) {
 	// // console.log(req.session)
 	// request(options, (error, response, body) => {
 	// 	if (error) {
-	// 		console.log('API Response Error: ', error)
+				// if (error.status === 429) {
+				// 	var referrer = (!req.session.referrer ? '/meetings' : req.session.referrer);
+				// 	return res.redirect(referrer)
+				// } else {
+				// 	return next(error)
+				// }
+
 	// 	} else {
 	// 		// console.log(body)
 	// 		body = JSON.parse(body);
@@ -267,7 +321,12 @@ router.get('/meeting/:id', getAuthCode, (req, res, next) => {
 	};
 	request(mOptions, (error, response, data) => {
 		if (error) {
-			return next(error)
+			if (error.status === 429) {
+				var referrer = (!req.session.referrer ? '/meeting/'+req.params.id : req.session.referrer);
+				return res.redirect(referrer)
+			} else {
+				return next(error)
+			}
 		} else {
 			// console.log(data)
 			return res.render('meeting', {
@@ -355,7 +414,13 @@ router.post('/api/createGroup', getAuthCode, upload.array(), parseBody, csrfProt
 		};
 		request(mOptions, (error, response, body) => {
 			if (error) {
-				return next(error)
+				if (error.status === 429) {
+					var referrer = (!req.session.referrer ? '/api/groups' : req.session.referrer);
+					return res.redirect(referrer)
+				} else {
+					return next(error)
+				}
+
 			}
 			const group = (!process.env.TEST_ENV ? new Group(body) : new GroupTest(body));
 			group.save(err => {
@@ -400,7 +465,13 @@ router.get('/api/meetingEnd/:id', getAuthCode, (req, res, next) => {
 	};
 	request(mOptions, (error, response, data) => {
 		if (error) {
-			return next(error)
+			if (error.status === 429) {
+				var referrer = (!req.session.referrer ? '/meetings' : req.session.referrer);
+				return res.redirect(referrer)
+			} else {
+				return next(error)
+			}
+
 		} else {
 			// console.log(data)
 			return res.redirect('/meetings')

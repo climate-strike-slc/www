@@ -3,9 +3,9 @@ const config = require('../config');
 const moment = require('moment');
 const request = require('request')
 function refreshAccessToken(refresh_token, next) {
-	const clientID = process.env.TEST_ENV ? config.clientIDTest : config.clientID;
-	const clientSecret = process.env.TEST_ENV ? config.clientSecretTest : config.clientSecret;
-	const redirectURL = process.env.TEST_ENV ? config.redirectURLTest : config.redirectURL;
+	const clientID = process.env.TEST_ENV || config.env !== 'production' ? config.clientIDTest : config.clientID;
+	const clientSecret = process.env.TEST_ENV || config.env !== 'production' ? config.clientSecretTest : config.clientSecret;
+	const redirectURL = process.env.TEST_ENV || config.env !== 'production' ? config.redirectURLTest : config.redirectURL;
 	const options = {
 		method: 'POST',
 		url: 'https://api.zoom.us/oauth/token',
@@ -65,9 +65,9 @@ const getAuthCode = async(req, res, next) => {
 	// Check if the code parameter is in the url 
 	// if an authorization code is available, the user has most likely been redirected from Zoom OAuth
 	// if not, the user needs to be redirected to Zoom OAuth to authorize
-	const clientID = process.env.TEST_ENV ? config.clientIDTest : config.clientID;
-	const clientSecret = process.env.TEST_ENV ? config.clientSecretTest : config.clientSecret;
-	const redirectURL = process.env.TEST_ENV ? config.redirectURLTest : config.redirectURL;
+	const clientID = process.env.TEST_ENV || config.env !== 'production' ? config.clientIDTest : config.clientID;
+	const clientSecret = process.env.TEST_ENV || config.env !== 'production' ? config.clientSecretTest : config.clientSecret;
+	const redirectURL = process.env.TEST_ENV || config.env !== 'production' ? config.redirectURLTest : config.redirectURL;
 	if (req.query && req.query.code) {
 
 		// Request an access token using the auth code
