@@ -170,9 +170,9 @@ router.get('/webinars', getAuthCodeJWT, (req, res, next) => {
 		} else {
 			const body = JSON.parse(data)
 			// console.log(body)
-			const b64Name = (!req || !req.userName ? null : Buffer.from(req.userName).toString('base64'))
+			const b64Name = (!req.userName ? null : Buffer.from(req.userName).toString('base64'))
 			return res.render('meetings', {
-				admin: (!req || !req.token ? false : true),
+				admin: (!req.admin ? false : true),
 				userName: b64Name,
 				data: body
 			})
@@ -274,10 +274,13 @@ router.get('/meetings', getAuthCodeJWT, function(req, res, next) {
 		} else {
 			body = JSON.parse(body);
 			// console.log(body)
+			const b64Name = (!req.userName ? null : Buffer.from(req.userName).toString('base64'))
 			return res.render('meetings', {
-				userName: req.userName,
+				admin: (!req.admin ? false : true),
+				userName: b64Name,
 				data: body.meetings
 			})
+
 		}
 	})
 });

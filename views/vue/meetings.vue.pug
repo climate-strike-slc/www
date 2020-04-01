@@ -62,7 +62,7 @@ script(type="text/javascript").
 					if (keyName === 'Enter') event.preventDefault()
 				});
 			})
-			if (self.data) {
+			if (self.data &&  self.data.length > 0) {
 				self.keys = self.data.map(function(doc) {
 					return doc.topic;
 				});

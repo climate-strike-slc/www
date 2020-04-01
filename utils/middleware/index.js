@@ -50,8 +50,30 @@ function getAuthCodeJWT(req, res, next) {
 	req.token = jwt.sign(payload, config.jwtSecret);
 	const referrer = req.get('Referrer');
 	req.referrer = referrer;
+	const uOptions = {
+		method: 'GET',
+		url: 'https://api.zoom.us/v2/users/me',
+		headers: {
+			Authorization: 'Bearer ' + req.token
+		}
+	}
+	request(uOptions, (error, response, body) => {
+		if (error) {
+			if (error.status === 429) {
+				var referrer = '/meetings';
+				return res.redirect(referrer)
+			} else {
+				return next(error)
+			}
+
+		} else {
+			body = JSON.parse(body);
+			req.userName = body.first_name + ' ' + body.last_name
+			return next();
+		}
+	})
+	
 	// console.log(req.session.token)
-	return next();
 }
 
 function generateSignature(apiKey, apiSecret, meetingNumber, role) {
