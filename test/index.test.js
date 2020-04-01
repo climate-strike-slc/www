@@ -7,12 +7,12 @@ const path = require('path');
 const nock = require('nock');
 const request = require('supertest');
 const http = require('http');
+const mockSession = require('mock-session');
 const moment = require('moment');
 const Mock = require('./utils/mock');
 const app = require('../app');
 const fs = require('fs');
 const config = require('../utils/config/index.js');
-const { MeetingTest } = require('../models/index.js');
 const port = config.port;
 // const { getAuthCode } = require('../utils/middleware'); 
 const { expect } = chai;
@@ -47,11 +47,11 @@ describe('API calls', () => {
     await app.listen(config.port, () => {
       console.log('connected');
       agent = request.agent(app);
-      authMiddleware = proxyquire('../utils/middleware', {
-        'path': {}
-      });
-      agent.get('/')
-      .expect(200)
+      // authMiddleware = proxyquire('../utils/middleware', {
+      //   'path': {}
+      // });
+      // agent.get('/')
+      // .expect(200)
       // console.log(agent)
     })
   }, 5000);
@@ -66,7 +66,7 @@ describe('API calls', () => {
     nock.cleanAll();
   });
   after(async() => {
-    await MeetingTest.deleteMany({}).catch(err => console.log(err));
+    // await MeetingTest.deleteMany({}).catch(err => console.log(err));
     // console.log('disconnecting');
     // // app.close(); 
     // setImmediate(done);
@@ -79,7 +79,7 @@ describe('API calls', () => {
     const { nockDone } = await nockBack(
       'editContent.header.json'
     );
-    const { getAuthCode } = authMiddleware;
+    // const { getAuthCode } = authMiddleware;
     nock.enableNetConnect('127.0.0.1');
     header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
   
@@ -88,7 +88,7 @@ describe('API calls', () => {
       nockDone()
   
     } else {
-      request(app)
+      await agent
       .get('/auth')
       // .expect(getAuthCode)
       .expect(302)
@@ -155,7 +155,7 @@ describe('API calls', () => {
   // })
   
   key = 'edit page should contain a well-configured csrf token';
-  it(key, async() => {
+  it(key, async(done) => {
     const snapKey = ('API calls '+key+' 1');
     const { nockDone } = await nockBack(
       'editContent.csrf.json'
@@ -168,21 +168,22 @@ describe('API calls', () => {
       nockDone()
 
     } else {
-      await request(app)
+      
+      await agent
       .get('/api/createMeeting')
       // .expect(200)
-      .expect(302)
-      .expect('Location', `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
+      // .expect(302)
+      // .expect('Location', `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
       .then(async(res)=>{
-        console.log(res.header)
+        // console.log(res.header)
         const csf = res.header['xsrf-token']
         console.log(csf)
         if (!csf) throw new Error('missing csrf token');
         expect(csf).to.matchSnapshot();
-      
+        // let cookie = mockSession('slccsSession', process.env.SECRET, {"_csrf":csf});
         await agent
         .post('/api/createMeeting')
-        .set({cookie: cookies(res)})
+        .set('cookie', cookies(res))
         .send({
           _csrf: csf,
           topic: 'ecology',
@@ -190,14 +191,15 @@ describe('API calls', () => {
           title: key,
           description: 'API calls '+key+' 1'
         })
-        .end((err, res) => {
-          if (err) {
-            console.log(err)
-          }
-          console.log('k')
-          console.log(res)
-          csrf = csf;
-        })
+        .expect(302)
+        // .end((err, res) => {
+        //   if (err) {
+        //     console.log(err)
+        //   }
+        //   console.log('k')
+        //   console.log(res)
+        //   csrf = csf;
+        // })
         // .expect(302)
         // .expect('Location', '/meetings')
         // .then((res) => /*console.log(res)*/
@@ -206,32 +208,11 @@ describe('API calls', () => {
         // })
         // .catch((err) => console.log(err))
       })
-      nockDone()      
-    }
-  });
-  
-  key = 'Meeting collection should now contain one document';
-  it(key, async() => {
-    const snapKey = ('API calls '+key+' 1');
-    const { nockDone } = await nockBack(
-      'editContent.mongo.json'
-    );
-    nock.enableNetConnect('127.0.0.1');
-    let document = (!mockSnapshots ? null : mockSnapshots[snapKey]);
-    
-    if (!recording) {
-      expect(document).to.matchSnapshot();
       nockDone()
 
-    } else {
-      document = await MeetingTest.find({}).then(doc => doc).catch(err => console.log(err));
-      console.log(document, document.length)
-      expect(document.length).to.equal(1);
-      expect(document).to.matchSnapshot();
-      nockDone();
     }
-  })
-  
+  });
+    
 })
 
 function cookies (res) {

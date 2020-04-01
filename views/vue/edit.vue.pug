@@ -6,6 +6,7 @@ script(type="text/javascript").
 		el: '#vue',
 		data: function data(){
 			return {
+				valid: {},
 				new: (!this.parseObj(!{JSON.stringify(doc)})),
 				doc: this.parseObj(!{JSON.stringify(doc)}),
 				dropped: false,

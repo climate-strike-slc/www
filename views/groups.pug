@@ -1,0 +1,27 @@
+extends layout
+block page
+	- var menu = 'people'
+block content
+	script(type="text/javascript" src="/scripts/jquery.min.js")
+	script(type="text/javascript", src="/scripts/baseFunctions.js?v="+Math.random())
+	script(type="text/javascript", src="/scripts/adminFunctions.js?v="+Math.random())
+
+	div#vue
+		div.wrapper.row.nav
+			include partials/menu.pug
+		div.container
+			div.row(v-for="(group, i) in groups")
+				div.tb-05-m0(v-for="(key, j) in Object.keys(group)")
+					p(v-text="key")
+				div.tb-05-m0(v-for="(key, j) in Object.keys(group)")
+					p(v-text="group[key]")
+			div.row
+				p.tb-10-m0 New Group
+				form.tb-10-m0(enctype="multipart/form-data" method="POST" action="/api/createGroup" style="padding: 20px")
+					input(type="hidden", name="_csrf", value= csrfToken)
+					div.row
+						label.tb-05-m0(for="name") Group name
+						input.tb-05-m0#name(name="name" @keypress="validate('group', $event)" :style="{'background-color': valid.group ? 'inherit' : 'red'}")
+					div.row
+						button(role="submit") Submit
+	include vue/groups.vue.pug

@@ -1,18 +1,22 @@
 require('dotenv').config();
 const config = require('../config');
+const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const request = require('request')
 function refreshAccessToken(refresh_token, next) {
+	const clientID = process.env.TEST_ENV || config.env !== 'production' ? config.clientIDTest : config.clientID;
+	const clientSecret = process.env.TEST_ENV || config.env !== 'production' ? config.clientSecretTest : config.clientSecret;
+	const redirectURL = process.env.TEST_ENV || config.env !== 'production' ? config.redirectURLTest : config.redirectURL;
 	const options = {
 		method: 'POST',
 		url: 'https://api.zoom.us/oauth/token',
 		qs: {
 			grant_type: 'refresh_token',
 			refresh_token: refresh_token,
-			redirect_uri: config.redirectURL
+			redirect_uri: redirectURL
 		},
 		headers: {
-			Authorization: 'Basic ' + Buffer.from(config.clientID + ':' + config.clientSecret).toString('base64')
+			Authorization: 'Basic ' + Buffer.from(clientID + ':' + clientSecret).toString('base64')
 		}
 	}
 	request(options, (error, response, body) => {
@@ -23,10 +27,12 @@ function refreshAccessToken(refresh_token, next) {
 			return next(new Error('expired'))
 		} else {
 			body = JSON.parse(body);
-			req.session.token = body.access_token;
-			req.session.refresh = body.refresh_token;
-			req.session.expires_on = moment().add(1, 'hours').utc().format();
+			if (req.session) {
+				req.session.token = body.access_token;
+				req.session.refresh = body.refresh_token;
+				req.session.expires_on = moment().add(1, 'hours').utc().format();
 
+			}
 		}
 		return next()
 	})
@@ -35,33 +41,38 @@ function refreshAccessToken(refresh_token, next) {
 function ensureAdmin(req, res, next) {
 	
 }
-// // JWT auth
-// function getAuthCodeJWT(req, res, next) {
-// 	const payload = {
-// 		iss: process.env.JWT_KEY,
-// 		exp: ((new Date()).getTime() + 5000)
-// 	};
-// 	req.token = jwt.sign(payload, process.env.JWT_SECRET);
-// 	// console.log(req.session.token)
-// 	return next();
-// }
-// 
-// function generateSignature(apiKey, apiSecret, meetingNumber, role) {
-// 
-// 	const timestamp = new Date().getTime()
-// 	const msg = Buffer.from(apiKey + meetingNumber + timestamp + role).toString('base64')
-// 	const hash = crypto.createHmac('sha256', apiSecret).update(msg).digest('base64')
-// 	const signature = Buffer.from(`${apiKey}.${meetingNumber}.${timestamp}.${role}.${hash}`).toString('base64')
-// 
-// 	return signature
-// }
-// 
+// JWT auth
+function getAuthCodeJWT(req, res, next) {
+	const payload = {
+		iss: config.jwtKey,
+		exp: ((new Date()).getTime() + 5000)
+	};
+	req.token = jwt.sign(payload, config.jwtSecret);
+	const referrer = req.get('Referrer');
+	req.referrer = referrer;
+	// console.log(req.session.token)
+	return next();
+}
+
+function generateSignature(apiKey, apiSecret, meetingNumber, role) {
+
+	const timestamp = new Date().getTime()
+	const msg = Buffer.from(apiKey + meetingNumber + timestamp + role).toString('base64')
+	const hash = crypto.createHmac('sha256', apiSecret).update(msg).digest('base64')
+	const signature = Buffer.from(`${apiKey}.${meetingNumber}.${timestamp}.${role}.${hash}`).toString('base64')
+
+	return signature
+}
+
 
 // OAuth
-function getAuthCode(req, res, next) {
+const getAuthCode = async(req, res, next) => {
 	// Check if the code parameter is in the url 
 	// if an authorization code is available, the user has most likely been redirected from Zoom OAuth
 	// if not, the user needs to be redirected to Zoom OAuth to authorize
+	const clientID = process.env.TEST_ENV || config.env !== 'production' ? config.clientIDTest : config.clientID;
+	const clientSecret = process.env.TEST_ENV || config.env !== 'production' ? config.clientSecretTest : config.clientSecret;
+	const redirectURL = process.env.TEST_ENV || config.env !== 'production' ? config.redirectURLTest : config.redirectURL;
 	if (req.query && req.query.code) {
 
 		// Request an access token using the auth code
@@ -71,10 +82,10 @@ function getAuthCode(req, res, next) {
 			qs: {
 				grant_type: 'authorization_code',
 				code: req.query.code,
-				redirect_uri: config.redirectURL
+				redirect_uri: redirectURL
 			},
 			headers: {
-				Authorization: 'Basic ' + Buffer.from(config.clientID + ':' + config.clientSecret).toString('base64')
+				Authorization: 'Basic ' + Buffer.from(clientID + ':' + clientSecret).toString('base64')
 			}
 		}
 		
@@ -83,9 +94,11 @@ function getAuthCode(req, res, next) {
 				return next(error)
 			} else if (JSON.parse(body) && JSON.parse(body).access_token) {
 				body = JSON.parse(body);
-				req.session.token = body.access_token;
-				req.session.refresh = body.refresh_token;
-				req.session.expires_on = moment().add(1, 'hours').utc().format();
+				if (req.session) {
+					req.session.token = body.access_token;
+					req.session.refresh = body.refresh_token;
+					req.session.expires_on = moment().add(1, 'hours').utc().format();
+				}
 
 				return next();
 			} else {
@@ -94,10 +107,11 @@ function getAuthCode(req, res, next) {
 		});
 	} else {
 		const referrer = req.get('Referrer');
-		if (process.env.TEST_ENV && process.env.RECORD_ENV && req.session && req.session.token) {
-			// console.log(req.session)
-			return next();
-		} else if (!process.env.TEST_ENV && !process.env.RECORD_ENV) {
+		// if (process.env.TEST_ENV && process.env.RECORD_ENV && req.session && req.session.token) {
+		// 	// console.log(req.session)
+		// 	return next();
+		// } else 
+		if (!process.env.TEST_ENV && !process.env.RECORD_ENV && req.session) {
 			req.session.referrer = referrer;
 			
 		}
@@ -108,7 +122,7 @@ function getAuthCode(req, res, next) {
 				refreshAccessToken(req.session.refresh_token, err => {
 					if (err) {
 						if (err.message === 'expired') {
-							return res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + config.clientID + '&redirect_uri=' + config.redirectURL)
+							return res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + redirectURL)
 						}
 						return next(err)
 					}
@@ -116,10 +130,10 @@ function getAuthCode(req, res, next) {
 				});
 			} else {
 				// If no authorization code is available, redirect to Zoom OAuth to authorize
-				return res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + config.clientID + '&redirect_uri=' + config.redirectURL)
+				return res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + redirectURL)
 			}
 		}
 
 	}
 }
-module.exports = { getAuthCode }
+module.exports = { getAuthCode, getAuthCodeJWT }

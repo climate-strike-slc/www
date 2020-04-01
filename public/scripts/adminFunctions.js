@@ -145,6 +145,18 @@ var adminFunctions = {
 			range.push(i)
 		}
 		return range;
+	},
+	validate: function(which, e) {
+		var self = this;
+		var val = e.target.value;
+		$.post(`/api/check${which}/${val}`, function(res){
+			if (!res) {
+				self.valid[which] = true;
+			} else {
+				self.valid[which] = false;
+				console.log(res)
+			}
+		})
 	}
 
 }
