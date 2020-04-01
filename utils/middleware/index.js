@@ -27,10 +27,12 @@ function refreshAccessToken(refresh_token, next) {
 			return next(new Error('expired'))
 		} else {
 			body = JSON.parse(body);
-			req.session.token = body.access_token;
-			req.session.refresh = body.refresh_token;
-			req.session.expires_on = moment().add(1, 'hours').utc().format();
+			if (req.session) {
+				req.session.token = body.access_token;
+				req.session.refresh = body.refresh_token;
+				req.session.expires_on = moment().add(1, 'hours').utc().format();
 
+			}
 		}
 		return next()
 	})
@@ -92,9 +94,11 @@ const getAuthCode = async(req, res, next) => {
 				return next(error)
 			} else if (JSON.parse(body) && JSON.parse(body).access_token) {
 				body = JSON.parse(body);
-				req.session.token = body.access_token;
-				req.session.refresh = body.refresh_token;
-				req.session.expires_on = moment().add(1, 'hours').utc().format();
+				if (req.session) {
+					req.session.token = body.access_token;
+					req.session.refresh = body.refresh_token;
+					req.session.expires_on = moment().add(1, 'hours').utc().format();
+				}
 
 				return next();
 			} else {
@@ -107,7 +111,7 @@ const getAuthCode = async(req, res, next) => {
 		// 	// console.log(req.session)
 		// 	return next();
 		// } else 
-		if (!process.env.TEST_ENV && !process.env.RECORD_ENV) {
+		if (!process.env.TEST_ENV && !process.env.RECORD_ENV && req.session) {
 			req.session.referrer = referrer;
 			
 		}
