@@ -7,7 +7,6 @@ const path = require('path');
 const nock = require('nock');
 const request = require('supertest');
 const http = require('http');
-const mockSession = require('mock-session');
 const moment = require('moment');
 const Mock = require('./utils/mock');
 const app = require('../app');
