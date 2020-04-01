@@ -13,7 +13,6 @@ const Mock = require('./utils/mock');
 const app = require('../app');
 const fs = require('fs');
 const config = require('../utils/config/index.js');
-const { MeetingTest } = require('../models/index.js');
 const port = config.port;
 // const { getAuthCode } = require('../utils/middleware'); 
 const { expect } = chai;
@@ -213,29 +212,7 @@ describe('API calls', () => {
 
     }
   });
-  
-  key = 'Meeting collection should now contain one document';
-  it(key, async() => {
-    const snapKey = ('API calls '+key+' 1');
-    const { nockDone } = await nockBack(
-      'editContent.mongo.json'
-    );
-    nock.enableNetConnect('127.0.0.1');
-    let document = (!mockSnapshots ? null : mockSnapshots[snapKey]);
     
-    if (!recording) {
-      expect(document).to.matchSnapshot();
-      nockDone()
-
-    } else {
-      document = await MeetingTest.find({}).then(doc => doc).catch(err => console.log(err));
-      console.log(document, document.length)
-      expect(document.length).to.equal(1);
-      expect(document).to.matchSnapshot();
-      nockDone();
-    }
-  })
-  
 })
 
 function cookies (res) {

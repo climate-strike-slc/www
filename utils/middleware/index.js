@@ -1,5 +1,6 @@
 require('dotenv').config();
 const config = require('../config');
+const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const request = require('request')
 function refreshAccessToken(refresh_token, next) {
@@ -38,27 +39,29 @@ function refreshAccessToken(refresh_token, next) {
 function ensureAdmin(req, res, next) {
 	
 }
-// // JWT auth
-// function getAuthCodeJWT(req, res, next) {
-// 	const payload = {
-// 		iss: process.env.JWT_KEY,
-// 		exp: ((new Date()).getTime() + 5000)
-// 	};
-// 	req.token = jwt.sign(payload, process.env.JWT_SECRET);
-// 	// console.log(req.session.token)
-// 	return next();
-// }
-// 
-// function generateSignature(apiKey, apiSecret, meetingNumber, role) {
-// 
-// 	const timestamp = new Date().getTime()
-// 	const msg = Buffer.from(apiKey + meetingNumber + timestamp + role).toString('base64')
-// 	const hash = crypto.createHmac('sha256', apiSecret).update(msg).digest('base64')
-// 	const signature = Buffer.from(`${apiKey}.${meetingNumber}.${timestamp}.${role}.${hash}`).toString('base64')
-// 
-// 	return signature
-// }
-// 
+// JWT auth
+function getAuthCodeJWT(req, res, next) {
+	const payload = {
+		iss: config.jwtKey,
+		exp: ((new Date()).getTime() + 5000)
+	};
+	req.token = jwt.sign(payload, config.jwtSecret);
+	const referrer = req.get('Referrer');
+	req.referrer = referrer;
+	// console.log(req.session.token)
+	return next();
+}
+
+function generateSignature(apiKey, apiSecret, meetingNumber, role) {
+
+	const timestamp = new Date().getTime()
+	const msg = Buffer.from(apiKey + meetingNumber + timestamp + role).toString('base64')
+	const hash = crypto.createHmac('sha256', apiSecret).update(msg).digest('base64')
+	const signature = Buffer.from(`${apiKey}.${meetingNumber}.${timestamp}.${role}.${hash}`).toString('base64')
+
+	return signature
+}
+
 
 // OAuth
 const getAuthCode = async(req, res, next) => {
@@ -129,4 +132,4 @@ const getAuthCode = async(req, res, next) => {
 
 	}
 }
-module.exports = { getAuthCode }
+module.exports = { getAuthCode, getAuthCodeJWT }

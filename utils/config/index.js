@@ -17,7 +17,10 @@ const envVarsSchema = Joi.object({
 	clientIDTest: Joi.string(),
 	clientSecretTest: Joi.string(),
 	TEST_ENV: Joi.boolean().default(false),
-	RECORD_ENV: Joi.boolean().default(false)
+	RECORD_ENV: Joi.boolean().default(false),
+	JWT_KEY: Joi.string(),
+	JWT_SECRET: Joi.string(),
+	HOST_ID: Joi.string()
 })
   .unknown()
   .required();
@@ -38,6 +41,9 @@ const config = {
 	clientIDTest: envVars.clientIDTest,
 	clientSecretTest: envVars.clientSecretTest,
 	redirectURLTest: envVars.redirectURLTest,
+	jwtKey: envVars.JWT_KEY,
+	jwtSecret: envVars.JWT_SECRET,
+	hostID: envVars.HOST_ID,
 	db: envVars.DB,
 	secret: envVars.SECRET
 };

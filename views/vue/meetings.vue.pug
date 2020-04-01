@@ -62,10 +62,10 @@ script(type="text/javascript").
 					if (keyName === 'Enter') event.preventDefault()
 				});
 			})
-			self.keys = self.data.map(function(doc) {
-				return doc.topic;
-			});
 			if (self.data) {
+				self.keys = self.data.map(function(doc) {
+					return doc.topic;
+				});
 				self.years = self.getDataDates('year');
 				self.months = self.getDataDates('month');
 				self.days = self.getDataDates('day');
