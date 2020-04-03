@@ -5,6 +5,7 @@ script(type="text/javascript").
 		el: '#vue',
 		data: function data(){
 			return {
+				admin: this.parseObj(!{JSON.stringify(admin)}),
 				user: this.parseObj(!{JSON.stringify(user)}),
 				dropped: false,
 				res: window.innerWidth < 600

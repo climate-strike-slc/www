@@ -12,8 +12,11 @@ const parseJSONBody = bodyParser.json();
 const parseBody = [parseJSONBody, parseForm];
 const router = require('./routes');
 const csrf = require('csurf');
-const csrfProtection = csrf({ cookie: true });
+const cookieParser = require('cookie-parser');
+const config = require('./utils/config');
+// const csrfProtection = csrf({ cookie: true });
 const app = express()
+app.use(cookieParser(config.secret));
 
 //CORS middleware
 var corsOpt = {
@@ -21,7 +24,6 @@ var corsOpt = {
 	methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
 	allowedHeaders: ['Content-Type', 'Authorization']
 }
-
 app.use(cors(corsOpt));
 app.options('*', cors(corsOpt))
 app.use(function(req, res, next) {

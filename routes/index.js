@@ -12,8 +12,8 @@ const parseForm = bodyParser.urlencoded({ extended: false });
 const parseJSONBody = bodyParser.json();
 const parseBody = [parseJSONBody, parseForm];
 const csrf = require('csurf');
-const csrfProtection = csrf();
-const { getAuthCodeJWT } = require('../utils/middleware');
+const csrfProtection = csrf({cookie:true});
+const { getAuthCode, getAuthCodeJWT, getMe, ensureAdmin } = require('../utils/middleware');
 const config = require('../utils/config');
 // Use the request module to make HTTP requests from Node
 const request = require('request')
@@ -44,31 +44,7 @@ function deleteMeeting(id, token, next) {
 	})
 }
 
-function getMe(token, next) {
-	const uOptions = {
-		method: 'GET',
-		url: 'https://api.zoom.us/v2/users/me',
-		headers: {
-			Authorization: 'Bearer ' + token
-		}
-	}
-	request(uOptions, (error, response, body) => {
-		if (error) {
-			if (error.status === 429) {
-				var referrer = '/meetings';
-				return res.redirect(referrer)
-			} else {
-				return next(error)
-			}
-
-		} else {
-			body = JSON.parse(body);
-			// console.log(body)
-			return next(null, body);
-		}
-	})
-}
-
+// router.all('/api/*', getAuthCodeJWT, getMe, ensureAdmin);
 
 // function saveTokens(body) {
 // 	// Parse response to JSON
@@ -80,16 +56,27 @@ function getMe(token, next) {
 // }
 // router.all('/api'/*, ensureAdmin*/, getAuthCodeJWT);
 
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
+	console.log(req.cookies);
 	res.render('home', {
+		admin: (!req.amIAdmin ? false : true),
 		menu: 'home'
 	});
 });
 
 router.get('/logout', (req, res, next) => {
-	if (req.user || req) {
+	if (req.user) {
 		// TODO JWT logout
+		
+		// res
 	}
+	res.clearCookie('token');
+	res.clearCookie('refresh');
+	res.clearCookie('expires_on');
+	// delete req.cookies.token;
+	// delete req.cookies.refresh;
+	// res.cookie('token', null);
+	// res.cookie('refresh', null);
 	return res.redirect('/')
 })
 
@@ -109,27 +96,18 @@ router.get('/logout', (req, res, next) => {
 // 	return res.json(ret)
 // })
 // 
-router.get('/auth', getAuthCodeJWT, async (req, res, next) => {
-	if (req.token) {
-		// We can now use the access token to authenticate API calls
-		getMe(req.token, (err, body) => {
-			if (err) {
-				return next(err)
-			} else {
-				req.userName = body.first_name + ' ' + body.last_name
-				req.admin = body.role_name === 'Admin' || body.role_name === 'Owner';
-				if (!req.referrer || /auth/.test(req.referrer)) {
-					// Send a request to get your user information using the /me context
-					// The `/me` context restricts an API call to the user the token belongs to
-					// This helps make calls to user-specific endpoints instead of storing the userID
-					return res.render('profile', {
-						user: body
-					})
-				} else {
-					return res.redirect(req.referrer)
-				}
-			}
-		})
+router.get('/auth', getAuthCode, getAuthCodeJWT, async (req, res, next) => {
+	if (req.user) {
+		const body = req.user;
+		if (!req.referrer || /auth/.test(req.referrer)) {
+
+			return res.render('profile', {
+				admin: (!req.amIAdmin ? false : true),
+				user: body
+			})
+		} else {
+			return res.redirect(req.referrer)
+		}
 	} else {
 		return res.redirect('/logout')
 		// something went wrong		
@@ -137,21 +115,19 @@ router.get('/auth', getAuthCodeJWT, async (req, res, next) => {
 })
 
 router.get('/profile', getAuthCodeJWT, async (req, res, next) => {
-	if (req.token) {
-		getMe(req.token, (err, body) => {
-			if (err) {
-				return next(err)
-			} else {
-				return res.render('profile', {
-					user: body
-				})
-			}
+	if (req.user) {
+		const body = req.user;
+		return res.render('profile', {
+			admin: (!req.amIAdmin ? false : true),
+			user: body
 		})
+	} else {
+		return res.redirect('/logout')
 	}
 })
 
 router.get('/webinars', getAuthCodeJWT, (req, res, next) => {
-	const userId = encodeURIComponent('tbushman@pu.bli.sh')
+	const userId = encodeURIComponent(config.admins.split(',')[0])
 	const mOptions = {
 		method: 'GET',
 		url: `https://api.zoom.us/v2/users/${userId}/webinars`,
@@ -172,7 +148,7 @@ router.get('/webinars', getAuthCodeJWT, (req, res, next) => {
 			// console.log(body)
 			const b64Name = (!req.userName ? null : Buffer.from(req.userName).toString('base64'))
 			return res.render('meetings', {
-				admin: (!req.admin ? false : true),
+				admin: (!req.amIAdmin ? false : true),
 				userName: b64Name,
 				data: body
 			})
@@ -181,22 +157,23 @@ router.get('/webinars', getAuthCodeJWT, (req, res, next) => {
 
 })
 
-router.get('/api/createMeeting', getAuthCodeJWT, csrfProtection, function(req, res) {
+router.get('/api/createMeeting', getAuthCodeJWT, ensureAdmin, csrfProtection, function(req, res) {
 	// console.log(req)
 	// console.log(req.csrfToken())
 	if (process.env.TEST_ENV && process.env.RECORD_ENV) res.header('XSRF-TOKEN', req.csrfToken());
 	// console.log(res.header['xsrf-token'])
 	res.render('edit', {
+		admin: (!req.amIAdmin ? false : true),
 		csrfToken: req.csrfToken(),
 		title: 'Manage Meetings'
 	});
 });
 
-router.post('/api/createMeeting', getAuthCodeJWT, upload.array(), parseBody, csrfProtection, async function(req, res, next) {
+router.post('/api/createMeeting', getAuthCodeJWT, ensureAdmin, upload.array(), parseBody, csrfProtection, async function(req, res, next) {
 	// console.log(req.body);
 	// console.log("topic:", req.body.topic);
 	// console.log("agenda:", '# ' +req.body.title + '  \n' + req.body.description);
-	if (req && req.token) {
+	if (req.token && req.cookies.token) {
 	// if (req && req.token) {
 		// console.log(req.token)
 		// console.log(req.body.start_time, moment(req.body.start_time).utc().format())
@@ -223,7 +200,7 @@ router.post('/api/createMeeting', getAuthCodeJWT, upload.array(), parseBody, csr
 				}
 			},
 			headers: {
-				Authorization: 'Bearer ' + req.token
+				Authorization: 'Bearer ' + req.cookies.token
 			}
 			
 		};
@@ -254,6 +231,8 @@ router.post('/api/createMeeting', getAuthCodeJWT, upload.array(), parseBody, csr
 });
 
 router.get('/meetings', getAuthCodeJWT, function(req, res, next) {
+	// console.log(req.cookies)
+
 	const options = {
 		method: 'GET',
 		url: `https://api.zoom.us/v2/users/${config.hostID}/meetings`,
@@ -264,19 +243,19 @@ router.get('/meetings', getAuthCodeJWT, function(req, res, next) {
 	// console.log(req)
 	request(options, (error, response, body) => {
 		if (error) {
-				if (error.status === 429) {
-					var referrer = (!req.referrer ? '/meetings' : req.referrer);
-					return res.redirect(referrer)
-				} else {
-					return next(error)
-				}
+			if (error.status === 429) {
+				var referrer = (!req.referrer ? '/meetings' : req.referrer);
+				return res.redirect(referrer)
+			} else {
+				return next(error)
+			}
 
 		} else {
 			body = JSON.parse(body);
 			// console.log(body)
 			const b64Name = (!req.userName ? null : Buffer.from(req.userName).toString('base64'))
 			return res.render('meetings', {
-				admin: (!req.admin ? false : true),
+				admin: (!req.amIAdmin ? false : true),
 				userName: b64Name,
 				data: body.meetings
 			})
@@ -285,124 +264,125 @@ router.get('/meetings', getAuthCodeJWT, function(req, res, next) {
 	})
 });
 
-router.get('/meeting/:id', getAuthCodeJWT, (req, res, next) => {
-	const meetingId = req.params.id;
-	const mOptions = {
-		method: 'GET',
-		url: `https://api.zoom.us/v2/meetings/${meetingId}`,
-		headers: {
-			Authorization: 'Bearer ' + req.token
-		}
-	};
-	request(mOptions, (error, response, data) => {
-		if (error) {
-			if (error.status === 429) {
-				var referrer = (!req.referrer ? '/meetings' : req.referrer);
-				return res.redirect(referrer)
-			} else {
-				return next(error)
-			}
-		} else {
-			// console.log(data)
-			return res.render('meeting', {
-				meeting: JSON.parse(data)
-			})
-		}
-	})
-})
-
-router.get('/api/groups', getAuthCodeJWT, csrfProtection, (req, res, next) => {
-	const options = {
-		method: 'GET',
-		url: `https://api.zoom.us/v2/groups`,
-		headers: {
-			Authorization: 'Bearer ' + req.token
-		}
-	}
-	request(options, async (error, response, groups) => {
-		if (error) {
-			console.log('API Response Error: ', error)
-		} else {
-			console.log(groups)
-			groups = JSON.parse(groups);
-			const grp = await groups.groups.map(group => {
-				let g = group;
-				const uOptions = {
-					method: 'GET',
-					url: `https://api.zoom.us/v2/groups/${group.id}/members`,
-					headers: {
-						Authorization: 'Bearer ' + req.token
-					}
-				}
-				request(uOptions, (err, response, members) => {
-					members = JSON.parse(members).members;
-					g.members = members;
-					// console.log(members)
-				})
-				if (g.members) return g;
-	
-			})
-			console.log(grp)
-			return res.render('users', {
-				users: grp
-			})
-		}
-	})
-})
+// router.get('/meeting/:id', getAuthCodeJWT, (req, res, next) => {
+// 	const meetingId = req.params.id;
+// 	const mOptions = {
+// 		method: 'GET',
+// 		url: `https://api.zoom.us/v2/meetings/${meetingId}`,
+// 		headers: {
+// 			Authorization: 'Bearer ' + req.token
+// 		}
+// 	};
+// 	request(mOptions, (error, response, data) => {
+// 		if (error) {
+// 			if (error.status === 429) {
+// 				var referrer = (!req.referrer ? '/meetings' : req.referrer);
+// 				return res.redirect(referrer)
+// 			} else {
+// 				return next(error)
+// 			}
+// 		} else {
+// 			// console.log(data)
+// 			return res.render('meeting', {
+// 				meeting: JSON.parse(data)
+// 			})
+// 		}
+// 	})
+// })
+// 
+// router.get('/api/groups', getAuthCodeJWT, ensureAdmin, csrfProtection, (req, res, next) => {
+// 	const options = {
+// 		method: 'GET',
+// 		url: `https://api.zoom.us/v2/groups`,
+// 		headers: {
+// 			Authorization: 'Bearer ' + req.token
+// 		}
+// 	}
+// 	request(options, async (error, response, groups) => {
+// 		if (error) {
+// 			console.log('API Response Error: ', error)
+// 		} else {
+// 			console.log(groups)
+// 			groups = JSON.parse(groups);
+// 			const grp = await groups.groups.map(group => {
+// 				let g = group;
+// 				const uOptions = {
+// 					method: 'GET',
+// 					url: `https://api.zoom.us/v2/groups/${group.id}/members`,
+// 					headers: {
+// 						Authorization: 'Bearer ' + req.token
+// 					}
+// 				}
+// 				request(uOptions, (err, response, members) => {
+// 					members = JSON.parse(members).members;
+// 					g.members = members;
+// 					// console.log(members)
+// 				})
+// 				if (g.members) return g;
+// 
+// 			})
+// 			console.log(grp)
+// 			return res.render('users', {
+// 				admin: (!req.amIAdmin ? false : true),
+// 				users: grp
+// 			})
+// 		}
+// 	})
+// })
 // 
 // router.post('/api/addGroup', getAuthCodeJWT, csrfProtection, async (req, res, next) => {
 // 
 // })
 
-router.post('/api/checkgroup/:id', (req, res, next) => {
-	const uOptions = {
-		method: 'GET',
-		url: `https://api.zoom.us/v2/groups/${req.params.id}/members`,
-		headers: {
-			Authorization: 'Bearer ' + req.token
-		}
-	}
-	request(uOptions, (err, response, members) => {
-		if (err) {
-			return next(err)
-		}
-		const group = JSON.parse(members).members;
-		return res.status(200).send(group)
-	})
-})
-
-//add group
-router.post('/api/createGroup', getAuthCodeJWT, upload.array(), parseBody, csrfProtection, async (req, res, next) => {
-	if (req && req.token) {
-		const mOptions = {
-			method: 'POST',
-			uri: `https://api.zoom.us/v2/groups`,
-			json: {
-				'name': req.body.topic
-			},
-			headers: {
-				Authorization: 'Bearer ' + req.token
-			}
-			
-		};
-		request(mOptions, (error, response, body) => {
-			if (error) {
-				if (error.status === 429) {
-					var referrer = (!req.referrer ? '/api/groups' : req.referrer);
-					return res.redirect(referrer)
-				} else {
-					return next(error)
-				}
-
-			}
-			return res.redirect('/meetings')
-		}) 
-	} else {
-		// console.log(req)
-		// something went wrong		
-	}
-
-})
+// router.post('/api/checkgroup/:id', getAuthCodeJWT, ensureAdmin, (req, res, next) => {
+// 	const uOptions = {
+// 		method: 'GET',
+// 		url: `https://api.zoom.us/v2/groups/${req.params.id}/members`,
+// 		headers: {
+// 			Authorization: 'Bearer ' + req.token
+// 		}
+// 	}
+// 	request(uOptions, (err, response, members) => {
+// 		if (err) {
+// 			return next(err)
+// 		}
+// 		const group = JSON.parse(members).members;
+// 		return res.status(200).send(group)
+// 	})
+// })
+// 
+// //add group
+// router.post('/api/createGroup', getAuthCodeJWT, ensureAdmin, upload.array(), parseBody, csrfProtection, async (req, res, next) => {
+// 	if (req && req.token) {
+// 		const mOptions = {
+// 			method: 'POST',
+// 			uri: `https://api.zoom.us/v2/groups`,
+// 			json: {
+// 				'name': req.body.topic
+// 			},
+// 			headers: {
+// 				Authorization: 'Bearer ' + req.token
+// 			}
+// 
+// 		};
+// 		request(mOptions, (error, response, body) => {
+// 			if (error) {
+// 				if (error.status === 429) {
+// 					var referrer = (!req.referrer ? '/api/groups' : req.referrer);
+// 					return res.redirect(referrer)
+// 				} else {
+// 					return next(error)
+// 				}
+// 
+// 			}
+// 			return res.redirect('/meetings')
+// 		}) 
+// 	} else {
+// 		// console.log(req)
+// 		// something went wrong		
+// 	}
+// 
+// })
 
 // add group members
 // router.post('/group/:id', getAuthCodeJWT, (req, res, next) => {
@@ -416,7 +396,7 @@ router.post('/api/createGroup', getAuthCodeJWT, upload.array(), parseBody, csrfP
 // }
 // })
 
-router.get('/api/meetingEnd/:id', getAuthCodeJWT, (req, res, next) => {
+router.get('/api/meetingEnd/:id', getAuthCodeJWT, ensureAdmin, (req, res, next) => {
 	const meetingId = req.params.id;
 	const mOptions = {
 		method: 'PUT',
@@ -444,7 +424,7 @@ router.get('/api/meetingEnd/:id', getAuthCodeJWT, (req, res, next) => {
 	})
 })
 
-router.get('/api/deleteMeeting/:id', getAuthCodeJWT, (req, res, next) => {
+router.get('/api/deleteMeeting/:id', getAuthCodeJWT, ensureAdmin, (req, res, next) => {
 	// console.log(req.params.id, req.token)
 	deleteMeeting(req.params.id, req.token, (err) => {
 		if (err) {
