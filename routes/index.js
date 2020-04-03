@@ -67,7 +67,8 @@ router.get('/', (req, res, next) => {
 router.get('/logout', (req, res, next) => {
 	if (req.user) {
 		// TODO JWT logout
-		
+		delete req.user;
+		delete req.userName;
 		// res
 	}
 	res.clearCookie('token');
@@ -114,7 +115,7 @@ router.get('/auth', getAuthCode, getAuthCodeJWT, async (req, res, next) => {
 	}
 })
 
-router.get('/profile', getAuthCodeJWT, async (req, res, next) => {
+router.get('/profile', getAuthCode, getAuthCodeJWT, async (req, res, next) => {
 	if (req.user) {
 		const body = req.user;
 		return res.render('profile', {
@@ -124,6 +125,45 @@ router.get('/profile', getAuthCodeJWT, async (req, res, next) => {
 	} else {
 		return res.redirect('/logout')
 	}
+})
+
+router.post('/checkAdmin/:userid', getAuthCodeJWT, (req, res, next) => {
+	const userId = decodeURIComponent(req.params.userid);
+	if (!req.token) {
+		return next()
+	} else {
+		const uOptions = {
+			method: 'GET',
+			url: `https://api.zoom.us/v2/users/${userId}`,
+			headers: {
+				Authorization: 'Bearer ' + req.token
+			}
+		}
+		request(uOptions, (error, response, body) => {
+			if (error) {
+				console.log(error)
+				if (error.status === 429) {
+					var referrer = '/meetings';
+					return res.redirect(referrer)
+				} else {
+					return next(error)
+				}
+
+			} else {
+				body = JSON.parse(body);
+				// console.log(body)
+				req.user = body;
+				// const admins = config.admins.split(',');
+				if (req.user.role_name === 'Owner' || req.user.role_name === 'Admin') {
+					return res.status(200).send(true)
+				} else {
+					return res.status(200).send(false)
+				}
+				// return next();
+			}
+		})
+	}
+	
 })
 
 router.get('/webinars', getAuthCodeJWT, (req, res, next) => {
@@ -263,6 +303,36 @@ router.get('/meetings', getAuthCodeJWT, function(req, res, next) {
 		}
 	})
 });
+
+router.get('/api/editMeeting/:id', getAuthCode, getAuthCodeJWT, (req, res, next) => {
+	const meetingId = req.params.id;
+	const mOptions = {
+		method: 'GET',
+		url: `https://api.zoom.us/v2/meetings/${meetingId}`,
+		headers: {
+			Authorization: 'Bearer ' + req.token
+		}
+	};
+	request(mOptions, (error, response, data) => {
+		if (error) {
+			if (error.status === 429) {
+				var referrer = (!req.referrer ? '/meetings' : req.referrer);
+				return res.redirect(referrer)
+			} else {
+				return next(error)
+			}
+		} else {
+			// console.log(data)
+			const b64Name = (!req.userName ? null : Buffer.from(req.userName).toString('base64'))
+			return res.render('edit', {
+				admin: (!req.amIAdmin ? false : true),
+				userName: b64Name,
+				doc: JSON.parse(data)
+			})
+		}
+	})
+})
+
 
 // router.get('/meeting/:id', getAuthCodeJWT, (req, res, next) => {
 // 	const meetingId = req.params.id;

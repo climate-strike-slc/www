@@ -5,9 +5,9 @@ const moment = require('moment');
 const request = require('request')
 
 function ensureAdmin(req, res, next) {
-	const admins = config.admins.split(',');
-	console.log(admins.indexOf(req.user.email))
-	if (admins.indexOf(req.user.email) !== -1) {
+	// const admins = config.admins.split(',');
+	// console.log(admins.indexOf(req.user.email))
+	if (req.user && req.user.role_name === 'Owner' || req.user.role_name === 'Admin') {
 		return next();
 	} else {
 		return res.redirect('/');
@@ -39,8 +39,8 @@ function getMe(req, res, next) {
 				body = JSON.parse(body);
 				// console.log(body)
 				req.user = body;
-				const admins = config.admins.split(',');
-				if (admins.indexOf(req.user.email) !== -1) {
+				// const admins = config.admins.split(',');
+				if (req.user.role_name === 'Owner' || req.user.role_name === 'Admin') {
 					req.amIAdmin = true;
 				} else {
 					req.amIAdmin = false;
@@ -76,22 +76,11 @@ function refreshAccessToken(refresh_token, next) {
 		} else {
 			body = JSON.parse(body);
 			// if (req.cookies) {
-			const expires = new Date(Date.now() + 8 * 3600000); //8hrs
-			res.cookie('token', body.access_token, { expires: expires/*, signed: true*/ })
-			res.cookie('refresh', body.refresh_token, { expires: expires/*, signed: true*/ });
-			res.cookie('expires_on', expires, { expires: expires/*, signed: true*/ });
-			req.userName = body.first_name + ' ' + body.last_name
-			req.user = body;
-			const admins = config.admins.split(',');
-			if (admins.indexOf(req.user.email) !== -1) {
-				req.amIAdmin = true;
-			} else {
-				req.amIAdmin = false;
-			}
+			
 
 			// }
 		}
-		return next()
+		return next(null, body);
 	})
 }
 
@@ -124,8 +113,8 @@ function getAuthCodeJWT(req, res, next) {
 			body = JSON.parse(body);
 			req.userName = body.first_name + ' ' + body.last_name
 			req.user = body;
-			const admins = config.admins.split(',');
-			if (admins.indexOf(req.user.email) !== -1) {
+			// const admins = config.admins.split(',');
+			if (req.user.role_name === 'Owner' || req.user.role_name === 'Admin') {
 				req.amIAdmin = true;
 			} else {
 				req.amIAdmin = false;
@@ -188,8 +177,8 @@ const getAuthCode = async(req, res, next) => {
 				res.cookie('expires_on', expires, { expires: expires/*, signed: true*/ });
 				req.userName = body.first_name + ' ' + body.last_name
 				req.user = body;
-				const admins = config.admins.split(',');
-				if (admins.indexOf(req.user.email) !== -1) {
+				// const admins = config.admins.split(',');
+				if (req.user.role_name === 'Owner' || req.user.role_name === 'Admin') {
 					req.amIAdmin = true;
 				} else {
 					req.amIAdmin = false;
@@ -216,14 +205,26 @@ const getAuthCode = async(req, res, next) => {
 			return next()
 		} else {
 			if (req.cookies && req.cookies.refresh) {
-				refreshAccessToken(req.cookies.refresh, err => {
+				refreshAccessToken(req.cookies.refresh, (err, body) => {
 					if (err) {
 						if (err.message === 'expired') {
 							return res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + redirectURL)
 						}
 						return next(err)
 					}
-					return next();
+					const expires = new Date(Date.now() + 8 * 3600000); //8hrs
+					res.cookie('token', body.access_token, { expires: expires/*, signed: true*/ })
+					res.cookie('refresh', body.refresh_token, { expires: expires/*, signed: true*/ });
+					res.cookie('expires_on', expires, { expires: expires/*, signed: true*/ });
+					req.userName = body.first_name + ' ' + body.last_name
+					req.user = body;
+					// const admins = config.admins.split(',');
+					if (req.user.role_name === 'Owner' || req.user.role_name === 'Admin') {
+						req.amIAdmin = true;
+					} else {
+						req.amIAdmin = false;
+					}
+					return next()
 				});
 			} else {
 				// If no authorization code is available, redirect to Zoom OAuth to authorize

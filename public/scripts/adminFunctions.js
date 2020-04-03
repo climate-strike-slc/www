@@ -1,5 +1,5 @@
 var adminFunctions = {
-	formatDate: function(which, e) {
+	changeDate: function(which, e) {
 		var self = this;
 		// switch(which) {
 		// 	case 'month':
@@ -46,11 +46,11 @@ var adminFunctions = {
 		var hour = (!self.hour ? h : self.hour);
 		
 		var minute = (!self.minute ? 0 : self.minute);
-		// self.year = year;
-		// self.month = month;
-		// self.day = day;
-		// self.hour = hour;
-		// self.minute = minute;
+		self.year = year;
+		self.month = month;
+		self.day = day;
+		self.hour = hour;
+		self.minute = minute;
 		// console.log(moment({ 
 		// 	y:year,
 		// 	M:month,

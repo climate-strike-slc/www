@@ -8,6 +8,7 @@ script(type="text/javascript").
 			return {
 				admin: this.parseObj(!{JSON.stringify(admin)}),
 				valid: {},
+				adminValidated: this.parseObj(!{JSON.stringify(admin)}),
 				new: (!this.parseObj(!{JSON.stringify(doc)})),
 				doc: this.parseObj(!{JSON.stringify(doc)}),
 				dropped: false,
@@ -38,12 +39,24 @@ script(type="text/javascript").
 					var keyName = event.key;
 					if (keyName === 'Enter') event.preventDefault()
 				});
-			})
-			self.formatDate('year', new Date().getFullYear())
-			self.formatDate('month', new Date().getMonth())
-			self.formatDate('day', new Date().getDate())
-			self.formatDate('hour', new Date().getHours())
-			self.formatDate('minute', (new Date().getMinutes() >= 30 ? 30 : 0))
+			});
+			setTimeout(function(){
+				var docDate = (
+					!self.doc ?
+					new Date() :
+					new Date(self.doc.start_time)
+					//- moment().utc().format() :
+					//- moment(self.doc.start_time).utc().format()
+				);
+				self.date = docDate;
+				console.log(docDate)
+				self.year = docDate.getFullYear()
+				self.month = docDate.getMonth()
+				self.day = docDate.getDate()
+				self.hour = docDate.getHours()
+				self.minute = docDate.getMinutes() >= 30 ? 30 : 0
+				console.log(self.year, self.month, self.day, self.hour, self.hour, self.minute)
+			},1000)
 		},
 		methods: Object.assign({}, adminFunctions, baseFunctions)
 	});

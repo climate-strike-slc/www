@@ -92,6 +92,7 @@ var baseFunctions = {
 			default:
 				d = null;
 		}
+		// console.log(d)
 		return d;
 	},
 	getDataDates: function(which) {
@@ -100,5 +101,32 @@ var baseFunctions = {
 			return self.formatDate(which, doc.start_time);
 		})).filter(function(v,i,a){return a.indexOf(v) === i})
 		return years;
+	},
+	checkAdmin: function(e) {
+		var self = this;
+		var valel = document.getElementById('checkAdmin');
+		var val = valel.value;
+		var valid = false;
+		$.post('/checkAdmin/'+encodeURIComponent(val), function(valid){
+			if (!valid) {
+				valid = false;
+			} else {
+				valid = true;
+			}
+			self.adminValidated = valid;
+		})//.test(val)
+	},
+	validateAdmin: function(e) {
+		var self = this;
+		var val = e.target.value;
+		var valid = false;
+		$.post('/checkAdmin/'+encodeURIComponent(val), function(valid){
+			if (!valid) {
+				valid = false;
+			} else {
+				valid = true;
+			}
+			self.adminValidated = valid;
+		})//.test(val)
 	}
 }
