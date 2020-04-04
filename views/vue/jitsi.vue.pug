@@ -1,0 +1,128 @@
+script(type="text/javascript").
+	Vue.prototype.$ = $;
+	Vue.prototype.window = window;
+	//- Vue.prototype.JitsiMeetJS = window.JitsiMeetJS;
+	new Vue({
+		el: '#vue',
+		data: function data(){
+			return {
+				active: null,
+				api: null,
+				admin: this.parseObj(!{JSON.stringify(admin)}),
+				adminValidated: this.parseObj(!{JSON.stringify(admin)}),
+				meeting: this.parseObj(!{JSON.stringify(meeting)}),
+				dropped: false,
+				res: window.innerWidth < 600,
+				jwt: this.parseObj(!{JSON.stringify(jwt)}),
+				connection: null,
+				room: null,
+				localTracks: [],
+				remoteTracks: {},
+				isVideo: false,
+				isJoined: false,
+				isFirefox: (!navigator ? true : navigator.userAgent.includes('Firefox')),
+				isSafari: /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification)),
+				wWidth: window.innerWidth,
+				wHeight: window.innerHeight,
+
+			}
+		},
+		mounted: function(){
+			var self = this;
+			$(document).ready(function(){
+				document.addEventListener('keydown', function(event) {
+					var keyName = event.key;
+					if (keyName === 'Enter') event.preventDefault()
+				});
+			})
+			//- console.log(JitsiMeetJS)
+			//- if (!self.api) {
+			//- 	var options = {
+			//- 		hosts: {
+			//- 			domain: 'bli.sh',
+			//- 			muc: 'conference.bli.sh'
+			//- 		},
+			//- 		bosh: 'https://bli.sh/http-bind'
+			//- 	};
+			//- 	var confOptions = {
+			//- 		openBridgeChannel: true
+			//- 	};
+			//- 	var initOptions = {
+			//- 		disableAudioLevels: true,
+			//- 		//- 
+			//- 		//- // The ID of the jidesha extension for Chrome.
+			//- 		//- desktopSharingChromeExtId: 'mbocklcggfhnbahlnepmldehdhpjfcjp',
+			//- 
+			//- 		// Whether desktop sharing should be disabled on Chrome.
+			//- 		desktopSharingChromeDisabled: false,
+			//- 
+			//- 		// The media sources to use when using screen sharing with the Chrome
+			//- 		// extension.
+			//- 		desktopSharingChromeSources: [ 'screen', 'window' ],
+			//- 
+			//- 		// Required version of Chrome extension
+			//- 		desktopSharingChromeMinExtVersion: '0.1',
+			//- 
+			//- 		// Whether desktop sharing should be disabled on Firefox.
+			//- 		desktopSharingFirefoxDisabled: true
+			//- 	};
+			//- 	JitsiMeetJS.init(initOptions);
+			//- 	self.connection = new JitsiMeetJS.JitsiConnection(null, null, options);
+			//- 	self.connection.addEventListener(
+			//- 		JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED,
+			//- 		self.onConnectionSuccess
+			//- 	)
+			//- 
+			//- 	self.connection.addEventListener(
+			//- 		JitsiMeetJS.events.connection.CONNECTION_FAILED,
+			//- 		self.onConnectionFailed
+			//- 	)
+			//- 
+			//- 	self.connection.addEventListener(
+			//- 		JitsiMeetJS.events.connection.CONNECTION_DISCONNECTED,
+			//- 		self.disconnect
+			//- 	)
+			//- 
+			//- 	JitsiMeetJS.mediaDevices.addEventListener(
+			//- 		JitsiMeetJS.events.mediaDevices.DEVICE_LIST_CHANGED,
+			//- 		self.onDeviceListChanged
+			//- 	)
+			//- 
+			//- 	self.connection.connect()
+			//- 	JitsiMeetJS.createLocalTracks({ devices: [ 'audio', 'video' ] })
+			//- 	.then(self.onLocalTracks)
+			//- 	.catch(error => {
+			//- 		throw error;
+			//- 	});
+			//- 
+			//- 	if (JitsiMeetJS.mediaDevices.isDeviceChangeAvailable('output')) {
+			//- 		JitsiMeetJS.mediaDevices.enumerateDevices(devices => {
+			//- 			const audioOutputDevices
+			//- 				= devices.filter(d => d.kind === 'audiooutput');
+			//- 
+			//- 			if (audioOutputDevices.length > 1) {
+			//- 				$('#audioOutputSelect').html(
+			//- 					audioOutputDevices
+			//- 							.map(
+			//- 									d =>
+			//- 											`<option value="${d.deviceId}">${d.label}</option>`)
+			//- 							.join('\n'));
+			//- 
+			//- 				$('#audioOutputSelectWrapper').show();
+			//- 			}
+			//- 		});
+			//- 	}
+				//- self.api = new JitsiMeetJS.JitsiConnection('bli.sh', null, options) 
+				//- self.api.connect({id: 'bli.sh', password: 'test'})
+				//- console.log(JitsiMeetJS.isDesktopSharingEnabled());
+				
+				
+				//- self.api.initJitsiConference('testname', {openBridgeChannel: true })
+			//- }
+		},
+		beforeDestroy: function() {
+			var self = this;
+			self.unload()
+		},
+		methods: Object.assign({}, baseFunctions)
+	});

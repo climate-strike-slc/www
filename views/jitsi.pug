@@ -1,0 +1,21 @@
+extends layout
+block page
+	- var menu = 'meetings'
+block content
+	script(type="text/javascript" src="/scripts/jquery.min.js")
+	//- script(src="/scripts/strophe/strophe.js")
+	//- script(src="/scripts/strophe/strophe.disco.min.js?v=1")
+	script(type="text/javascript", src="/scripts/baseFunctions.js?v="+Math.random())
+	//- script(type="text/javascript", src="/scripts/jitsiFunctions.js?v="+Math.random())
+
+	div#vue
+		div.nav
+			include partials/menu.pug
+		div#meet
+			embed(v-if="!isSafari" :height="(!res ? ((wWidth * 0.66) * 0.72) : 400)" :width="(!res ? wWidth * 0.66 : wWidth)" type="text/html" style="pointer-events:all; z-index: 2; position: relative;" :src="'https://bli.sh/Tryingthisout'")
+			//- a(href="#" @click="unload()") Unload
+			//- a(href="#" @click="switchVideo()") switchVideo
+			//- div#audioOutputSelectWrapper(style="display: none;") 
+			//- 	span Change audio output device
+			//- 	select#audioOutputSelect(@change="changeAudioOutput")
+	include vue/jitsi.vue.pug
