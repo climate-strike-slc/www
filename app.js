@@ -19,15 +19,17 @@ const app = express()
 app.use(cookieParser(config.secret));
 
 //CORS middleware
+var whitelist = ['bli.sh', 'soc.bli.sh', 'localhost:9999', 'http://localhost:9999']
 var corsOpt = {
-	origin: '*',
+	origin: true,
 	methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-	allowedHeaders: ['Content-Type', 'Authorization']
+	allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept', 'Set-Cookie']
 }
 app.use(cors(corsOpt));
 app.options('*', cors(corsOpt))
 app.use(function(req, res, next) {
-	// console.log(app.get('env'));
+	res.cookie('site', 'cookie', {sameSite: 'None', secure: true});
+
 	res.set({
 		'Access-Control-Allow-Origin' : '*',
 		'Access-Control-Allow-Methods' : 'GET, POST, HEAD, OPTIONS',

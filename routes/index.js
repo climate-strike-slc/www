@@ -279,6 +279,13 @@ router.post('/api/createMeeting', getAuthCodeJWT, /*ensureAdmin,*/ upload.array(
 	 
 });
 
+router.get('/mtg', (req, res, next) => {
+	return res.render('jitsi', {
+		admin: (!req.amIAdmin ? false : true)
+	})
+
+})
+
 router.get('/meetings', getAuthCodeJWT, function(req, res, next) {
 	// console.log(req.cookies)
 
