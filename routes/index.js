@@ -519,11 +519,11 @@ router.post('/webhook', (req, res, next) => {
 		const vt = req.headers.authorization;
 		const matches = vt === config.verificationToken;
 		if (matches) {
-			console.log(req.body)
+			console.log(req)
 			return res.status(200).send()
 		} else {
 			console.log('authorization mismatch. Received '+ vt +', expected '+ config.verificationToken)
-			console.log(req.body)
+			console.log(req)
 			return res.status(200).send()
 		}
 	} else {
