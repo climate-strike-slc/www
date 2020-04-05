@@ -7,7 +7,7 @@ require('dotenv').config({ path: envPath });
 // define validation for all the env vars
 const envVarsSchema = Joi.object({
 	PORT: Joi.number().default(9999),
-	NODE_ENV: Joi.string(),
+	NODE_ENV: Joi.string().default('development'),
 	SECRET: Joi.string(),
 	DB: Joi.string(),
 	redirectURL:Joi.string(),
