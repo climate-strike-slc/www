@@ -522,6 +522,8 @@ router.post('/webhook', (req, res, next) => {
 			console.log(JSON.parse(req.body))
 			return res.status(200).send()
 		} else {
+			console.log('authorization mismatch. Received '+ vt +', expected '+ config.verificationToken)
+			console.log(JSON.parse(req.body))
 			return res.status(200).send()
 		}
 	} else {
