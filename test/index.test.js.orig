@@ -64,12 +64,14 @@ describe('API calls', () => {
   after(async() => {
   });
   
+<<<<<<< HEAD
   // key = 'should get a header';
   // it(key, async () => {
   //   const snapKey = ('API calls '+key+' 1');
   //   const { nockDone } = await nockBack(
   //     'editContent.header.json'
   //   );
+  //   // const { getAuthCode } = authMiddleware;
   //   nock.enableNetConnect('https://zoom.us');
   //   header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
   // 
@@ -89,6 +91,33 @@ describe('API calls', () => {
   //     })
   //   }
   // })
+=======
+  key = 'should get a header';
+  it(key, async () => {
+    const snapKey = ('API calls '+key+' 1');
+    const { nockDone } = await nockBack(
+      'editContent.header.json'
+    );
+    nock.enableNetConnect('127.0.0.1');
+    header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
+  
+    if (!recording) {
+      expect(header).to.matchSnapshot();
+      nockDone()
+  
+    } else {
+      await agent
+      .get('/auth')
+      // .expect(getAuthCode)
+      .expect(302)
+      .expect('Location', `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
+      .then(async(res)=>{
+        header = res.header;
+        expect(header).to.matchSnapshot();
+      })
+    }
+  })
+>>>>>>> wip
   // 
   // key = 'should require authentication redirect';
   // it(key, async() => {
@@ -167,6 +196,10 @@ describe('API calls', () => {
         //   })[0].split('XSRF-TOKEN=')[1].split(';')[0];
         // if (!csf) throw new Error('missing csrf token');
         expect(csf).to.matchSnapshot();
+<<<<<<< HEAD
+        // console.log(cookies(res), `_csrf=${csf}`)
+=======
+>>>>>>> wip
         await agent
         .post('/api/createMeeting')
         // .set('Cookie', cookies(res, '_csrf'))
@@ -178,11 +211,29 @@ describe('API calls', () => {
           description: 'API calls '+key+' 1'
         })
         .expect(302)
+<<<<<<< HEAD
         .expect('Location', '/meetings')
         .then(res => {
           console.log(res.header)
         })
         // .expect(403)
+        // .end((err, res) => {
+        //   if (err) {
+        //     console.log(err)
+        //   }
+        //   console.log('k')
+        //   console.log(res)
+        //   csrf = csf;
+        // })
+        // .expect(302)
+        // .expect('Location', '/meetings')
+        // .then((res) => /*console.log(res)*/
+        // {
+        // 
+        // })
+        // .catch((err) => console.log(err))
+=======
+>>>>>>> wip
       })
       nockDone()
 
