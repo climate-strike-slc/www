@@ -57,9 +57,12 @@ function deleteMeeting(id, token, next) {
 // router.all('/api'/*, ensureAdmin*/, getAuthCodeJWT);
 
 router.get('/', (req, res, next) => {
-	console.log(req.cookies);
+	// console.log(req.cookies);
+	var amIAdmin = (!req.cookies.token ? false : true);
+	console.log('Am I admin?')
+	console.log(amIAdmin)
 	res.render('home', {
-		admin: (!req.amIAdmin ? false : true),
+		admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
 		menu: 'home'
 	});
 });
