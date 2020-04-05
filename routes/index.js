@@ -104,9 +104,9 @@ router.get('/auth', getAuthCode, getAuthCodeJWT, async (req, res, next) => {
 	if (req.user) {
 		const body = req.user;
 		if (!req.referrer || /auth/.test(req.referrer)) {
-
+			var amIAdmin = (!req.cookies.token ? false : true);
 			return res.render('profile', {
-				admin: (!req.amIAdmin ? false : true),
+				admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
 				user: body
 			})
 		} else {
@@ -121,8 +121,9 @@ router.get('/auth', getAuthCode, getAuthCodeJWT, async (req, res, next) => {
 router.get('/profile', getAuthCode, getAuthCodeJWT, async (req, res, next) => {
 	if (req.user) {
 		const body = req.user;
+		var amIAdmin = (!req.cookies.token ? false : true);
 		return res.render('profile', {
-			admin: (!req.amIAdmin ? false : true),
+			admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
 			user: body
 		})
 	} else {
@@ -190,8 +191,9 @@ router.get('/webinars', getAuthCodeJWT, (req, res, next) => {
 			const body = JSON.parse(data)
 			// console.log(body)
 			const b64Name = (!req.userName ? null : Buffer.from(req.userName).toString('base64'))
+			var amIAdmin = (!req.cookies.token ? false : true);
 			return res.render('meetings', {
-				admin: (!req.amIAdmin ? false : true),
+				admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
 				userName: b64Name,
 				data: body
 			})
@@ -205,8 +207,9 @@ router.get('/api/createMeeting', getAuthCodeJWT, ensureAdmin, csrfProtection, fu
 	// console.log(req.csrfToken())
 	if (process.env.TEST_ENV && process.env.RECORD_ENV) res.header('XSRF-TOKEN', req.csrfToken());
 	// console.log(res.header['xsrf-token'])
+	var amIAdmin = (!req.cookies.token ? false : true);
 	res.render('edit', {
-		admin: (!req.amIAdmin ? false : true),
+		admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
 		csrfToken: req.csrfToken(),
 		title: 'Manage Meetings'
 	});
@@ -297,8 +300,9 @@ router.get('/meetings', getAuthCodeJWT, function(req, res, next) {
 			body = JSON.parse(body);
 			// console.log(body)
 			const b64Name = (!req.userName ? null : Buffer.from(req.userName).toString('base64'))
+			var amIAdmin = (!req.cookies.token ? false : true);
 			return res.render('meetings', {
-				admin: (!req.amIAdmin ? false : true),
+				admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
 				userName: b64Name,
 				data: body.meetings
 			})
@@ -327,8 +331,9 @@ router.get('/api/editMeeting/:id', getAuthCode, getAuthCodeJWT, (req, res, next)
 		} else {
 			// console.log(data)
 			const b64Name = (!req.userName ? null : Buffer.from(req.userName).toString('base64'))
+			var amIAdmin = (!req.cookies.token ? false : true);
 			return res.render('edit', {
-				admin: (!req.amIAdmin ? false : true),
+				admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
 				userName: b64Name,
 				doc: JSON.parse(data)
 			})
