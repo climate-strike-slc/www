@@ -21,7 +21,8 @@ const envVarsSchema = Joi.object({
 	JWT_KEY: Joi.string(),
 	JWT_SECRET: Joi.string(),
 	HOST_ID: Joi.string(),
-	ADMINS: Joi.string()
+	ADMINS: Joi.string(),
+	VERIFICATION_TOKEN: Joi.string()
 })
   .unknown()
   .required();
@@ -47,7 +48,8 @@ const config = {
 	hostID: envVars.HOST_ID,
 	db: envVars.DB,
 	secret: envVars.SECRET,
-	admins: envVars.ADMINS
+	admins: envVars.ADMINS,
+	verificationToken: envVars.VERIFICATION_TOKEN
 };
 
 module.exports = config;

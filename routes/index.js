@@ -230,7 +230,7 @@ router.post('/api/createMeeting', getAuthCodeJWT, ensureAdmin, upload.array(), p
 					'host_video': true,
 					'participant_video': true,
 					'use_pmi': false,
-					'join_before_host': true,
+					'join_before_host': false,
 					'mute_upon_entry': true,
 					'enforce_login': false,
 					'enforce_login_domains': '*',
@@ -504,5 +504,84 @@ router.get('/api/deleteMeeting/:id', getAuthCodeJWT, ensureAdmin, (req, res, nex
 	})
 })
 
+router.post('/webhook', (req, res, next) => {
+	console.log('webhook received')
+	console.log(req.headers)
+	if (req.headers && req.headers.authorization) {
+		const vt = req.headers.authorization;
+		const matches = vt === config.verificationToken;
+		if (matches) {
+			console.log(JSON.parse(req.body))
+			return res.status(200).send()
+		} else {
+			return res.status(200).send()
+		}
+	} else {
+		return res.status(200).send()
+	}
+})
+
+router.get('/deauthorize', (req, res, next) => {
+	if (req.headers && req.headers.authorization) {
+		const vt = req.headers.authorization;
+		const matches = vt === config.verificationToken;
+		if (matches) {
+			const clientID = process.env.TEST_ENV || config.env !== 'production' ? config.clientIDTest : config.clientID;
+			const clientSecret = process.env.TEST_ENV || config.env !== 'production' ? config.clientSecretTest : config.clientSecret;
+			if (req.user) {
+				// TODO JWT logout
+				delete req.user;
+				delete req.userName;
+				// res
+			}
+			res.clearCookie('token');
+			res.clearCookie('refresh');
+			res.clearCookie('expires_on');
+			const payload = JSON.parse(vt).payload;
+			const deAuth = {
+				'client_id': payload.client_id,
+				'user_id': payload.user_id,
+				'account_id': payload.account_id,
+				'compliance_completed': true,
+				'deauthorization_event_received': vt
+			}
+			const dOptions = {
+				method: 'POST',
+				url: `https://api.zoom.us/v2/oauth/data/compliance`,
+				json: deAuth,
+				headers: {
+					Authorization: 'Basic ' + Buffer.from(clientID + ':' + clientSecret).toString('base64')
+				}
+			};
+			request(dOptions, (error, response, data) => {
+				if (error) {
+					if (error.status === 429) {
+						var referrer = (!req.referrer ? '/deauthorize' : req.referrer);
+						return res.redirect(referrer)
+					} else {
+						return next(error)
+					}
+
+				} else {
+					// console.log(data)
+					return res.redirect('/meetings')
+				}
+			})
+		}
+// 		{
+//   "payload": {
+//     "user_id": "$user_id(string)",
+//     "account_id": "$account_id(string)",
+//     "client_id": "$client_id(string)",
+//     "user_data_retention": "$user_data_retention(boolean, yes: user has allowed to store the data)",
+//     "deauthorization_time": "string [datetime]",
+//     "signature": "$signature(string)"
+//   },
+//   "event": "string"
+// }
+	} else {
+		return next(new Error('misconfigured header parsing for req.headers.authorization. Received ' +req.headers))
+	}
+})
 
 module.exports = router;

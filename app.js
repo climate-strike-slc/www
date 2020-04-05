@@ -27,7 +27,7 @@ var corsOpt = {
 app.use(cors(corsOpt));
 app.options('*', cors(corsOpt))
 app.use(function(req, res, next) {
-	console.log(app.get('env'));
+	// console.log(app.get('env'));
 	res.set({
 		'Access-Control-Allow-Origin' : '*',
 		'Access-Control-Allow-Methods' : 'GET, POST, HEAD, OPTIONS',
