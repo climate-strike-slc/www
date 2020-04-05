@@ -519,11 +519,11 @@ router.post('/webhook', (req, res, next) => {
 		const vt = req.headers.authorization;
 		const matches = vt === config.verificationToken;
 		if (matches) {
-			console.log(JSON.parse(req.body))
+			console.log(req.body)
 			return res.status(200).send()
 		} else {
 			console.log('authorization mismatch. Received '+ vt +', expected '+ config.verificationToken)
-			console.log(JSON.parse(req.body))
+			console.log(req.body)
 			return res.status(200).send()
 		}
 	} else {
@@ -547,7 +547,7 @@ router.get('/deauthorize', (req, res, next) => {
 			res.clearCookie('token');
 			res.clearCookie('refresh');
 			res.clearCookie('expires_on');
-			const payload = JSON.parse(vt).payload;
+			const payload = vt.payload;
 			const deAuth = {
 				'client_id': payload.client_id,
 				'user_id': payload.user_id,
