@@ -77,6 +77,7 @@ router.get('/logout', (req, res, next) => {
 	res.clearCookie('token');
 	res.clearCookie('refresh');
 	res.clearCookie('expires_on');
+	res.clearCookie('_csrf')
 	// delete req.cookies.token;
 	// delete req.cookies.refresh;
 	// res.cookie('token', null);
@@ -205,8 +206,9 @@ router.get('/webinars', getAuthCodeJWT, (req, res, next) => {
 router.get('/api/createMeeting', getAuthCodeJWT, ensureAdmin, csrfProtection, function(req, res) {
 	// console.log(req)
 	// console.log(req.csrfToken())
-	if (process.env.TEST_ENV && process.env.RECORD_ENV) res.header('XSRF-TOKEN', req.csrfToken());
+	// if (process.env.TEST_ENV && process.env.RECORD_ENV) res.header('XSRF-TOKEN', req.csrfToken());
 	// console.log(res.header['xsrf-token'])
+	// res.cookie('XSRF-TOKEN', req.csrfToken(), {path: '/api/createMeeting'})
 	var amIAdmin = (!req.cookies.token ? false : true);
 	res.render('edit', {
 		admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
@@ -215,11 +217,12 @@ router.get('/api/createMeeting', getAuthCodeJWT, ensureAdmin, csrfProtection, fu
 	});
 });
 
-router.post('/api/createMeeting', getAuthCodeJWT, ensureAdmin, upload.array(), parseBody, csrfProtection, async function(req, res, next) {
+router.post('/api/createMeeting', getAuthCodeJWT, /*ensureAdmin,*/ upload.array(), parseBody, csrfProtection, async function(req, res, next) {
 	// console.log(req.body);
 	// console.log("topic:", req.body.topic);
 	// console.log("agenda:", '# ' +req.body.title + '  \n' + req.body.description);
-	if (req.token && req.cookies.token) {
+	if (req.token || req.cookies.token) {
+		var token = (!req.cookies.token ? req.token : req.cookies.token)
 	// if (req && req.token) {
 		// console.log(req.token)
 		// console.log(req.body.start_time, moment(req.body.start_time).utc().format())
@@ -246,7 +249,7 @@ router.post('/api/createMeeting', getAuthCodeJWT, ensureAdmin, upload.array(), p
 				}
 			},
 			headers: {
-				Authorization: 'Bearer ' + req.cookies.token
+				Authorization: 'Bearer ' + token
 			}
 			
 		};
@@ -259,15 +262,15 @@ router.post('/api/createMeeting', getAuthCodeJWT, ensureAdmin, upload.array(), p
 					return next(error)
 				}
 			}
-			const meeting = (!process.env.TEST_ENV ? new Meeting(body) : new MeetingTest(body));
-			meeting.save(err => {
-				if (err) {
-					return next(err)
-				} else {
+			// const meeting = (!process.env.TEST_ENV ? new Meeting(body) : new MeetingTest(body));
+			// meeting.save(err => {
+			// 	if (err) {
+			// 		return next(err)
+			// 	} else {
 					
 					return res.redirect('/meetings')
-				}
-			});
+			// 	}
+			// });
 		}) 
 	} else {
 		// console.log(req)

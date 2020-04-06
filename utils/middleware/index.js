@@ -7,7 +7,9 @@ const request = require('request')
 function ensureAdmin(req, res, next) {
 	// const admins = config.admins.split(',');
 	// console.log(admins.indexOf(req.user.email))
-	if (req.user && req.user.role_name === 'Owner' || req.user.role_name === 'Admin') {
+	const matches = req.user && req.user.role_name === 'Owner' || req.user.role_name === 'Admin'
+	// console.log(req.user, matches)
+	if (matches) {
 		return next();
 	} else {
 		return res.redirect('/');
@@ -86,6 +88,8 @@ function refreshAccessToken(refresh_token, next) {
 
 // JWT auth
 function getAuthCodeJWT(req, res, next) {
+	console.log(req.headers, req.cookies)
+
 	const payload = {
 		iss: config.jwtKey,
 		exp: ((new Date()).getTime() + 5000)
@@ -142,6 +146,9 @@ const getAuthCode = async(req, res, next) => {
 	const clientID = process.env.TEST_ENV || config.env !== 'production' ? config.clientIDTest : config.clientID;
 	const clientSecret = process.env.TEST_ENV || config.env !== 'production' ? config.clientSecretTest : config.clientSecret;
 	const redirectURL = process.env.TEST_ENV || config.env !== 'production' ? config.redirectURLTest : config.redirectURL;
+	if (/localhost/.test(redirectUrl)) {
+		return next()
+	}
 	// Check if the code parameter is in the url 
 	// if an authorization code is available, the user has most likely been redirected from Zoom OAuth
 	// if not, the user needs to be redirected to Zoom OAuth to authorize
@@ -199,12 +206,15 @@ const getAuthCode = async(req, res, next) => {
 			req.referrer = referrer;
 			
 		}
-		if (req.cookies && req.cookies.expires_on && new Date(Date.now()) < /*moment(req.cookies.expires_on).subtract(5, 'minutes').utc().format()*/
+		// console.log(req.cookies)
+
+		if (!process.env.TEST_ENV && !process.env.RECORD_ENV && req.cookies && req.cookies.expires_on && new Date(Date.now()) < /*moment(req.cookies.expires_on).subtract(5, 'minutes').utc().format()*/
 			new Date(req.cookies.expires_on - 0.5 * 3600000)
 			) {
 			return next()
 		} else {
 			if (req.cookies && req.cookies.refresh) {
+				console.log(req.cookies)
 				refreshAccessToken(req.cookies.refresh, (err, body) => {
 					if (err) {
 						if (err.message === 'expired') {
@@ -226,6 +236,9 @@ const getAuthCode = async(req, res, next) => {
 					}
 					return next()
 				});
+			} else if (process.env.TEST_ENV && process.env.RECORD_ENV) {
+				console.log(req.cookies)
+				return next()
 			} else {
 				// If no authorization code is available, redirect to Zoom OAuth to authorize
 				return res.redirect('https://zoom.us/oauth/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + redirectURL)

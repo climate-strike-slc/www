@@ -61,6 +61,10 @@ describe('API calls', () => {
   afterEach(async() => {
     // this ensures that consecutive tests don't use the snapshot created
     // by a previous test
+    // await agent
+    // .get('/logout')
+    // .expect(302)
+    // .expect('Location', '/')
     nockBack.setMode('wild');
     nock.cleanAll();
   });
@@ -72,32 +76,32 @@ describe('API calls', () => {
     // done()
   });
   
-  key = 'should get a header';
-  it(key, async () => {
-    const snapKey = ('API calls '+key+' 1');
-    const { nockDone } = await nockBack(
-      'editContent.header.json'
-    );
-    // const { getAuthCode } = authMiddleware;
-    nock.enableNetConnect('127.0.0.1');
-    header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
-  
-    if (!recording) {
-      expect(header).to.matchSnapshot();
-      nockDone()
-  
-    } else {
-      await agent
-      .get('/auth')
-      // .expect(getAuthCode)
-      .expect(302)
-      .expect('Location', `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
-      .then(async(res)=>{
-        header = res.header;
-        expect(header).to.matchSnapshot();
-      })
-    }
-  })
+  // key = 'should get a header';
+  // it(key, async () => {
+  //   const snapKey = ('API calls '+key+' 1');
+  //   const { nockDone } = await nockBack(
+  //     'editContent.header.json'
+  //   );
+  //   // const { getAuthCode } = authMiddleware;
+  //   nock.enableNetConnect('https://zoom.us');
+  //   header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
+  // 
+  //   if (!recording) {
+  //     expect(header).to.matchSnapshot();
+  //     nockDone()
+  // 
+  //   } else {
+  //     await agent
+  //     .get(`https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
+  //     // .expect(getAuthCode)
+  //     .expect(302)
+  //     .expect('Location', '/auth')
+  //     .then(async(res)=>{
+  //       header = res.header;
+  //       expect(header).to.matchSnapshot();
+  //     })
+  //   }
+  // })
   // 
   // key = 'should require authentication redirect';
   // it(key, async() => {
@@ -106,55 +110,36 @@ describe('API calls', () => {
   //     'editContent.auth.json'
   //   );
   //   nock.enableNetConnect('127.0.0.1');
+  //   let header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
   // 
   //   if (!recording) {
   //     expect(header).to.matchSnapshot();
   //     nockDone()
   // 
   //   } else {
-  //     // const rq = {
-  //     //   headers: header
-  //     // };
-  //     // const req = mockReq(rq);
-  //     // const res = mockRes({ req });
-  //     // const next = sinon.spy();
-  //     await request(app)
+  //     await agent
   //     .get('/auth')
   //     .expect(302)
-  //     .expect('Location', `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
+  //     .expect('Location', `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientIDTest}&redirect_uri=${config.redirectURLTest}`)
   //     .then(async(res)=>{
   //       // console.log(res)
-  //       nock.enableNetConnect('zoom.us');
-  //       await request(app)
-  //       .get(`https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
-  //       .expect(302)
-  //       .expect('Location', `${config.redirectURL}`)
+  //       header = res.header;
+  //       expect(header).to.matchSnapshot();
+  //       // nock.enableNetConnect('zoom.us');
+  //       // await request(app)
+  //       // .get(`https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientIDTest}&redirect_uri=${config.redirectURLTest}`)
+  //       // .expect(302)
+  //       // .expect('Location', `${config.redirectURL}`)
+  //       // .then(async res => {
+  //       //   header = res.header;
+  //       //   expect(header).to.matchSnapshot();
+  //       // })
   //     })
-  //     // .expect(getAuthCode(req, res))
-  //     // .end(done)
-  // 
-  //     // const { getAuthCode } = authMiddleware;
-  // 
-  //     // getAuthCode(req, res, next)
-  //     //   .then((err) => {
-  //     //     if (err) console.log(err)
-  //     //     expect(next.called).to.equal(true)
-  //     //   })
   //   }
-  //   // request(app)
-  //   // .get('/auth')
-  //   // .expect(getAuthCode)
-  //   // .end(done)
-  //   // agent.get('/api/createMeeting')
-  //   // .expect(302)
-  //   // .expect('Location', `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
-  //   // // .expect(200)
-  //   // console.log(agent)
-  // 
   // })
   
   key = 'edit page should contain a well-configured csrf token';
-  it(key, async(done) => {
+  it(key, async() => {
     const snapKey = ('API calls '+key+' 1');
     const { nockDone } = await nockBack(
       'editContent.csrf.json'
@@ -175,14 +160,33 @@ describe('API calls', () => {
       // .expect('Location', `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
       .then(async(res)=>{
         // console.log(res.header)
-        const csf = res.header['xsrf-token']
-        console.log(csf)
+        // const csurf = res.header['xsrf-token']
+        // console.log(csf)
+        const cookie = res.header['set-cookie'];
+        // console.log(res.header)
+        // const csf = cookie.filter((item) => {
+        //     // console.log(item, /(\_csrf=)/.test(item))
+        //     return /(\_csrf=)/.test(item)
+        //   })[0].split('_csrf=')[1].split(';')[0];
+        
+        const csf = cookie.filter((item) => {
+          const matches = /(\_csrf=)/i.test(item)
+            // console.log(item, /(\_csrf=)/.test(item), matches)
+            return matches
+          })[0].split('_csrf=')[1].split(';')[0];
         if (!csf) throw new Error('missing csrf token');
+        
+        // const csf = cookie.filter((item) => {
+        //   const matches = /(XSRF\-TOKEN=)/i.test(item) && /\/api\/createMeeting/ig.test(item)
+        //     console.log(item, /(XSRF\-TOKEN=)/i.test(item), matches)
+        //     return matches
+        //   })[0].split('XSRF-TOKEN=')[1].split(';')[0];
+        // if (!csf) throw new Error('missing csrf token');
         expect(csf).to.matchSnapshot();
-        // let cookie = mockSession('slccsSession', process.env.SECRET, {"_csrf":csf});
+        // console.log(cookies(res), `_csrf=${csf}`)
         await agent
         .post('/api/createMeeting')
-        .set('cookie', cookies(res))
+        // .set('Cookie', cookies(res, '_csrf'))
         .send({
           _csrf: csf,
           topic: 'ecology',
@@ -191,6 +195,11 @@ describe('API calls', () => {
           description: 'API calls '+key+' 1'
         })
         .expect(302)
+        .expect('Location', '/meetings')
+        .then(res => {
+          console.log(res.header)
+        })
+        // .expect(403)
         // .end((err, res) => {
         //   if (err) {
         //     console.log(err)
@@ -214,9 +223,13 @@ describe('API calls', () => {
     
 })
 
-function cookies (res) {
-  return res.headers['set-cookie'].map(function (cookies) {
-    return cookies.split(';')[0]
+function cookies (res, cookie) {
+  return res.headers['set-cookie'].filter(function (cookies) {
+    console.log('cookies')
+    console.log(cookies)
+    const rx = new RegExp(cookie, 'gi');
+    return rx.test(cookies)
+    // return cookies.split(';')[0]
   }).join(';')
 }
 
