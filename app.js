@@ -1,7 +1,3 @@
-// Bring in environment secrets through dotenv
-require('dotenv/config')
-
-// Run the express app
 const express = require('express')
 const cors = require('cors');
 const path = require('path');
@@ -23,9 +19,7 @@ const { Content, ContentTest, Publisher, PublisherTest } = require('./models');
 const PublisherDB = (!testenv ? Publisher : PublisherTest);
 const ContentDB = (!testenv ? Content : ContentTest);
 const LocalStrategy = require('passport-local').Strategy;
-// const csrfProtection = csrf({ cookie: true });
 const app = express()
-app.use(cookieParser(config.secret));
 
 //CORS middleware
 var whitelist = ['bli.sh', 'soc.bli.sh', 'localhost:9999', 'http://localhost:9999']
@@ -54,11 +48,24 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')));
 
 passport.use(new LocalStrategy(PublisherDB.authenticate()));
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+passport.deserializeUser(function(id, done) {
+	PublisherDB.findOne({_id: id}, function(err, user){
+
+		if(!err) {
+			done(null, user);
+		} else {
+			done(err, null);
+		}
+	});
+});
 
 const store = new MongoDBStore(
 	{
 		mongooseConnection: mongoose.connection,
-		uri: process.env.DB,
+		uri: config.DB,
 		collection: 'slccsSession',
 		autoRemove: 'interval',     
 		autoRemoveInterval: 3600
@@ -76,23 +83,10 @@ const sess = {
 	store: store,
 	cookie: { maxAge: 180 * 60 * 1000 }
 }
-
+app.use(cookieParser(config.secret));
 app.use(session(sess));
 app.use(passport.initialize());
 app.use(passport.session());
-passport.serializeUser(function(user, done) {
-  done(null, user._id);
-});
-passport.deserializeUser(function(id, done) {
-	PublisherDB.findOne({_id: id}, function(err, user){
-
-		if(!err) {
-			done(null, user);
-		} else {
-			done(err, null);
-		}
-	});
-});
 
 if (app.get('env') === 'production') {
 	app.set('trust proxy', 1)
@@ -100,7 +94,7 @@ if (app.get('env') === 'production') {
 
 app.use((req, res, next) => {
 	res.locals.session = req.session;
-	next();
+	return next();
 })
 
 app.use('/', router);
@@ -115,7 +109,7 @@ app.use(function (err, req, res) {
 		error: err.status
 	})
 });
-const uri = process.env.DB;
+const uri = config.db;
 const promise = mongoose.connect(uri, {
 	useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false
 });

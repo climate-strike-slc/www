@@ -4,6 +4,7 @@ var jitsiFunctions = {
 		const confOptions = {
 			openBridgeChannel: true,
 		}
+		
 		self.room = self.connection.initJitsiConference('conference', confOptions)
 	},
 	unload: function() {

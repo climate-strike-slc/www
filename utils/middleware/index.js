@@ -4,6 +4,19 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const request = require('request')
 
+function sessionAdmin(req, res, next) {
+	if (req.user && req.user.properties) {
+		req.session.admin = req.user.properties.admin;
+	} else {
+		req.session.admin = false;
+	}
+	if (req.session.admin) {
+		req.session.userSecret = config.wt;
+	} else {
+		req.session.userSecret = null;
+	}
+	return next();
+}
 
 function ensureAuthenticated(req, res, next) {
 	// console.log(req.isAuthenticated())
@@ -19,9 +32,13 @@ function ensureAuthenticated(req, res, next) {
 }
 
 function ensureAdmin(req, res, next) {
-	const admins = config.admins.split(',');
+	const admins = config.admins.split(/\,\s{0,5}/);
 	// console.log(admins.indexOf(req.user.email))
-	if (admins.indexOf(req.user.email) !== -1 || admins.indexOf(req.user.username) !== -1) {
+	const user = req.user;
+	const isAdmin = (!user || !user.properties.admin ? false : user.properties.admin)
+	if (isAdmin || admins.indexOf(user.email) !== -1 || admins.indexOf(user.username) !== -1) {
+		req.session.userSecret = config.userSecret;
+		req.session.admin = true;
 		return next();
 	} else {
 		return res.redirect('/')
@@ -274,4 +291,4 @@ async function getMe(req, res, next) {
 // 
 // 	}
 // }
-module.exports = { getMe, ensureAdmin, ensureAuthenticated }
+module.exports = { getMe, ensureAdmin, ensureAuthenticated, sessionAdmin }

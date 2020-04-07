@@ -12,11 +12,11 @@ nav
 				a(href="/") Home  
 			li
 				a(href="/meetings") Meetings
-			li(v-if="admin")
+			li(v-if="pu && pu.properties.admin")
 				a(href="/api/createMeeting") New Meeting
 			li
 				a(href="/login") Login
-			//- li(v-if="!admin")
+			//- li(v-if="!pu || !pu.properties.admin")
 			//- 	//- href="/profile"
 			//- 	//- v-if="!adminValidated"
 			//- 	input#checkAdmin(
@@ -39,5 +39,5 @@ nav
 			//- 		v-else-if="adminValidated"
 			//- 		href="/auth"
 			//- 		) Profile
-			//- li(v-if="admin")
+			//- li(v-if="pu && pu.properties.admin")
 			//- 	a(href="/auth") Profile

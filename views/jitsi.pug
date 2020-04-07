@@ -3,10 +3,10 @@ block page
 	- var menu = 'meetings'
 block content
 	script(type="text/javascript" src="/scripts/jquery.min.js")
-	//- script(src="/scripts/strophe/strophe.js")
-	//- script(src="/scripts/strophe/strophe.disco.min.js?v=1")
+	script(src="/scripts/strophe/strophe.js")
+	script(src="/scripts/strophe/strophe.disco.min.js?v=1")
 	script(type="text/javascript", src="/scripts/baseFunctions.js?v="+Math.random())
-	//- script(type="text/javascript", src="/scripts/jitsiFunctions.js?v="+Math.random())
+	script(type="text/javascript", src="/scripts/jitsiFunctions.js?v="+Math.random())
 
 	div#vue
 		div.nav
@@ -41,7 +41,14 @@ block content
 						style="pointer-events: auto;"
 					)
 						//- https://zoom.us/wc/{{ meetindID }}/join?prefer=1&un={{ base64Encoded Name }} 
-						embed(v-if="!isFirefox && !isSafari && i === parseInt(active,10)" :height="(!res ? ((wWidth * 0.66) * 0.72) : 400)" :width="(!res ? wWidth * 0.66 : wWidth)" type="text/html" style="pointer-events:all; z-index: 2; position: relative;" :src="'https://zoom.us/wc/'+data[i].id+'/join?prefer=1&un='+userName")
+						embed(
+							v-if="!isFirefox && !isSafari && i === parseInt(active,10)"
+							:height="(!res ? ((wWidth * 0.66) * 0.72) : 400)"
+							:width="(!res ? wWidth * 0.66 : wWidth)" 
+							type="text/html" 
+							style="pointer-events:all; z-index: 2; position: relative;" 
+							:src="'https://bli.sh/'+data[i].title.split(' ').join('_')"
+							)
 						//- iframe(v-if="k === active" :src="'/meeting/'+data[i].id")
 						div.row(style="position:relative;z-index:1;")
 							div.tb-10-m0
@@ -55,7 +62,7 @@ block content
 									div.tb-05-m0
 										a.fit(role="button" :href="'/api/editMeeting/'+ doc.id") Edit
 						img(:src="'/images/icons/'+data[i].topic+'.svg'" style="width:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.4;")
-						a(v-if="admin" :href="'/api/deleteMeeting/'+data[i].id" v-text="'x'" style="z-index: 3; position: relative;")
+						a(v-if="pu && pu.properties.admin" :href="'/api/deleteMeeting/'+data[i].id" v-text="'x'" style="z-index: 3; position: relative;")
 
 		//- div#meet
 		//- 	embed(v-if="!isSafari" :height="(!res ? ((wWidth * 0.66) * 0.72) : 400)" :width="(!res ? wWidth * 0.66 : wWidth)" type="text/html" style="pointer-events:all; z-index: 2; position: relative;" :src="'https://bli.sh/Tryingthisout'")
