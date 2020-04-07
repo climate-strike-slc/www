@@ -1,8 +1,29 @@
+script(src="https://unpkg.com/vue-router/dist/vue-router.js")
 script(type="text/javascript").
 	Vue.prototype.$ = $;
 	Vue.prototype.window = window;
+	Vue.prototype.marked = marked;
+	Vue.prototype.moment = moment;
+	Vue.prototype.JitsiMeetExternalAPI = window.JitsiMeetExternalAPI;
 	//- Vue.prototype.JitsiMeetJS = window.JitsiMeetJS;
 	//- Vue.prototype.Strophe = window.Strophe;
+	var router = new VueRouter({
+		mode: 'history',
+		scrollBehavior: function(to, from, savedPosition) {
+			if (to.hash) {
+				this.app.active = to.hash.split('meeting')[1];
+				//- this.app.hov = to.hash.slice(1);
+			} else {
+				this.app.active = null;
+				//- this.app.hov = null;
+			}
+			//- console.log(to.hash)
+			return false;
+		},
+		routes: [
+				{path: '/jitsi'},
+		]
+	})
 	new Vue({
 		el: '#vue',
 		data: function data(){
@@ -11,6 +32,7 @@ script(type="text/javascript").
 				api: null,
 				admin: this.parseObj(!{JSON.stringify(admin)}),
 				pu: this.parseObj(!{JSON.stringify(pu)}),
+				data: this.parseObj(!{JSON.stringify(data)}),
 				adminValidated: this.parseObj(!{JSON.stringify(admin)}),
 				meeting: this.parseObj(!{JSON.stringify(meeting)}),
 				dropped: false,
@@ -31,6 +53,11 @@ script(type="text/javascript").
 				days: [],
 				hours: [],
 				minutes: [],
+				apis: {},
+				keys: [],
+				monthtext: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+				c: ["#1f78b4","#b2df8a","#33a02c","#6a3d9a","#b15928","#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"],
+				cats: ['ecology', 'economy', 'politics', 'community'],
 
 			}
 		},
@@ -129,6 +156,9 @@ script(type="text/javascript").
 				self.keys = self.data.map(function(doc) {
 					return doc.topic;
 				});
+				//- setTimeout(function(){
+				//- 	self.keys.forEach(function(key, i){
+				//- }, 1000)
 				self.years = self.getDataDates('year');
 				self.months = self.getDataDates('month');
 				self.days = self.getDataDates('day');

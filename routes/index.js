@@ -208,6 +208,16 @@ router.post('/api/createMeeting', ensureAdmin, upload.array(), parseBody, csrfPr
 router.get('/meetings', async (req, res, next) => {
 	// console.log(req.cookies)
 	const meetings = await ContentDB.find({}).then(data=>data).catch(err=>next(err));
+	return res.render('meetings', {
+		pu: req.user,
+		admin: req.session.admin,
+		data: meetings
+	})
+});
+
+router.get('/jitsi', async (req, res, next) => {
+	// console.log(req.cookies)
+	const meetings = await ContentDB.find({}).then(data=>data).catch(err=>next(err));
 	return res.render('jitsi', {
 		pu: req.user,
 		admin: req.session.admin,

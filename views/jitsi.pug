@@ -36,32 +36,32 @@ block content
 						@touchstart="hover"
 						@touchend="dialog(i)"
 						:class="i === parseInt(active,10) ? 'active' : ''"
-						:id="i"
+						:id="'meeting'+i"
 						:style="{'background-color': (!doc ? c[i] : c[cats.indexOf(doc.topic)]) }"
 						style="pointer-events: auto;"
 					)
 						//- https://zoom.us/wc/{{ meetindID }}/join?prefer=1&un={{ base64Encoded Name }} 
-						embed(
-							v-if="!isFirefox && !isSafari && i === parseInt(active,10)"
-							:height="(!res ? ((wWidth * 0.66) * 0.72) : 400)"
-							:width="(!res ? wWidth * 0.66 : wWidth)" 
-							type="text/html" 
-							style="pointer-events:all; z-index: 2; position: relative;" 
-							:src="'https://bli.sh/'+data[i].title.split(' ').join('_')"
-							)
+						//- embed(
+						//- 	v-if="!isFirefox && !isSafari && i === parseInt(active,10)"
+						//- 	:height="(!res ? ((wWidth * 0.66) * 0.72) : 400)"
+						//- 	:width="(!res ? wWidth * 0.66 : wWidth)" 
+						//- 	type="text/html" 
+						//- 	style="pointer-events:all; z-index: 2; position: relative;" 
+						//- 	:src="'https://bli.sh/'+data[i].title.split(' ').join('_')"
+						//- 	)
 						//- iframe(v-if="k === active" :src="'/meeting/'+data[i].id")
-						div.row(style="position:relative;z-index:1;")
+						div.row(v-if="i !== parseInt(active,10)" style="position:relative;z-index:1;")
 							div.tb-10-m0
 								p(v-html="marked('# '+moment(data[i].start_time).format('LT'))")
 								p(v-if="data && data[i].agenda" v-html="marked(data[i].agenda)" style="color: #555;")
-							div.tb-10-m0
-								div.row
-									div.tb-05-m0
-										a.fit(@click="deactivate(i)" role="button" target="_blank" :href="data[i].join_url" v-text="'Join in Zoom app'")
-										//- a(:href="'/meeting/'+data[i].id")
-									div.tb-05-m0
-										a.fit(role="button" :href="'/api/editMeeting/'+ doc.id") Edit
-						img(:src="'/images/icons/'+data[i].topic+'.svg'" style="width:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.4;")
+							//- div.tb-10-m0
+							//- 	div.row
+							//- 		div.tb-05-m0
+							//- 			a.fit(@click="deactivate(i)" role="button" target="_blank" :href="data[i].join_url" v-text="'Join in Zoom app'")
+							//- 			//- a(:href="'/meeting/'+data[i].id")
+							//- 		div.tb-05-m0
+							//- 			a.fit(role="button" :href="'/api/editMeeting/'+ doc.id") Edit
+						img(v-if="i !== parseInt(active,10)" :src="'/images/icons/'+data[i].topic+'.svg'" style="width:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.4;")
 						a(v-if="pu && pu.properties.admin" :href="'/api/deleteMeeting/'+data[i].id" v-text="'x'" style="z-index: 3; position: relative;")
 
 		//- div#meet

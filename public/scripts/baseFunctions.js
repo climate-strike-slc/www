@@ -30,8 +30,10 @@ var baseFunctions = {
 		)
 	},
 	activate: function(i) {
+		var self = this;
 		// logic for when a div is active (mouseover, touchstart)
-		this.active = parseInt(i,10);
+		self.active = parseInt(i,10);
+
 	},
 	deactivate: function(i) {
 		// (mouseleave, touchend)
@@ -43,7 +45,24 @@ var baseFunctions = {
 		this.active = null;
 	},
 	dialog: function(i) {
-		router.push({ path: `#${i}` });
+		var self = this;
+		self.active = parseInt(i,10);
+		router.push({ path: `/jitsi#meeting${i}` });
+		const domain = 'bli.sh';
+		const options = {
+			roomName: self.keys[i],
+			width: (!self.res ? (self.wWidth * 0.66) : (self.wWidth*0.85)) +'px',
+			height: (!self.res ? ((self.wWidth * 0.66) * 0.72) : (self.wWidth * 0.66)) +'px',
+			parentNode: document.querySelector(`#meeting${i}`),
+			// noSSL: false
+		};
+		self.apis[self.keys[i]] = new JitsiMeetExternalAPI(domain, options);
+		var iframe = document.getElementById(`jitsiConferenceFrame${i}`)
+		setTimeout(function(){
+			iframe.style.position = 'absolute';
+			iframe.style.top = '0'
+			iframe.style.left = '0'
+		}, 1000)
 	},
 	hover: function() {
 		// setTimeout(function(){
@@ -99,7 +118,8 @@ var baseFunctions = {
 		var self = this;
 		var years = (!self.data ? [] : self.data.map(function(doc){
 			return self.formatDate(which, doc.start_time);
-		})).filter(function(v,i,a){return a.indexOf(v) === i})
+		})).filter(function(v,i,a){return a.indexOf(v) === i});
+		console.log(years)
 		return years;
 	},
 	checkAdmin: function(e) {
