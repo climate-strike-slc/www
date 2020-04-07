@@ -14,6 +14,33 @@ nav
 				a(href="/meetings") Meetings
 			li(v-if="admin")
 				a(href="/api/createMeeting") New Meeting
+<<<<<<< HEAD
+			li(v-if="!admin")
+				//- href="/profile"
+				//- v-if="!adminValidated"
+				input#checkAdmin(
+					type="text"
+					@change="validateAdmin"
+					placeholder="E-mail of your Zoom account"
+					)
+				a(
+					v-if="!adminValidated && !admin"
+					style="margin: 0 0 0 1rem;"
+					@click="checkAdmin"
+					) Login
+				
+				a(
+					v-else-if="!adminValidated && admin"
+					style="margin: 0 0 0 1rem;"
+					href="/profile"
+					) Profile
+				a(
+					v-else-if="adminValidated"
+					href="/auth"
+					) Profile
+			li(v-if="admin")
+				a(href="/profile") Profile
+=======
 			li
 				a(href="/login") Login
 			//- li(v-if="!admin")
@@ -41,3 +68,4 @@ nav
 			//- 		) Profile
 			//- li(v-if="admin")
 			//- 	a(href="/auth") Profile
+>>>>>>> basic profiles

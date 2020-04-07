@@ -109,7 +109,18 @@ router.get('/logout', async (req, res, next) => {
 // 	return res.json(ret)
 // })
 // 
+<<<<<<< HEAD
+router.get('/auth', getAuthCode, getAuthCodeJWT, async (req, res, next) => {
+	if (req.user) {
+		const body = req.user;
+		if (!req.referrer || /auth/.test(req.referrer)) {
 			var amIAdmin = (!req.cookies.token ? false : true);
+			return res.render('profile', {
+				admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
+				user: body
+			})
+=======
+
 router.get('/register', csrfProtection, (req, res, next) => {
 	// res.cookie('XSRF-TOKEN', req.csrfToken())
 	return res.render('register', { csrfToken: req.csrfToken(), menu: 'register' } );
@@ -128,6 +139,7 @@ router.post('/register', upload.array(), parseBody/*, csrfProtection*/, (req, re
 			config.admins.split(',').indexOf(req.body.email) !== -1
 		) {
 			admin = true;
+>>>>>>> basic profiles
 		} else {
 			admin = false;
 		}
@@ -166,6 +178,19 @@ router.post('/register', upload.array(), parseBody/*, csrfProtection*/, (req, re
 		});
 	})
 
+<<<<<<< HEAD
+router.get('/profile', getAuthCode, getAuthCodeJWT, async (req, res, next) => {
+	if (req.user) {
+		const body = req.user;
+		var amIAdmin = (!req.cookies.token ? false : true);
+		return res.render('profile', {
+			admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
+			user: body
+		})
+	} else {
+		return res.redirect('/logout')
+	}
+=======
 });
 
 router.get('/login', csrfProtection, (req, res, next) => {
@@ -210,6 +235,7 @@ router.get('/profile', ensureAuthenticated, async (req, res, next) => {
 	return res.render('profile', {
 		pu: user
 	})
+>>>>>>> basic profiles
 })
 
 router.post('/checkAdmin/:userid', async (req, res, next) => {
@@ -220,7 +246,6 @@ router.post('/checkAdmin/:userid', async (req, res, next) => {
 		amIAdmin = (!user.properties.admin ? false : true)
 	} else {
 		amIAdmin = false;
-			var amIAdmin = (!req.cookies.token ? false : true);
 	}
 	return res.status(200).send(amIAdmin)
 	// if (!req.token) {
@@ -260,7 +285,43 @@ router.post('/checkAdmin/:userid', async (req, res, next) => {
 	
 })
 
+<<<<<<< HEAD
+router.get('/webinars', getAuthCodeJWT, (req, res, next) => {
+	const userId = encodeURIComponent(config.admins.split(',')[0])
+	const mOptions = {
+		method: 'GET',
+		url: `https://api.zoom.us/v2/users/${userId}/webinars`,
+		headers: {
+			Authorization: 'Bearer ' + req.token
+		}
+	};
+	request(mOptions, (error, response, data) => {
+		if (error) {
+			if (error.status === 429) {
+				var referrer = (!req.referrer ? '/meetings' : req.referrer);
+				return res.redirect(referrer)
+			} else {
+				return next(error)
+			}
+		} else {
+			const body = JSON.parse(data)
+			// console.log(body)
+			const b64Name = (!req.userName ? null : Buffer.from(req.userName).toString('base64'))
+			var amIAdmin = (!req.cookies.token ? false : true);
+			return res.render('meetings', {
+				admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
+				userName: b64Name,
+				data: body
+			})
+		}
+	})
+
+})
+
+router.get('/api/createMeeting', getAuthCodeJWT, ensureAdmin, csrfProtection, function(req, res) {
+=======
 router.get('/api/createMeeting', ensureAdmin, csrfProtection, function(req, res) {
+>>>>>>> basic profiles
 	// console.log(req)
 	// console.log(req.csrfToken())
 	// if (process.env.TEST_ENV && process.env.RECORD_ENV) res.header('XSRF-TOKEN', req.csrfToken());
@@ -268,17 +329,81 @@ router.get('/api/createMeeting', ensureAdmin, csrfProtection, function(req, res)
 	// res.cookie('XSRF-TOKEN', req.csrfToken(), {path: '/api/createMeeting'})
 	var amIAdmin = (!req.cookies.token ? false : true);
 	res.render('edit', {
+<<<<<<< HEAD
+		admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
+=======
 		admin: req.session.admin,
+>>>>>>> basic profiles
 		csrfToken: req.csrfToken(),
 		title: 'Manage Meetings'
 	});
 });
 
+<<<<<<< HEAD
+router.post('/api/createMeeting', getAuthCodeJWT, /*ensureAdmin,*/ upload.array(), parseBody, csrfProtection, async function(req, res, next) {
+	// console.log(req.body);
+	// console.log("topic:", req.body.topic);
+	// console.log("agenda:", '# ' +req.body.title + '  \n' + req.body.description);
+	if (req.token || req.cookies.token) {
+		var token = (!req.cookies.token ? req.token : req.cookies.token)
+	// if (req && req.token) {
+		// console.log(req.token)
+		// console.log(req.body.start_time, moment(req.body.start_time).utc().format())
+		const mOptions = {
+			method: 'POST',
+			uri: `https://api.zoom.us/v2/users/${config.hostID}/meetings`,
+			json: {
+				'topic': req.body.topic,
+				'type': 2,
+				'agenda': '# ' +req.body.title + '  \n' + req.body.description,
+				'start_time': moment(req.body.start_time).utc().format(),//moment().add(5, 'minutes').utc().format(),
+				'duration': 30,
+				'settings': {
+					'host_video': true,
+					'participant_video': true,
+					'use_pmi': false,
+					'join_before_host': false,
+					'mute_upon_entry': true,
+					'enforce_login': false,
+					'enforce_login_domains': '*',
+					'meeting_authentication': false,
+					// Have tried with and without:
+					// 'authentication_domains': '*'
+				}
+			},
+			headers: {
+				Authorization: 'Bearer ' + token
+			}
+			
+		};
+		request(mOptions, (error, response, body) => {
+			if (error) {
+				if (error.status === 429) {
+					var referrer = (!req.referrer ? '/api/createMeeting' : req.referrer);
+					return res.redirect(referrer)
+				} else {
+					return next(error)
+				}
+			}
+			// const meeting = (!process.env.TEST_ENV ? new Meeting(body) : new MeetingTest(body));
+			// meeting.save(err => {
+			// 	if (err) {
+			// 		return next(err)
+			// 	} else {
+					
+					return res.redirect('/meetings')
+			// 	}
+			// });
+		}) 
+	} else {
+		// console.log(req)
+		// something went wrong		
+	}
+=======
 router.post('/api/createMeeting', ensureAdmin, upload.array(), parseBody, csrfProtection, async function(req, res, next) {
 	// console.log(req.body);
 	// console.log("topic:", req.body.topic);
 	// console.log("agenda:", '# ' +req.body.title + '  \n' + req.body.description);
-		var token = (!req.cookies.token ? req.token : req.cookies.token)
 	
 	const meeting = new ContentDB(req.body);
 	meeting.save(err => {
@@ -344,17 +469,50 @@ router.post('/api/createMeeting', ensureAdmin, upload.array(), parseBody, csrfPr
 	// 	// console.log(req)
 	// 	// something went wrong		
 	// }
+>>>>>>> basic profiles
 	 
 });
 
 router.get('/meetings', async (req, res, next) => {
 	// console.log(req.cookies)
-	const meetings = await ContentDB.find({}).then(data=>data).catch(err=>next(err));
+<<<<<<< HEAD
+
+	const options = {
+		method: 'GET',
+		url: `https://api.zoom.us/v2/users/${config.hostID}/meetings`,
+		headers: {
+			Authorization: 'Bearer ' + req.token
+		}
+	}
+	// console.log(req)
+	request(options, (error, response, body) => {
+		if (error) {
+			if (error.status === 429) {
+				var referrer = (!req.referrer ? '/meetings' : req.referrer);
+				return res.redirect(referrer)
+			} else {
+				return next(error)
+			}
+
+		} else {
+			body = JSON.parse(body);
+			// console.log(body)
+			const b64Name = (!req.userName ? null : Buffer.from(req.userName).toString('base64'))
 			var amIAdmin = (!req.cookies.token ? false : true);
+			return res.render('meetings', {
+				admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
+				userName: b64Name,
+				data: body.meetings
+			})
+
+		}
+=======
+	const meetings = await ContentDB.find({}).then(data=>data).catch(err=>next(err));
 	return res.render('meetings', {
 		admin: req.session.admin,
 		// userName: b64Name,
 		data: meetings
+>>>>>>> basic profiles
 	})
 
 	// const options = {
@@ -390,12 +548,39 @@ router.get('/meetings', async (req, res, next) => {
 
 router.get('/api/editMeeting/:id', ensureAdmin, async (req, res, next) => {
 	const meetingId = req.params.id;
-	const doc = await ContentDB.findOne({_id: meetingId}).then(doc=>doc).catch(err=>next(err));
+<<<<<<< HEAD
+	const mOptions = {
+		method: 'GET',
+		url: `https://api.zoom.us/v2/meetings/${meetingId}`,
+		headers: {
+			Authorization: 'Bearer ' + req.token
+		}
+	};
+	request(mOptions, (error, response, data) => {
+		if (error) {
+			if (error.status === 429) {
+				var referrer = (!req.referrer ? '/meetings' : req.referrer);
+				return res.redirect(referrer)
+			} else {
+				return next(error)
+			}
+		} else {
+			// console.log(data)
+			const b64Name = (!req.userName ? null : Buffer.from(req.userName).toString('base64'))
 			var amIAdmin = (!req.cookies.token ? false : true);
+			return res.render('edit', {
+				admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
+				userName: b64Name,
+				doc: JSON.parse(data)
+			})
+		}
+=======
+	const doc = await ContentDB.findOne({_id: meetingId}).then(doc=>doc).catch(err=>next(err));
 	return res.render('edit', {
 		admin: req.session.admin,
 		// userName: b64Name,
 		doc: doc
+>>>>>>> basic profiles
 	})
 
 	// const mOptions = {

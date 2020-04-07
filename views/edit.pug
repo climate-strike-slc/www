@@ -51,8 +51,8 @@ block content
 					//- 	label.row(for="pm") AM / PM
 					//- 	select.row#pm(@change="formatDate('pm', $event)")
 					//- 		option(v-for="(p, i) in ['am','pm']" v-text="p" :value="i" :selected="(pm === i)")
-
-
+				input(type="hidden" name="puid" :value="userId")
+				input(type="hidden" name="published_at" :value="new Date()")
 				input(type="hidden" name="start_time" :value="date")
 				div.row
 					label.tb-10-m0(for="title") Title

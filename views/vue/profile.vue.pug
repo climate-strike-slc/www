@@ -7,9 +7,10 @@ script(type="text/javascript").
 			return {
 				admin: this.parseObj(!{JSON.stringify(admin)}),
 				adminValidated: this.parseObj(!{JSON.stringify(admin)}),
-				user: this.parseObj(!{JSON.stringify(user)}),
+				pu: this.parseObj(!{JSON.stringify(pu)}),
 				dropped: false,
-				res: window.innerWidth < 600
+				res: window.innerWidth < 600,
+				menu: this.parseObj(!{JSON.stringify(menu)})
 			}
 		},
 		mounted: function(){
