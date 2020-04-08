@@ -1,7 +1,3 @@
-// Bring in environment secrets through dotenv
-require('dotenv/config')
-
-// Run the express app
 const express = require('express')
 const cors = require('cors');
 const path = require('path');
@@ -10,13 +6,22 @@ const favicon = require('serve-favicon');
 const parseForm = bodyParser.urlencoded({ extended: false });
 const parseJSONBody = bodyParser.json();
 const parseBody = [parseJSONBody, parseForm];
-const router = require('./routes');
+const { router, api, usr, mtg } = require('./routes');
 const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
 const config = require('./utils/config');
-// const csrfProtection = csrf({ cookie: true });
+const mongoose = require('mongoose');
+const session = require('express-session');
+const passport = require('passport')
+const MongoDBStore = require('connect-mongodb-session')(session);
+const testenv = config.testenv;
+const { Content, ContentTest, Publisher, PublisherTest } = require('./models');
+const PublisherDB = (!testenv ? Publisher : PublisherTest);
+const ContentDB = (!testenv ? Content : ContentTest);
+const LocalStrategy = require('passport-local').Strategy;
+const provideRoutes = require('./routes');
+
 const app = express()
-app.use(cookieParser(config.secret));
 
 //CORS middleware
 var whitelist = ['bli.sh', 'soc.bli.sh', 'localhost:9999', 'http://localhost:9999']
@@ -44,7 +49,58 @@ app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')));
 
-app.use('/', router);
+passport.use(new LocalStrategy(PublisherDB.authenticate()));
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+passport.deserializeUser(function(id, done) {
+	PublisherDB.findOne({_id: id}, function(err, user){
+
+		if(!err) {
+			done(null, user);
+		} else {
+			done(err, null);
+		}
+	});
+});
+
+const store = new MongoDBStore(
+	{
+		mongooseConnection: mongoose.connection,
+		uri: config.DB,
+		collection: 'slccsSession',
+		autoRemove: 'interval',     
+		autoRemoveInterval: 3600
+	}
+);
+store.on('error', function(error){
+	console.log(error)
+});
+
+const sess = {
+	secret: config.secret,
+	name: 'nodecookie',
+	resave: true,
+	saveUninitialized: true,
+	store: store,
+	cookie: { maxAge: 180 * 60 * 1000 }
+}
+app.use(cookieParser(config.secret));
+app.use(session(sess));
+app.use(passport.initialize());
+app.use(passport.session());
+
+if (app.get('env') === 'production') {
+	app.set('trust proxy', 1)
+}
+
+app.use((req, res, next) => {
+	res.locals.session = req.session;
+	return next();
+})
+
+provideRoutes(app);
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
 	res.status(404).send('Not Found');
@@ -56,5 +112,15 @@ app.use(function (err, req, res) {
 		error: err.status
 	})
 });
-
+const uri = config.db;
+const promise = mongoose.connect(uri, {
+	useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false
+});
+promise.then(function(){
+	console.log('connected slccs')
+})
+.catch(function(err){
+	console.log(err);
+	console.log('MongoDB connection unsuccessful');
+});
 module.exports = app;
