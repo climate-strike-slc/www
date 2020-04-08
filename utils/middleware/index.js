@@ -33,7 +33,7 @@ function ensureAuthenticated(req, res, next) {
 		req.session.admin = req.user.properties.admin;
 		return next();
 	} else {
-		return res.redirect('/mtg/jitsi');
+		return res.redirect('/login');
 	}
 }
 

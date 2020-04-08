@@ -76,7 +76,7 @@ describe('API calls', () => {
     const { nockDone } = await nockBack(
       'router.header.json'
     );
-    nock.enableNetConnect('https://zoom.us');
+    nock.enableNetConnect('127.0.0.1');
     header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
   
     if (!recording) {
@@ -275,7 +275,7 @@ describe('API calls', () => {
         await agent
         .post('/api/users')
         .expect(302)
-        .expect('Location', '/mtg/jitsi')
+        .expect('Location', '/login')
         // .then(async res => {
         //   // expect(res.body[0]).to.be.undefined;
         //   expect(res.body).to.matchSnapshot();
