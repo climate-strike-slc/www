@@ -16,13 +16,15 @@ const envVarsSchema = Joi.object({
 	redirectURLTest:Joi.string(),
 	clientIDTest: Joi.string(),
 	clientSecretTest: Joi.string(),
+	userID: Joi.string(),
+	userSecret: Joi.string(),
 	TEST_ENV: Joi.boolean().default(false),
 	RECORD_ENV: Joi.boolean().default(false),
 	JWT_KEY: Joi.string(),
 	JWT_SECRET: Joi.string(),
 	HOST_ID: Joi.string(),
 	ADMINS: Joi.string(),
-	VERIFICATION_TOKEN: Joi.string()
+	// WT: Joi.string()
 })
   .unknown()
   .required();
@@ -49,7 +51,9 @@ const config = {
 	db: envVars.DB,
 	secret: envVars.SECRET,
 	admins: envVars.ADMINS,
-	verificationToken: envVars.VERIFICATION_TOKEN
+	userID: envVars.userID,
+	userSecret: envVars.userSecret,
+	// wt: envVars.WT
 };
 
 module.exports = config;

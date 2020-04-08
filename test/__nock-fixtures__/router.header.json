@@ -1,0 +1,43 @@
+[
+    {
+        "scope": "http://127.0.0.1:49607",
+        "method": "GET",
+        "path": "/login",
+        "body": "",
+        "status": 200,
+        "response": "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge; charset=utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><meta name=\"format-detection\" content=\"telephone=no\"><title></title><link rel=\"stylesheet\" href=\"/stylesheets/style.css?version=0.1866446160038311\"><style id=\"style\" type=\"text/css\"></style><script type=\"text/javascript\" src=\"/scripts/jquery.min.js\"></script><script type=\"text/javascript\" src=\"/scripts/vue.js\"></script><script type=\"text/javascript\" src=\"/scripts/marked.min.js\"></script><script type=\"text/javascript\" src=\"/scripts/moment-with-locales.min.js\"></script><script type=\"text/javascript\" src=\"https://meet.jit.si/libs/lib-jitsi-meet.min.js\"></script><script type=\"text/javascript\" src=\"https://meet.jit.si/external_api.js\"></script></head><body><script type=\"text/javascript\" src=\"/scripts/basefunctions.js\"></script><div id=\"vue\"><div class=\"wrapper row nav\"><nav><a class=\"mainmenu\" v-if=\"res\" title=\"Menu\" style=\"pointer-events: auto;\" @click=\"drop\"><svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"30.1px\" height=\"25px\" viewBox=\"0 0 30.1 28\" style=\"enable-background:new 0 0 30.1 28; padding: 0 0 0 8px;\" xml:space=\"preserve\"><path d=\"M1.103,4.464c-0.606,0-1.1-0.493-1.1-1.1v-2.3c0-0.606,0.493-1.1,1.1-1.1h27.893  c0.607,0,1.1,0.494,1.1,1.1v2.3c0,0.606-0.492,1.1-1.1,1.1H1.103z\"></path><path d=\"M1.103,16.464c-0.606,0-1.1-0.493-1.1-1.1v-2.3c0-0.606,0.493-1.101,1.1-1.101h27.893  c0.607,0,1.1,0.494,1.1,1.101v2.3c0,0.606-0.492,1.1-1.1,1.1H1.103z\"></path><path d=\"M1.103,27.962c-0.606,0-1.1-0.494-1.1-1.1v-2.301c0-0.605,0.493-1.1,1.1-1.1h27.893  c0.607,0,1.1,0.494,1.1,1.1v2.301c0,0.605-0.492,1.1-1.1,1.1H1.103z\"></path></svg></a><div class=\"dropdown\" v-cloak v-if=\"dropped || !res\"><ul><li><a href=\"/mtg/jitsi\">Meetings</a></li><li v-if=\"pu &amp;&amp; pu.properties.admin\"><a href=\"/api/createMeeting\">New Meeting</a></li><li v-if=\"pu &amp;&amp; pu !== ''\"><a href=\"/usr/profile\">Profile</a></li><li v-if=\"!pu\"><a href=\"/login\">Login</a></li></ul></div></nav></div><div class=\"container row\"><p class=\"tb-font-l\">Enter username and password</p><form class=\"tb-10-m0\" enctype=\"multipart/form-data\" method=\"POST\" action=\"/login\"><input type=\"hidden\" name=\"_csrf\" value=\"ATvoBQQV-frLAKpvRgkcHMKJOtfDpdhXg-z0\"><div class=\"row\"><label class=\"tb-10-m0\" for=\"username\">Username</label><input class=\"tb-10-m0\" type=\"text\" name=\"username\" id=\"username\" autocomplete=\"username\"></div><div class=\"row\"><label class=\"tb-10-m0\" for=\"password\">Password</label><input class=\"tb-10-m0\" type=\"password\" name=\"password\" id=\"password\" autocomplete=\"current-password\"></div><p></p><button class=\"tb-10-m0 tb-03-m2 block\" type=\"submit\" ariaDescription=\"Log in\"><span>Log in</span></button><p class=\"tb-font-xl head\">First time here?</p><a class=\"block\" href=\"/register\" role=\"button\" ariaDescription=\"Register\"> <span>Register</span></a></form></div></div><script type=\"text/javascript\">Vue.prototype.$ = $;\nVue.prototype.window = window;\nnew Vue({\n\tel: '#vue',\n\tdata: function data(){\n\t\treturn {\n\t\t\tadmin: this.parseObj(),\n\t\t\tpu: this.parseObj(),\n\t\t\tadminValidated: this.parseObj(),\n\t\t\tpu: this.parseObj(),\n\t\t\tdropped: false,\n\t\t\tres: window.innerWidth < 600,\n\t\t\tmenu: this.parseObj(\"login\")\n\t\t}\n\t},\n\tmounted: function(){\n\t\t$(document).ready(function(){\n\t\t\t//- document.addEventListener('keydown', function(event) {\n\t\t\t//- \tvar keyName = event.key;\n\t\t\t//- \tif (keyName === 'Enter') event.preventDefault()\n\t\t\t//- });\n\t\t})\n\n\t},\n\tmethods: Object.assign({}, baseFunctions)\n});</script></body></html>",
+        "rawHeaders": [
+            "X-Powered-By",
+            "Express",
+            "Vary",
+            "Origin",
+            "Set-Cookie",
+            "site=cookie; Path=/; Secure; SameSite=None",
+            "Set-Cookie",
+            "_csrf=dSe07kaZu4N7UhZTL9L1sk9u; Path=/",
+            "Set-Cookie",
+            "XSRF-TOKEN=ATvoBQQV-frLAKpvRgkcHMKJOtfDpdhXg-z0; Path=/",
+            "Set-Cookie",
+            "nodecookie=s%3Aj9fjbkOZyu7m2BQfa8hyRR2_qPCgTUeR.CJag%2Be7pKdXuHDrPaGvXDyTNkwyDKwUR8TjVKtaxIAY; Path=/; Expires=Wed, 08 Apr 2020 11:30:23 GMT; HttpOnly",
+            "Access-Control-Allow-Origin",
+            "*",
+            "Access-Control-Allow-Methods",
+            "GET, POST, HEAD, OPTIONS",
+            "Access-Control-Allow-Headers",
+            "Cache-Control, Origin, Content-Type, Accept, Set-Cookie",
+            "Access-Control-Allow-Credentials",
+            "true",
+            "Content-Type",
+            "text/html; charset=utf-8",
+            "Content-Length",
+            "3650",
+            "ETag",
+            "W/\"e42-mn6wanlhxy+xdu7zzP0cBGV2LXU\"",
+            "Date",
+            "Wed, 08 Apr 2020 08:30:23 GMT",
+            "Connection",
+            "close"
+        ],
+        "responseIsBinary": false
+    }
+]

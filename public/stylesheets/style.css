@@ -693,7 +693,7 @@ div[aria-label="Chat Message List"] {
   .ui.active {
     padding: 0;
     pointer-events: none;
-    width: 100vw; }
+    width: 85vw; }
     .ui.active embed {
       pointer-events: all;
       top: 0;
@@ -813,8 +813,8 @@ div[aria-label="Chat Message List"] {
     height: 15.89vw;
     margin: 2vw 2vw 0 0; }
     .ui:hover {
-      width: 33.1vw;
-      height: 33.1vw; }
+      width: 26vw;
+      height: 26vw; }
     .ui.active {
       width: 66vw !important;
       height: calc(66vw * 0.72);
@@ -914,5 +914,12 @@ div[aria-label="Chat Message List"] {
 
   .tb-01-m4 {
     width: 10%; } }
+@media (min-width: 1300px) {
+  .ui {
+    width: 18vw;
+    height: 18vw; }
+    .ui:hover {
+      width: 31vw;
+      height: 31vw; } }
 
 /*# sourceMappingURL=style.css.map */

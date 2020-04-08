@@ -10,7 +10,7 @@ block content
 		div.wrapper.row.nav
 			include partials/menu.pug
 		div.container.row
-			form.tb-10-m0(enctype="multipart/form-data" method="POST" action="/api/createMeeting" style="padding: 20px")
+			form.tb-10-m0(enctype="multipart/form-data" method="POST" :action="(!doc ? '/api/createMeeting' : '/api/editMeeting/'+doc._id)" style="padding: 20px")
 				input(type="hidden", name="_csrf", value= csrfToken)
 
 				div.row
@@ -51,18 +51,18 @@ block content
 					//- 	label.row(for="pm") AM / PM
 					//- 	select.row#pm(@change="formatDate('pm', $event)")
 					//- 		option(v-for="(p, i) in ['am','pm']" v-text="p" :value="i" :selected="(pm === i)")
-
-
+				input(type="hidden" name="puid" :value="!pu ? '' : pu._id")
+				input(type="hidden" name="created_at" :value="new Date()")
 				input(type="hidden" name="start_time" :value="date")
 				div.row
 					label.tb-10-m0(for="title") Title
-					input.tb-10-m0(type="text" name="title" id="title" :value="(!doc ? '' : doc.agenda.split('\\n')[0].replace('# ', ''))")
+					input.tb-10-m0(type="text" name="title" id="title" :value="(!doc ? '' : doc.title)")
 				div.row
 					label.tb-10-m0(for="description") Description
-					input.tb-10-m0(type="text" name="description" id="description" :value="(!doc ? '' : doc.agenda.split('\\n')[1])")
+					textarea.tb-10-m0(type="text" name="description" id="description" v-html="(!doc ? '' : marked(doc.description))")
 				div.row
 					button.tb-10-m0(role="submit") Submit
 				div.row
-					a.tb-10-m0(role="button" href="/meetings") Cancel
+					a.tb-10-m0(role="button" href="/mtg/jitsi") Cancel
 	include vue/edit.vue.pug
 

@@ -1,0 +1,42 @@
+div.grid-right
+	div.tb-10-m0
+		p.tb-font-xl Your information:
+		div#registersection(style="height:auto;overflow-y:hidden;")
+			form#form(enctype="multipart/form-data", method="POST", :action="(menu === 'register' ? '/register' : (pu && pu !== '' ? '/profile' : null))", style="margin-bottom: 50px")
+				input(type="hidden", name="_csrf", value= csrfToken)
+				input#avatarurl(type="hidden", name="avatar", :value="(pu && pu !== '' ? pu.avatar : '')")
+				div.tb-10-m0.input-field
+					p(v-text="(pu && pu !== '' ? pu.username : '')")
+				//- div.tb-10-m0
+				//- 	label.row(v-text="'The ZIP code you vote from'")
+				//- 	input.row(type="text", name="zip", id="zip", aria-required="true", 
+				//- 		:value="(pu && pu !== '' ? pu.properties.zip : '')",
+				//- 		autocomplete="shipping postal-code",
+				//- 		required) 
+
+				div.tb-10-m0(v-if="(!pu || pu === '')")
+					label.row Username
+
+					input.row(
+						type="text", name="username", maxlength="40", id="username", aria-required="true", 
+						@blur="checkNameValidity('username', '\s!@#$%^*()+=-[]\\\';,./{}|\<>?:', 'Alpha-numeric characters only, please', $event)",
+						autocomplete="username",
+						:value="(pu && pu !== '' ? pu.username : '')"
+						required)
+				
+				div.tb-10-m0
+					label.row Email
+
+					input.row(type="email", name="email", id="email", aria-required="true", 
+						:value="(pu && pu !== '' ? pu.email : '')",
+						:placeholder="(pu && pu !== '' ? pu.email : '')",
+						autocomplete="email",
+						required
+						)
+				div.tb-10-m0(v-if="(!pu || pu === '')")
+					label.row Password
+
+					input.row(
+						type="password", name="password", aria-required="true", autocomplete="new-password", required)
+				p
+				button#submitregister.tb-10-m0.tb-03-m2.block(type="submit", :ariaDescription="(menu === 'register' ? 'Register' : 'Submit')", v-text="(menu === 'register' ? 'Register' : 'Submit')")

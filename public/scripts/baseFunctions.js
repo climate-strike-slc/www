@@ -30,20 +30,46 @@ var baseFunctions = {
 		)
 	},
 	activate: function(i) {
+		var self = this;
 		// logic for when a div is active (mouseover, touchstart)
-		this.active = parseInt(i,10);
+		self.active = parseInt(i,10);
+
 	},
-	deactivate: function(i) {
+	deactivate: function(i, e) {
 		// (mouseleave, touchend)
-		
-		if (parseInt(i, 10) !== this.active) {
-			// this.hov = null;
+		e.preventDefault()
+		var self = this;
+		if (self.active >= 0 && i) {
+			if (parseInt(i, 10) !== this.active) {
+				// this.hov = null;
+				router.push({ path: '' });
+			}
+			self.active = null;
+		} else if (self.active >= 0 && !i) {
 			router.push({ path: '' });
+			self.active = null;
 		}
-		this.active = null;
 	},
-	dialog: function(i) {
-		router.push({ path: `#${i}` });
+	dialog: function(i, e) {
+		e.preventDefault()
+		var self = this;
+		self.active = parseInt(i,10);
+		router.push({ path: `/mtg/jitsi#meeting${i}` });
+		const domain = 'bli.sh';
+		const options = {
+			roomName: self.keys[i],
+			width: (!self.res ? (self.wWidth * 0.66) : (self.wWidth*0.86)) +'px',
+			height: (!self.res ? ((self.wWidth * 0.66) * 0.72) : ((self.wWidth * 0.72) * 0.95)) +'px',
+			parentNode: document.querySelector(`#meeting${i}`),
+			// noSSL: false
+		};
+		self.apis[self.keys[i]] = new JitsiMeetExternalAPI(domain, options);
+		var iframe = document.getElementById(`jitsiConferenceFrame${i}`)
+		setTimeout(function(){
+			iframe.style.position = 'absolute';
+			iframe.style.top = '0'
+			iframe.style.left = '0'
+		}, 1000)
 	},
 	hover: function() {
 		// setTimeout(function(){
@@ -99,7 +125,8 @@ var baseFunctions = {
 		var self = this;
 		var years = (!self.data ? [] : self.data.map(function(doc){
 			return self.formatDate(which, doc.start_time);
-		})).filter(function(v,i,a){return a.indexOf(v) === i})
+		})).filter(function(v,i,a){return a.indexOf(v) === i});
+		console.log(years)
 		return years;
 	},
 	checkAdmin: function(e) {
