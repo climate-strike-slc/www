@@ -125,8 +125,8 @@ router.get('/login', csrfProtection, (req, res, next) => {
 	const outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath, 'GET');
 	res.cookie('XSRF-TOKEN', req.csrfToken())
-	// var referrer = req.get('Referrer');
-	// req.session.referrer = referrer;
+	var referrer = req.get('Referrer');
+	req.session.referrer = referrer;
 	return res.render('login', { 
 		csrfToken: req.csrfToken(),
 		menu: 'login'
@@ -137,10 +137,10 @@ router.post('/login', upload.array(), parseBody, csrfProtection, passport.authen
 	failureRedirect: '/login'
 }), async (req, res, next) => {
 	const outputPath = url.parse(req.url).pathname;
-	// console.log(outputPath, 'POST');
+	console.log(outputPath, 'POST');
 	req.session.userId = req.user._id;
 	req.session.loggedin = req.user.username;
-	var referrer = !req.session.referrer || req.session.referrer === '/login' ? '/usr/profile' : req.session.referrer;
+	var referrer = !req.session.referrer || /(\/login)/.test(req.session.referrer) || /(\/auth)/.test(req.session.referrer)  ? '/usr/profile' : req.session.referrer;
 	const pu = await PublisherDB.findOne({_id: req.user._id}).then(pu=>pu).catch(err=>next(err));
 	if (!pu.properties.admin) {
 		var admin;
@@ -163,6 +163,7 @@ router.post('/login', upload.array(), parseBody, csrfProtection, passport.authen
 	} else {
 		req.session.admin = pu.properties.admin;
 		req.session.referrer = referrer;
+		console.log(referrer)
 		return res.redirect(referrer);
 	}
 });

@@ -51,15 +51,15 @@ block content
 					//- 	label.row(for="pm") AM / PM
 					//- 	select.row#pm(@change="formatDate('pm', $event)")
 					//- 		option(v-for="(p, i) in ['am','pm']" v-text="p" :value="i" :selected="(pm === i)")
-				input(type="hidden" name="puid" :value="userId")
+				input(type="hidden" name="puid" :value="!pu ? '' : pu._id")
 				input(type="hidden" name="created_at" :value="new Date()")
 				input(type="hidden" name="start_time" :value="date")
 				div.row
 					label.tb-10-m0(for="title") Title
-					input.tb-10-m0(type="text" name="title" id="title" :value="doc.title")
+					input.tb-10-m0(type="text" name="title" id="title" :value="(!doc ? '' : doc.title)")
 				div.row
 					label.tb-10-m0(for="description") Description
-					textarea.tb-10-m0(type="text" name="description" id="description" v-html="marked(doc.description)")
+					textarea.tb-10-m0(type="text" name="description" id="description" v-html="(!doc ? '' : marked(doc.description))")
 				div.row
 					button.tb-10-m0(role="submit") Submit
 				div.row

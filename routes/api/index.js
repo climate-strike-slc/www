@@ -36,7 +36,6 @@ router.get('/createMeeting', csrfProtection, function(req, res) {
 	res.cookie('XSRF-TOKEN', req.csrfToken())
 	const outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath, 'GET');
-	if (process.env.TEST_ENV && process.env.RECORD_ENV) res.header('XSRF-TOKEN', req.csrfToken());
 	// console.log(res.header['xsrf-token'])
 	res.render('edit', {
 		pu: req.user,
