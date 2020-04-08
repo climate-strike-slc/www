@@ -70,34 +70,33 @@ describe('API calls', () => {
     .expect('Location', '/mtg/jitsi')
   });
   
-  // key = 'should get a header';
-  // it(key, async () => {
-  //   const snapKey = ('API calls '+key+' 1');
-  //   const { nockDone } = await nockBack(
+  key = 'should get a header';
+  it(key, async () => {
+    const snapKey = ('API calls '+key+' 1');
+    const { nockDone } = await nockBack(
       'router.header.json'
-  //   );
-  //   nock.enableNetConnect('https://zoom.us');
-  //   header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
-  // 
-  //   if (!recording) {
-  //     expect(header).to.matchSnapshot();
-  //     nockDone()
-  // 
-  //   } else {
-  //     await agent
+    );
+    nock.enableNetConnect('https://zoom.us');
+    header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
+  
+    if (!recording) {
+      expect(header).to.matchSnapshot();
+      nockDone()
+  
+    } else {
+      await agent
       .get('/login')
       .expect(200)
-  //     .then(async(res)=>{
-  //       header = res.header;
-  //       expect(header).to.matchSnapshot();
-  //     })
+      .then(async(res)=>{
+        header = res.header;
+        expect(header).to.matchSnapshot();
+      })
       nockDone()
-  // })
-  // 
+    }
+  })
+  
   key = 'registration page should contain a well-configured csrf token';
   it(key, async() => {
-  //   let header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
-  //     })
     const snapKey = ('API calls '+key+' 1');
     const { nockDone } = await nockBack(
       'api.csrf.json'
@@ -115,29 +114,11 @@ describe('API calls', () => {
       .get('/register')
       // .expect(200)
       .then(async(res)=>{
-        // console.log(res.header)
         const cookie = res.header['set-cookie'];
-        // console.log(res.header)
         const csf = cookie.filter((item) => {
             // console.log(item, /(XSRF\-TOKEN=)/i.test(item))
             return /(XSRF\-TOKEN=)/.test(item)
           })[0].split('XSRF-TOKEN=')[1].split(';')[0];
-        // const csf = await cookie(res, '_csrf')
-        // console.log(csf)
-        
-        const csf = cookie.filter((item) => {
-          const matches = /(\_csrf=)/i.test(item)
-            // console.log(item, /(\_csrf=)/.test(item), matches)
-            return matches
-          })[0].split('_csrf=')[1].split(';')[0];
-        if (!csf) throw new Error('missing csrf token');
-        
-        // const csf = cookie.filter((item) => {
-        //   const matches = /(XSRF\-TOKEN=)/i.test(item) && /\/api\/createMeeting/ig.test(item)
-        //     console.log(item, /(XSRF\-TOKEN=)/i.test(item), matches)
-        //     return matches
-        //   })[0].split('XSRF-TOKEN=')[1].split(';')[0];
-        // if (!csf) throw new Error('missing csrf token');
         expect(csf).to.matchSnapshot();
   
         await agent
@@ -151,10 +132,6 @@ describe('API calls', () => {
         })
         .expect(302)
         .expect('Location', '/usr/profile')
-        // .catch(err=>console.log(err))
-          console.log(res.header)
-        })
-        // .expect(403)
       })
       nockDone()
   
@@ -317,12 +294,8 @@ describe('API calls', () => {
   // }
 })
 
-// function cookie (res, name) {
-//   return res.headers['set-cookie'].filter(function (cookies) {
-//     return cookies.split('=')[0] === name
-//   })[0]
-// }
-
-
+function cookies (res) {
+  return res.headers['set-cookie'].map(function (cookies) {
+    return cookies.split(';')[0]
   }).join(';')
 }
