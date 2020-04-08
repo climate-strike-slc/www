@@ -1,0 +1,56 @@
+exports["API calls/should get a header(0)"] = {
+  "x-powered-by": "Express",
+  "vary": "Origin",
+  "set-cookie": [
+    "site=cookie; Path=/; Secure; SameSite=None",
+    "_csrf=H-KF1RlQQwC2YK2quHsI0kP2; Path=/",
+    "XSRF-TOKEN=VFgRdsuP-a-IAVy7FZsC1W0JdjJgu74RXVjI; Path=/",
+    "nodecookie=s%3AcKutWYrI1tP-EbK1pUcHuJZoabhp2SHQ.8hvQ7nU1WkF03ngN4ETRcnCVp1ISoLS27QwHsM%2BXIt8; Path=/; Expires=Wed, 08 Apr 2020 09:57:06 GMT; HttpOnly"
+  ],
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, POST, HEAD, OPTIONS",
+  "access-control-allow-headers": "Cache-Control, Origin, Content-Type, Accept, Set-Cookie",
+  "access-control-allow-credentials": "true",
+  "content-type": "text/html; charset=utf-8",
+  "content-length": "3650",
+  "etag": "W/\"e42-cLimC3E+BmxOdwAq2+pnoVVjs3U\"",
+  "date": "Wed, 08 Apr 2020 06:57:06 GMT",
+  "connection": "close"
+};
+
+exports["API calls/registration page should contain a well-configured csrf token(0)"] = "7shBeXwx-R7jAopjvccSTdrmoC1Aw7TgejEA";
+
+exports["API calls/Should get all users(0)"] = [
+  {
+    "properties": {
+      "time": {
+        "begin": "2020-04-08T06:57:06.991Z",
+        "end": "2020-04-08T06:57:06.991Z"
+      },
+      "avatar": "/images/publish_logo_sq.svg",
+      "admin": true
+    },
+    "_id": "5e8d75c29bc11d9f2fd9547f",
+    "username": "tbushman",
+    "email": "tracey.bushman@gmail.com",
+    "__v": 0
+  }
+];
+
+exports["API calls/should edit a user(0)"] = [
+  {
+    "properties": {
+      "time": {
+        "begin": "2020-04-08T06:57:06.991Z",
+        "end": "2020-04-08T06:57:06.991Z"
+      },
+      "avatar": "/images/publish_logo_sq.svg",
+      "admin": true
+    },
+    "_id": "5e8d75c29bc11d9f2fd9547f",
+    "username": "tb",
+    "email": "tbushman@pu.bli.sh",
+    "__v": 0
+  }
+];
+

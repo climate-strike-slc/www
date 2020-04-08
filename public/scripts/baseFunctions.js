@@ -35,24 +35,31 @@ var baseFunctions = {
 		self.active = parseInt(i,10);
 
 	},
-	deactivate: function(i) {
+	deactivate: function(i, e) {
 		// (mouseleave, touchend)
-		
-		if (parseInt(i, 10) !== this.active) {
-			// this.hov = null;
+		e.preventDefault()
+		var self = this;
+		if (self.active >= 0 && i) {
+			if (parseInt(i, 10) !== this.active) {
+				// this.hov = null;
+				router.push({ path: '' });
+			}
+			self.active = null;
+		} else if (self.active >= 0 && !i) {
 			router.push({ path: '' });
+			self.active = null;
 		}
-		this.active = null;
 	},
-	dialog: function(i) {
+	dialog: function(i, e) {
+		e.preventDefault()
 		var self = this;
 		self.active = parseInt(i,10);
-		router.push({ path: `/jitsi#meeting${i}` });
+		router.push({ path: `/mtg/jitsi#meeting${i}` });
 		const domain = 'bli.sh';
 		const options = {
 			roomName: self.keys[i],
-			width: (!self.res ? (self.wWidth * 0.66) : (self.wWidth*0.85)) +'px',
-			height: (!self.res ? ((self.wWidth * 0.66) * 0.72) : (self.wWidth * 0.66)) +'px',
+			width: (!self.res ? (self.wWidth * 0.66) : (self.wWidth*0.86)) +'px',
+			height: (!self.res ? ((self.wWidth * 0.66) * 0.72) : ((self.wWidth * 0.72) * 0.95)) +'px',
 			parentNode: document.querySelector(`#meeting${i}`),
 			// noSSL: false
 		};

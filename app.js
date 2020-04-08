@@ -6,7 +6,7 @@ const favicon = require('serve-favicon');
 const parseForm = bodyParser.urlencoded({ extended: false });
 const parseJSONBody = bodyParser.json();
 const parseBody = [parseJSONBody, parseForm];
-const router = require('./routes');
+const { router, api, usr, mtg } = require('./routes');
 const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
 const config = require('./utils/config');
@@ -19,6 +19,8 @@ const { Content, ContentTest, Publisher, PublisherTest } = require('./models');
 const PublisherDB = (!testenv ? Publisher : PublisherTest);
 const ContentDB = (!testenv ? Content : ContentTest);
 const LocalStrategy = require('passport-local').Strategy;
+const provideRoutes = require('./routes');
+
 const app = express()
 
 //CORS middleware
@@ -97,7 +99,8 @@ app.use((req, res, next) => {
 	return next();
 })
 
-app.use('/', router);
+provideRoutes(app);
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
 	res.status(404).send('Not Found');

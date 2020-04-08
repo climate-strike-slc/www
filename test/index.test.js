@@ -12,7 +12,7 @@ const app = require('../app');
 const fs = require('fs');
 const config = require('../utils/config/index.js');
 const port = config.port;
-// const { getAuthCode } = require('../utils/middleware'); 
+const { ContentTest, PublisherTest } = require('../models'); 
 const { expect } = chai;
 chai.use(sinonChai);
 
@@ -39,8 +39,10 @@ if (testing === undefined) {
 nockBack.setMode('record');
 
 describe('API calls', () => {
-  let key, agent, csrf, header = null;
+  let key, agent, csrf, header = null, users, user;
   before(async() => {
+    // await ContentTest.deleteMany({}).catch(err => console.log(err));
+    // await PublisherTest.deleteMany({}).catch(err => console.log(err));
     nock.enableNetConnect('127.0.0.1');
     await app.listen(config.port, () => {
       console.log('connected');
@@ -54,21 +56,25 @@ describe('API calls', () => {
   afterEach(async() => {
     // this ensures that consecutive tests don't use the snapshot created
     // by a previous test
-    // await agent
-    // .get('/logout')
+    await nockBack.setMode('wild');
+    await nock.cleanAll();
     // .expect(302)
     // .expect('Location', '/')
-    nockBack.setMode('wild');
-    nock.cleanAll();
   });
   after(async() => {
+    await ContentTest.deleteMany({}).catch(err => console.log(err));
+    await PublisherTest.deleteMany({}).catch(err => console.log(err));
+    await agent
+    .get('/logout')
+    .expect(302)
+    .expect('Location', '/mtg/jitsi')
   });
   
   // key = 'should get a header';
   // it(key, async () => {
   //   const snapKey = ('API calls '+key+' 1');
   //   const { nockDone } = await nockBack(
-  //     'editContent.header.json'
+      'router.header.json'
   //   );
   //   nock.enableNetConnect('https://zoom.us');
   //   header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
@@ -79,79 +85,45 @@ describe('API calls', () => {
   // 
   //   } else {
   //     await agent
-  //     .get(`https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientID}&redirect_uri=${config.redirectURL}`)
-  //     // .expect(getAuthCode)
-  //     .expect(302)
-  //     .expect('Location', '/auth')
+      .get('/login')
+      .expect(200)
   //     .then(async(res)=>{
   //       header = res.header;
   //       expect(header).to.matchSnapshot();
   //     })
-  //   }
+      nockDone()
   // })
   // 
-  // key = 'should require authentication redirect';
-  // it(key, async() => {
-  //   const snapKey = ('API calls '+key+' 1');
-  //   const { nockDone } = await nockBack(
-  //     'editContent.auth.json'
-  //   );
-  //   nock.enableNetConnect('127.0.0.1');
-  //   let header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
-  // 
-  //   if (!recording) {
-  //     expect(header).to.matchSnapshot();
-  //     nockDone()
-  // 
-  //   } else {
-  //     await agent
-  //     .get('/auth')
-  //     .expect(302)
-  //     .expect('Location', `https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientIDTest}&redirect_uri=${config.redirectURLTest}`)
-  //     .then(async(res)=>{
-  //       // console.log(res)
-  //       header = res.header;
-  //       expect(header).to.matchSnapshot();
-  //       // nock.enableNetConnect('zoom.us');
-  //       // await request(app)
-  //       // .get(`https://zoom.us/oauth/authorize?response_type=code&client_id=${config.clientIDTest}&redirect_uri=${config.redirectURLTest}`)
-  //       // .expect(302)
-  //       // .expect('Location', `${config.redirectURL}`)
-  //       // .then(async res => {
-  //       //   header = res.header;
-  //       //   expect(header).to.matchSnapshot();
-  //       // })
-  //     })
-  //   }
-  // })
-  
-  key = 'edit page should contain a well-configured csrf token';
+  key = 'registration page should contain a well-configured csrf token';
   it(key, async() => {
+  //   let header = (!mockSnapshots ? null : mockSnapshots[snapKey]);
+  //     })
     const snapKey = ('API calls '+key+' 1');
     const { nockDone } = await nockBack(
-      'editContent.csrf.json'
+      'api.csrf.json'
     );
     nock.enableNetConnect('127.0.0.1');
     csrf = (!mockSnapshots ? null : mockSnapshots[snapKey]);
-    
+  
     if (!recording) {
       expect(csrf).to.matchSnapshot();
       nockDone()
-
+  
     } else {
-      
+  
       await agent
-      .get('/api/createMeeting')
+      .get('/register')
+      // .expect(200)
       .then(async(res)=>{
         // console.log(res.header)
-        // const csurf = res.header['xsrf-token']
-        // console.log(csf)
         const cookie = res.header['set-cookie'];
         // console.log(res.header)
-        // const csf = cookie.filter((item) => {
-        //     // console.log(item, /(\_csrf=)/.test(item))
-        //     return /(\_csrf=)/.test(item)
-        //   })[0].split('_csrf=')[1].split(';')[0];
+        const csf = cookie.filter((item) => {
+            // console.log(item, /(XSRF\-TOKEN=)/i.test(item))
+            return /(XSRF\-TOKEN=)/.test(item)
+          })[0].split('XSRF-TOKEN=')[1].split(';')[0];
+        // const csf = await cookie(res, '_csrf')
+        // console.log(csf)
         
         const csf = cookie.filter((item) => {
           const matches = /(\_csrf=)/i.test(item)
@@ -167,63 +139,190 @@ describe('API calls', () => {
         //   })[0].split('XSRF-TOKEN=')[1].split(';')[0];
         // if (!csf) throw new Error('missing csrf token');
         expect(csf).to.matchSnapshot();
+  
         await agent
-        .post('/api/createMeeting')
-        // .set('Cookie', cookies(res, '_csrf'))
+        .post('/register')
+        .set('Cookie', cookies(res))
         .send({
           _csrf: csf,
-          topic: 'ecology',
-          start_time: moment().utc().format(),
-          title: key,
-          description: 'API calls '+key+' 1'
+          username: 'tbushman',
+          password: 'password',
+          email: 'tracey.bushman@gmail.com'
         })
         .expect(302)
-        .expect('Location', '/meetings')
-        .then(res => {
+        .expect('Location', '/usr/profile')
+        // .catch(err=>console.log(err))
           console.log(res.header)
         })
         // .expect(403)
       })
       nockDone()
-
+  
     }
-  });
+  }).timeout(5000);
+  
+  key = 'Should get all users';
+  it(key, async () => {
+    const snapKey = ('API calls '+key+' 1');
+    const { nockDone } = await nockBack(
+      'api.users.post.json'
+    );
+    nock.enableNetConnect('127.0.0.1');
+    users = (!mockSnapshots ? null : mockSnapshots[snapKey]);
     
+    if (!recording) {
+      expect(users).to.matchSnapshot();
+      nockDone()
+
+    } else {
+      await agent
+      .get('/auth')
+      .expect(302)
+      .expect('Location', '/usr/profile')
+      .then(async res => {
+        const cookie = res.header['set-cookie'];
+        const csf = cookie.filter((item) => {
+            return /(XSRF\-TOKEN=)/.test(item)
+          })[0].split('XSRF-TOKEN=')[1].split(';')[0];
+        if (!csf) throw new Error('missing csrf token');
+        await agent
+        .post('/login')
+        .set('Cookie', cookies(res))
+        .send({
+          _csrf: csf,
+          username: 'tbushman',
+          password: 'password'
+        })
+        .expect(302)
+        .expect('Location', '/usr/profile')
+        .then(async res => {
+          await agent
+          .post('/api/users')
+          .expect(200)
+          // .expect('Location', '/')
+          .then(async res => {
+            users = res.body;
+            expect(res.body.length).to.equal(1);
+            expect(res.body).to.matchSnapshot();
+            // await agent
+            // .get('/sig/admin')
+            // // .set('cookie', ck)
+            // .expect(302)
+            // .expect('Location', `/pu/getgeo/${res[0]._id}`)
+            // .then(async res => {
+            //   await agent
+            //   .post('/')
+            // })
+          })
+        })
+        // .catch(err => console.log(err))
+        
+      })
+      // .catch(err => console.log(err))
+      // console.log(ck)
+      
+      nockDone()
+      
+    }
+  })
+  
+  key = 'should edit a user';
+  it(key, async() => {
+    const userId = users[0]._id;
+    const snapKey = ('API calls '+key+' 1');
+    const { nockDone } = await nockBack(
+      'usr.profile.post.json'
+    );
+    nock.enableNetConnect('127.0.0.1');
+    user = (!mockSnapshots ? (!users ? null : users[0]) : mockSnapshots[snapKey]);
+    
+    if (!recording) {
+      expect(user).to.matchSnapshot();
+      nockDone()
+
+    } else {
+      await agent
+      .get('/auth')
+      .then(async res => {
+        await agent
+        .get('/usr/profile')
+        .expect(200)
+        .then(async res => {
+          const cookie = res.header['set-cookie'];
+          const csf = cookie.filter((item) => {
+              return /(XSRF\-TOKEN=)/.test(item)
+            })[0].split('XSRF-TOKEN=')[1].split(';')[0];
+          if (!csf) throw new Error('missing csrf token');
+          await agent
+          .post(`/usr/profile/${userId}`)
+          .set('Cookie', cookies(res))
+          .send({
+            _csrf: csf,
+            username: 'tb',
+            email: 'tbushman@pu.bli.sh'
+          })
+          .then(async res => {
+            await agent
+            .post('/api/users')
+            .then(async res => {
+              user = res.body
+              expect(user).to.matchSnapshot()
+            })
+          })
+        })
+      })
+      
+      nockDone()
+    }
+  })
+  key = 'should delete a user';
+  it(key, async() => {
+    const userId = users[0]._id;
+    const snapKey = ('API calls '+key+' 1');
+    const { nockDone } = await nockBack(
+      'usr.profile.delete.json'
+    );
+    nock.enableNetConnect('127.0.0.1');
+    user = (!mockSnapshots ? user : mockSnapshots[snapKey]);
+    
+    if (!recording) {
+      expect(user).to.matchSnapshot();
+      nockDone()
+
+    } else {
+      await agent
+      .post(`/usr/deleteProfile/${userId}`)
+      .expect(200)
+      // .expect('Location', '/mtg/jitsi')
+      .then(async res => {
+        await agent
+        .post('/api/users')
+        .expect(302)
+        .expect('Location', '/mtg/jitsi')
+        // .then(async res => {
+        //   // expect(res.body[0]).to.be.undefined;
+        //   expect(res.body).to.matchSnapshot();
+        // })
+      })
+      nockDone()
+    }
+  })  // {
+  //   _csrf: csf,
+  //   topic: 'ecology',
+  //   start_time: moment().utc().format(),
+  //   title: key,
+  //   description: 'API calls '+key+' 1',
+  //   created_at: moment().utc().format(),
+  //   start_url: `https://bli.sh/${topic}`
+  // }
 })
 
-function cookies (res, cookie) {
-  return res.headers['set-cookie'].filter(function (cookies) {
-    console.log('cookies')
-    console.log(cookies)
-    const rx = new RegExp(cookie, 'gi');
-    return rx.test(cookies)
-    // return cookies.split(';')[0]
+// function cookie (res, name) {
+//   return res.headers['set-cookie'].filter(function (cookies) {
+//     return cookies.split('=')[0] === name
+//   })[0]
+// }
+
+
   }).join(';')
 }
-
-// function promisedRegisterRequest() {
-//   var authenticatedagent2b = request.agent(app);
-//   return new Promise((resolve, reject) => {
-//     authenticatedagent2b
-//       .post("/register")
-//       .send(user)
-//       .end(function(error, response) {
-//         if (error) reject(error);
-//         resolve(authenticatedagent2b);
-//       });
-//   });
-// }
-// // Auxiliary function.
-// function createLoginAgent(server, loginDetails, done) {
-//   agent
-//     .post(server)
-//     .send(loginDetails)
-//     .end(function (error, response) {
-//         if (error) {
-//             throw error;
-//         }
-//         // var loginAgent = request.agent();
-//         agent.saveCookies(response);
-//         done(loginAgent);
-//     });
-// };

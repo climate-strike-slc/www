@@ -71,7 +71,7 @@ block content
 								div.row
 									div.tb-05-m0
 										a.fit(@click="deactivate(i)" role="button" target="_blank" :href="data[i].join_url" v-text="'Join in Zoom app'")
-										//- a(:href="'/meeting/'+data[i].id")
+										//- a(:href="'/mtg/meeting/'+data[i].id")
 									div.tb-05-m0
 										a.fit(role="button" :href="'/api/editMeeting/'+ doc.id") Edit
 						img(:src="'/images/icons/'+data[i].topic+'.svg'" style="width:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.4;")

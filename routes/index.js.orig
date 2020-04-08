@@ -1,6 +1,5 @@
 require('dotenv').config()
 const express = require('express');
-const router = express.Router();
 const crypto = require('crypto');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -8,13 +7,15 @@ const moment = require('moment');
 const multer = require('multer');
 const rp = require('request-promise');
 const passport = require('passport');
+const url = require('url');
 const upload = multer({fieldSize: 25 * 1024 * 1024});
 const parseForm = bodyParser.urlencoded({ extended: false });
 const parseJSONBody = bodyParser.json();
 const parseBody = [parseJSONBody, parseForm];
 const csrf = require('csurf');
 const csrfProtection = csrf({cookie:true});
-const { getMe, ensureAdmin, ensureAuthenticated, sessionAdmin } = require('../utils/middleware');
+const { getMe, ensureAdmin, ensureAuthenticated, sessionAdmin, sessionReferrer } = require('../utils/middleware');
+const { deleteMeeting } = require('../utils/helpers');
 const config = require('../utils/config');
 // const request = require('request')
 
@@ -23,40 +24,56 @@ const { Content, ContentTest, Publisher, PublisherTest } = require('../models');
 const PublisherDB = (!testenv ? Publisher : PublisherTest);
 const ContentDB = (!testenv ? Content : ContentTest);
 
-// Helper functions
+const routes = express.Router();
+const router = express.Router();
 
-function deleteMeeting(id, token, next) {
-	ContentDB.deleteOne({_id: id}, (err, doc) => {
-		if (err) {
-			return next(err)
-		}
-		return next()
-	})
-}
+const api = require('./api');
+const mtg = require('./mtg');
+const usr = require('./usr');
 
+<<<<<<< HEAD
 router.all('/*', sessionAdmin)
 // router.all('/api/*', getAuthCodeJWT, getMe, ensureAdmin);
 
 router.get('/', (req, res, next) => {
 	// console.log(req.cookies);
-<<<<<<< HEAD
-	var amIAdmin = (!req.cookies.token ? false : true);
-	console.log('Am I admin?')
-	console.log(amIAdmin)
-	res.render('home', {
-		admin: (!req.amIAdmin ? amIAdmin : req.amIAdmin),
-=======
 	// console.log(req.user)
 	
+	console.log(amIAdmin)
 	res.render('home', {
 		pu: req.user,
 		admin: (!req.session.admin ? false : true),
->>>>>>> todo reservations
 		menu: 'home'
 	});
 });
+=======
+routes.all(/(.+)/, sessionAdmin, sessionReferrer);
+
+routes.use('/api', api);
+routes.use('/mtg', mtg);
+routes.use('/usr', usr);
+
+
+// router.all(/(.+)/, sessionAdmin)
+
+router.all(/(.+)/, sessionAdmin, sessionReferrer);
+
+router.get('/auth', csrfProtection, async (req, res, next) => {
+	res.cookie('XSRF-TOKEN', req.csrfToken())
+	const outputPath = url.parse(req.url).pathname;
+	// console.log(outputPath, 'GET');
+	if (req.isAuthenticated()) {
+		var referrer = !req.session.referrer ? '/usr/profile' : req.session.referrer;
+		return res.redirect(referrer);
+	} else {
+		return res.redirect('/login')
+	}
+})
+>>>>>>> wip tests
 
 router.get('/logout', async (req, res, next) => {
+	const outputPath = url.parse(req.url).pathname;
+	// console.log(outputPath, 'GET');
 	if (req.session || req.user) {
 		await req.session.destroy(err=>req.logout())
 	}
@@ -65,95 +82,73 @@ router.get('/logout', async (req, res, next) => {
 	res.clearCookie('expires_on');
 <<<<<<< HEAD
 	res.clearCookie('_csrf')
-	// delete req.cookies.token;
-	// delete req.cookies.refresh;
-	// res.cookie('token', null);
-	// res.cookie('refresh', null);
 	return res.redirect('/')
-})
-
-// router.post('/signature/:meetingnumber', async (req, res, next) => {
-// 	const meetingNumber = parseInt(req.params.meetingnumber);
-// 	const role = 0;
-// 	const timestamp = new Date().getTime()
-//   const msg = Buffer.from(process.env.JWT_KEY + meetingNumber + timestamp + role).toString('base64')
-//   const hash = await crypto.createHmac('sha256', process.env.JWT_SECRET).update(msg).digest('base64')
-//   const signature = Buffer.from(`${process.env.JWT_KEY}.${meetingNumber}.${timestamp}.${role}.${hash}`).toString('base64')
-// 	const key = process.env.JWT_KEY;
-// 	const ret = {
-// 		apiKey: key,
-// 		wt: process.env.WT,
-// 		signature: signature
-// 	}
-// 	return res.json(ret)
-// })
-// 
-			var amIAdmin = (!req.cookies.token ? false : true);
 =======
-	return res.redirect('/')
+	return res.redirect('/mtg/jitsi')
+>>>>>>> wip tests
 })
 
->>>>>>> todo reservations
 router.get('/register', csrfProtection, (req, res, next) => {
-	// res.cookie('XSRF-TOKEN', req.csrfToken())
+	const outputPath = url.parse(req.url).pathname;
+	// // console.log(outputPath, 'GET');
+	res.cookie('XSRF-TOKEN', req.csrfToken())
 	return res.render('register', { csrfToken: req.csrfToken(), menu: 'register' } );
 })
 
 router.post('/register', upload.array(), parseBody/*, csrfProtection*/, (req, res, next) => {
+	const outputPath = url.parse(req.url).pathname;
+	// console.log(outputPath, 'POST');
 	var langs = [];
-	console.log(req.body)
-	PublisherDB.find({}, (err, data) => {
-		if (err) {
-			return next(err)
-		}
-		var admin;
-		if (
-			config.admins.split(/\,\s{0,5}/).indexOf(req.body.username) !== -1 ||
-			config.admins.split(/\,\s{0,5}/).indexOf(req.body.email) !== -1
-		) {
-			admin = true;
-		} else {
-			admin = false;
-		}
-		PublisherDB.register(new PublisherDB(
-			{ username : req.body.username, 
-				/*language: req.body.languages,*/ 
-				email: req.body.email, 
-				properties: { 
-					avatar: '/images/publish_logo_sq.svg', 
-					admin: admin, 
-					givenName: req.body.givenName, 
-					zip: req.body.zip, 
-					time: {
-						begin: new Date(),
-						end: new Date()
-					}
+	// console.log(req.body)
+	var admin;
+	if (
+		config.admins.split(/\,\s{0,5}/).indexOf(req.body.username) !== -1 ||
+		config.admins.split(/\,\s{0,5}/).indexOf(req.body.email) !== -1
+	) {
+		admin = true;
+	} else {
+		admin = false;
+	}
+	PublisherDB.register(new PublisherDB(
+		{ username : req.body.username, 
+			/*language: req.body.languages,*/ 
+			email: req.body.email, 
+			properties: { 
+				avatar: '/images/publish_logo_sq.svg', 
+				admin: admin, 
+				givenName: req.body.givenName, 
+				time: {
+					begin: new Date(),
+					end: new Date()
 				}
 			}
-		), req.body.password, (err, user) => {
-			if (err) {
-				return res.render('register', {info: "Sorry. That Name already exists. Try again."});
-			}
-			req.session.username = req.body.username;
-			passport.authenticate('local')(req, res, function () {
-				PublisherDB.findOne({username: req.body.username}, function(error, pu){
-					if (error) {
-						return next(error)
-					}
-					req.session.userId = pu._id;
-					req.session.loggedin = pu.username;
-					
-					return res.redirect('/profile')
-				})
-			});
+		}
+	), req.body.password, (err, user) => {
+		if (err) {
+			return res.render('register', {info: "Sorry. That Name already exists. Try again."});
+		}
+		req.session.username = req.body.username;
+		passport.authenticate('local')(req, res, function () {
+			PublisherDB.findOne({username: req.body.username}, function(error, pu){
+				if (error) {
+					return next(error)
+				}
+				req.session.userId = pu._id;
+				req.session.loggedin = pu.username;
+				
+				return res.redirect('/usr/profile')
+			})
 		});
-	})
+	});
 
 });
 
 router.get('/login', csrfProtection, (req, res, next) => {
-	var referrer = req.get('Referrer');
-	req.session.referrer = referrer;
+	const outputPath = url.parse(req.url).pathname;
+	// console.log(outputPath, 'GET');
+	res.cookie('XSRF-TOKEN', req.csrfToken())
+	// var referrer = req.get('Referrer');
+	// req.session.referrer = referrer;
 	return res.render('login', { 
 		csrfToken: req.csrfToken(),
 		menu: 'login'
@@ -163,9 +158,11 @@ router.get('/login', csrfProtection, (req, res, next) => {
 router.post('/login', upload.array(), parseBody, csrfProtection, passport.authenticate('local', {
 	failureRedirect: '/login'
 }), async (req, res, next) => {
+	const outputPath = url.parse(req.url).pathname;
+	// console.log(outputPath, 'POST');
 	req.session.userId = req.user._id;
 	req.session.loggedin = req.user.username;
-	var referrer = !req.session.referrer ? '/profile' : req.session.referrer;
+	var referrer = !req.session.referrer || req.session.referrer === '/login' ? '/usr/profile' : req.session.referrer;
 	const pu = await PublisherDB.findOne({_id: req.user._id}).then(pu=>pu).catch(err=>next(err));
 	if (!pu.properties.admin) {
 		var admin;
@@ -177,7 +174,7 @@ router.post('/login', upload.array(), parseBody, csrfProtection, passport.authen
 		} else {
 			admin = false;
 		}
-		console.log(admin, config.admins, req.user)
+		// console.log(admin, config.admins, req.user)
 		PublisherDB.findOneAndUpdate({_id: req.user._id}, {$set: {'properties.admin': admin}}, {new: true}, (err, user) => {
 			if (err) return next(err);
 			// req.user = user;
@@ -192,6 +189,7 @@ router.post('/login', upload.array(), parseBody, csrfProtection, passport.authen
 	}
 });
 
+<<<<<<< HEAD
 router.get('/profile', ensureAuthenticated, async (req, res, next) => {
 	const user = await PublisherDB.findOne({_id: req.session.userId}).then(pu=>pu).catch(err=>next(err));
 	console.log(user)
@@ -214,13 +212,7 @@ router.post('/checkAdmin/:userid', async (req, res, next) => {
 })
 
 router.get('/api/createMeeting', ensureAdmin, csrfProtection, function(req, res) {
-<<<<<<< HEAD
-	// console.log(req)
-	// console.log(req.csrfToken())
 	// if (process.env.TEST_ENV && process.env.RECORD_ENV) res.header('XSRF-TOKEN', req.csrfToken());
-=======
-	if (process.env.TEST_ENV && process.env.RECORD_ENV) res.header('XSRF-TOKEN', req.csrfToken());
->>>>>>> todo reservations
 	// console.log(res.header['xsrf-token'])
 	// res.cookie('XSRF-TOKEN', req.csrfToken(), {path: '/api/createMeeting'})
 	var amIAdmin = (!req.cookies.token ? false : true);
@@ -233,14 +225,7 @@ router.get('/api/createMeeting', ensureAdmin, csrfProtection, function(req, res)
 });
 
 router.post('/api/createMeeting', ensureAdmin, upload.array(), parseBody, csrfProtection, async function(req, res, next) {
-<<<<<<< HEAD
-	// console.log(req.body);
-	// console.log("topic:", req.body.topic);
-	// console.log("agenda:", '# ' +req.body.title + '  \n' + req.body.description);
 		var token = (!req.cookies.token ? req.token : req.cookies.token)
-	
-=======
->>>>>>> todo reservations
 	const meeting = new ContentDB(req.body);
 	meeting.save(err => {
 		if (err) {
@@ -255,13 +240,18 @@ router.post('/api/createMeeting', ensureAdmin, upload.array(), parseBody, csrfPr
 router.get('/meetings', async (req, res, next) => {
 	// console.log(req.cookies)
 	const meetings = await ContentDB.find({}).then(data=>data).catch(err=>next(err));
-<<<<<<< HEAD
-			var amIAdmin = (!req.cookies.token ? false : true);
 	return res.render('meetings', {
-=======
+		pu: req.user,
+		admin: req.session.admin,
+		data: meetings
+	})
+});
+
+router.get('/jitsi', async (req, res, next) => {
+	// console.log(req.cookies)
+	const meetings = await ContentDB.find({}).then(data=>data).catch(err=>next(err));
 	return res.render('jitsi', {
 		pu: req.user,
->>>>>>> todo reservations
 		admin: req.session.admin,
 		data: meetings
 	})
@@ -277,178 +267,6 @@ router.get('/api/editMeeting/:id', ensureAdmin, async (req, res, next) => {
 		doc: doc
 	})
 })
-
-<<<<<<< HEAD
-
-// router.get('/meeting/:id', getAuthCodeJWT, (req, res, next) => {
-// 	const meetingId = req.params.id;
-// 	const mOptions = {
-// 		method: 'GET',
-// 		url: `https://api.zoom.us/v2/meetings/${meetingId}`,
-// 		headers: {
-// 			Authorization: 'Bearer ' + req.token
-// 		}
-// 	};
-// 	request(mOptions, (error, response, data) => {
-// 		if (error) {
-// 			if (error.status === 429) {
-// 				var referrer = (!req.referrer ? '/meetings' : req.referrer);
-// 				return res.redirect(referrer)
-// 			} else {
-// 				return next(error)
-// 			}
-// 		} else {
-// 			// console.log(data)
-// 			return res.render('meeting', {
-// 				meeting: JSON.parse(data)
-// 			})
-// 		}
-// 	})
-// })
-// 
-// router.get('/api/groups', getAuthCodeJWT, ensureAdmin, csrfProtection, (req, res, next) => {
-// 	const options = {
-// 		method: 'GET',
-// 		url: `https://api.zoom.us/v2/groups`,
-// 		headers: {
-// 			Authorization: 'Bearer ' + req.token
-// 		}
-// 	}
-// 	request(options, async (error, response, groups) => {
-// 		if (error) {
-// 			console.log('API Response Error: ', error)
-// 		} else {
-// 			console.log(groups)
-// 			groups = JSON.parse(groups);
-// 			const grp = await groups.groups.map(group => {
-// 				let g = group;
-// 				const uOptions = {
-// 					method: 'GET',
-// 					url: `https://api.zoom.us/v2/groups/${group.id}/members`,
-// 					headers: {
-// 						Authorization: 'Bearer ' + req.token
-// 					}
-// 				}
-// 				request(uOptions, (err, response, members) => {
-// 					members = JSON.parse(members).members;
-// 					g.members = members;
-// 					// console.log(members)
-// 				})
-// 				if (g.members) return g;
-// 
-// 			})
-// 			console.log(grp)
-// 			return res.render('users', {
-// 				admin: (!req.amIAdmin ? false : true),
-// 				users: grp
-// 			})
-// 		}
-// 	})
-// })
-// 
-// router.post('/api/addGroup', getAuthCodeJWT, csrfProtection, async (req, res, next) => {
-// 
-// })
-
-// router.post('/api/checkgroup/:id', getAuthCodeJWT, ensureAdmin, (req, res, next) => {
-// 	const uOptions = {
-// 		method: 'GET',
-// 		url: `https://api.zoom.us/v2/groups/${req.params.id}/members`,
-// 		headers: {
-// 			Authorization: 'Bearer ' + req.token
-// 		}
-// 	}
-// 	request(uOptions, (err, response, members) => {
-// 		if (err) {
-// 			return next(err)
-// 		}
-// 		const group = JSON.parse(members).members;
-// 		return res.status(200).send(group)
-// 	})
-// })
-// 
-// //add group
-// router.post('/api/createGroup', getAuthCodeJWT, ensureAdmin, upload.array(), parseBody, csrfProtection, async (req, res, next) => {
-// 	if (req && req.token) {
-// 		const mOptions = {
-// 			method: 'POST',
-// 			uri: `https://api.zoom.us/v2/groups`,
-// 			json: {
-// 				'name': req.body.topic
-// 			},
-// 			headers: {
-// 				Authorization: 'Bearer ' + req.token
-// 			}
-// 
-// 		};
-// 		request(mOptions, (error, response, body) => {
-// 			if (error) {
-// 				if (error.status === 429) {
-// 					var referrer = (!req.referrer ? '/api/groups' : req.referrer);
-// 					return res.redirect(referrer)
-// 				} else {
-// 					return next(error)
-// 				}
-// 
-// 			}
-// 			return res.redirect('/meetings')
-// 		}) 
-// 	} else {
-// 		// console.log(req)
-// 		// something went wrong		
-// 	}
-// 
-// })
-
-// add group members
-// router.post('/group/:id', getAuthCodeJWT, (req, res, next) => {
-// 	{
-//   "members": [
-//     {
-//       "id": "36565387",
-//       "email": "memberemail@somecompany.com"
-//     }
-//   ]
-// }
-// })
-
-// router.get('/api/meetingEnd/:id', getAuthCodeJWT, ensureAdmin, (req, res, next) => {
-// 	const meetingId = req.params.id;
-// 	const mOptions = {
-// 		method: 'PUT',
-// 		url: `https://api.zoom.us/v2/meetings/${meetingId}/status`,
-// 		json: {
-// 			'action': 'end'
-// 		},
-// 		headers: {
-// 			Authorization: 'Bearer ' + req.token
-// 		}
-// 	};
-// 	request(mOptions, (error, response, data) => {
-// 		if (error) {
-// 			if (error.status === 429) {
-// 				var referrer = (!req.referrer ? '/meetings' : req.referrer);
-// 				return res.redirect(referrer)
-// 			} else {
-// 				return next(error)
-// 			}
-// 
-// 		} else {
-// 			// console.log(data)
-// 			return res.redirect('/meetings')
-// 		}
-// 	})
-// })
-// 
-// router.get('/api/deleteMeeting/:id', getAuthCodeJWT, ensureAdmin, (req, res, next) => {
-// 	// console.log(req.params.id, req.token)
-// 	deleteMeeting(req.params.id, req.token, (err) => {
-// 		if (err) {
-// 			return next(err)
-// 		}
-// 		return res.redirect('/meetings')
-// 	})
-// })
 
 router.post('/webhook', (req, res, next) => {
 	console.log('webhook received')
@@ -531,7 +349,12 @@ router.get('/deauthorize', (req, res, next) => {
 		return next(new Error('misconfigured header parsing for req.headers.authorization. Received ' +req.headers))
 	}
 })
-
-=======
->>>>>>> todo reservations
 module.exports = router;
+=======
+function provideRoutes(app) {
+  app.use(routes);
+  app.use(router);
+  return;
+}
+module.exports = provideRoutes;
+>>>>>>> wip tests

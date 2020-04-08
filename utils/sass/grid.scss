@@ -212,8 +212,8 @@
 		height: 15.89vw;
 		margin: 2vw 2vw 0 0;
 		&:hover {
-			width: 33.1vw;
-			height: 33.1vw;
+			width: 26vw;
+			height: 26vw;
 		}
 		&.active {
 			width: 66vw!important;
@@ -337,5 +337,16 @@
 	}
 	.tb-01-m4 {
 		width: 10%;
+	}
+}
+
+@media (min-width: 1300px) {
+	.ui {
+		width: 18vw;
+		height: 18vw;
+		&:hover {
+			width: 31vw;
+			height: 31vw;
+		}
 	}
 }

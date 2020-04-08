@@ -4,6 +4,12 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const request = require('request')
 
+function sessionReferrer(req, res, next) {
+	const referrer = req.get('Referrer');
+	req.session.referrer = referrer;
+	return next()
+}
+
 function sessionAdmin(req, res, next) {
 	if (req.user && req.user.properties) {
 		req.session.admin = req.user.properties.admin;
@@ -27,7 +33,7 @@ function ensureAuthenticated(req, res, next) {
 		req.session.admin = req.user.properties.admin;
 		return next();
 	} else {
-		return res.redirect('/');
+		return res.redirect('/mtg/jitsi');
 	}
 }
 
@@ -41,18 +47,13 @@ function ensureAdmin(req, res, next) {
 		req.session.admin = true;
 		return next();
 	} else {
-		return res.redirect('/')
+		return res.redirect('/mtg/jitsi')
 	console.log(req.headers, req.cookies)
 
 	if (/localhost/.test(redirectUrl)) {
 		return next()
 	}
 	}
-	// if (req.user && req.user.role_name === 'Owner' || req.user.role_name === 'Admin') {
-	// 	return next();
-	// } else {
-	// 	return res.redirect('/');
-	// }
 }
 
 async function getMe(req, res, next) {
@@ -291,4 +292,4 @@ async function getMe(req, res, next) {
 // 
 // 	}
 // }
-module.exports = { getMe, ensureAdmin, ensureAuthenticated, sessionAdmin }
+module.exports = { getMe, ensureAdmin, ensureAuthenticated, sessionAdmin, sessionReferrer }

@@ -8,36 +8,13 @@ nav
 	
 	div.dropdown(v-cloak v-if="dropped || !res")
 		ul
+			//- li
+			//- 	a(href="/") Home  
 			li
-				a(href="/") Home  
-			li
-				a(href="/jitsi") Meetings
+				a(href="/mtg/jitsi") Meetings
 			li(v-if="pu && pu.properties.admin")
 				a(href="/api/createMeeting") New Meeting
-			li
+			li(v-if="pu && pu !== ''")
+				a(href="/usr/profile") Profile
+			li(v-if="!pu")
 				a(href="/login") Login
-			//- li(v-if="!pu || !pu.properties.admin")
-			//- 	//- href="/profile"
-			//- 	//- v-if="!adminValidated"
-			//- 	input#checkAdmin(
-			//- 		type="text"
-			//- 		@change="validateAdmin"
-			//- 		placeholder="E-mail or username"
-			//- 		)
-			//- 	a(
-			//- 		v-if="!adminValidated && !admin"
-			//- 		style="margin: 0 0 0 1rem;"
-			//- 		@click="checkAdmin"
-			//- 		) Login
-			//- 
-			//- 	a(
-			//- 		v-else-if="!adminValidated && admin"
-			//- 		style="margin: 0 0 0 1rem;"
-			//- 		href="/profile"
-			//- 		) Profile
-			//- 	a(
-			//- 		v-else-if="adminValidated"
-			//- 		href="/auth"
-			//- 		) Profile
-			//- li(v-if="pu && pu.properties.admin")
-			//- 	a(href="/auth") Profile

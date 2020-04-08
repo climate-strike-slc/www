@@ -22,7 +22,6 @@ block content
 			)
 				div.container(
 					v-for="(date, m) in days"
-					
 					:class="(!active ? '' : 'active')"
 					style="pointer-events:none;"
 				)
@@ -30,7 +29,7 @@ block content
 					div.ui.img(
 						v-for="(doc, i) in data"
 						v-if="(new Date(doc.start_time).getDate() === date)"
-						@click="dialog(i)"
+						@click="dialog(i, $event)"
 						@mouseover="hover"
 						@mouseleave="unhover"
 						@touchstart="hover"
@@ -53,16 +52,17 @@ block content
 						div.row(v-if="i !== parseInt(active,10)" style="position:relative;z-index:1;")
 							div.tb-10-m0
 								p(v-html="marked('# '+moment(data[i].start_time).format('LT'))")
-								p(v-if="data && data[i].agenda" v-html="marked(data[i].agenda)" style="color: #555;")
+								p(v-if="data && data[i].title" v-html="data[i].title" style="color: #555;")
+								p(v-if="data && data[i].description" v-html="marked(data[i].description)")
 							//- div.tb-10-m0
 							//- 	div.row
 							//- 		div.tb-05-m0
 							//- 			a.fit(@click="deactivate(i)" role="button" target="_blank" :href="data[i].join_url" v-text="'Join in Zoom app'")
-							//- 			//- a(:href="'/meeting/'+data[i].id")
+							//- 			//- a(:href="'/mtg/meeting/'+data[i].id")
 							//- 		div.tb-05-m0
 							//- 			a.fit(role="button" :href="'/api/editMeeting/'+ doc.id") Edit
 						img(v-if="i !== parseInt(active,10)" :src="'/images/icons/'+data[i].topic+'.svg'" style="width:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.4;")
-						a(v-if="pu && pu.properties.admin" :href="'/api/deleteMeeting/'+data[i].id" v-text="'x'" style="z-index: 3; position: relative;")
+						a(v-if="pu && pu.properties.admin" :href="'/api/deleteMeeting/'+data[i].id" v-text="'x'" style="z-index: 3; position: absolute;")
 
 		//- div#meet
 		//- 	embed(v-if="!isSafari" :height="(!res ? ((wWidth * 0.66) * 0.72) : 400)" :width="(!res ? wWidth * 0.66 : wWidth)" type="text/html" style="pointer-events:all; z-index: 2; position: relative;" :src="'https://bli.sh/Tryingthisout'")

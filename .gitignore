@@ -3,5 +3,5 @@ node_modules
 .sass-cache
 slccsdb
 */.env
-test/__snapshots__
-test/__nock-fixtures__
+# test/__snapshots__
+# test/__nock-fixtures__
