@@ -10,7 +10,7 @@ block content
 		div.wrapper.row.nav
 			include partials/menu.pug
 		div.container.row
-			form.tb-10-m0(enctype="multipart/form-data" method="POST" action="/api/createMeeting" style="padding: 20px")
+			form.tb-10-m0(enctype="multipart/form-data" method="POST" :action="(!doc ? '/api/createMeeting' : '/api/editMeeting/'+doc._id)" style="padding: 20px")
 				input(type="hidden", name="_csrf", value= csrfToken)
 
 				div.row

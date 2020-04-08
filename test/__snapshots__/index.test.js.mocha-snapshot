@@ -3,34 +3,34 @@ exports["API calls/should get a header(0)"] = {
   "vary": "Origin",
   "set-cookie": [
     "site=cookie; Path=/; Secure; SameSite=None",
-    "_csrf=oHfaVNJtOzSuTg8AlA_LUM2a; Path=/",
-    "XSRF-TOKEN=1U0vM9E6-sn311q5IrzHvhQi3ABWFZvmP2sk; Path=/",
-    "nodecookie=s%3AYCGmjGLm3qj_4h5rZ1XeAPmzMHfyp5dX.mW%2BEYpHzDDikkyG3Ic0Im4gsa2PAcLOwhaA2GgkMqNk; Path=/; Expires=Wed, 08 Apr 2020 10:55:17 GMT; HttpOnly"
+    "_csrf=sYstXv1ZhLQLs-aagtjmk0CK; Path=/",
+    "XSRF-TOKEN=oHbCb34k-MvF8WjUYaWlwhdgHMDtC9Cx9eeQ; Path=/",
+    "nodecookie=s%3AXInT08v-6X9gLs4Myd2WrJezUd1ae-Dw.Spl9U545LUnx72lzR1z%2FXapJUCTznm5gmcmUmgnikgM; Path=/; Expires=Wed, 08 Apr 2020 11:26:45 GMT; HttpOnly"
   ],
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, HEAD, OPTIONS",
   "access-control-allow-headers": "Cache-Control, Origin, Content-Type, Accept, Set-Cookie",
   "access-control-allow-credentials": "true",
   "content-type": "text/html; charset=utf-8",
-  "content-length": "3651",
-  "etag": "W/\"e43-tlBGclNgk3X7KWUMJ+vy8YunjOw\"",
-  "date": "Wed, 08 Apr 2020 07:55:17 GMT",
+  "content-length": "3650",
+  "etag": "W/\"e42-FKoj/JZxYUoiXMxkmO7XL3SzAk0\"",
+  "date": "Wed, 08 Apr 2020 08:26:45 GMT",
   "connection": "close"
 };
 
-exports["API calls/registration page should contain a well-configured csrf token(0)"] = "FqvUWFGo-IfZgtpZQlfMLLJHHrZZhDmRYJco";
+exports["API calls/registration page should contain a well-configured csrf token(0)"] = "17Xq4bzf-UDHKRgcn0ppL7gRrMezDjN9jBBA";
 
 exports["API calls/Should get all users(0)"] = [
   {
     "properties": {
       "time": {
-        "begin": "2020-04-08T07:55:18.020Z",
-        "end": "2020-04-08T07:55:18.020Z"
+        "begin": "2020-04-08T08:26:45.529Z",
+        "end": "2020-04-08T08:26:45.529Z"
       },
       "avatar": "/images/publish_logo_sq.svg",
       "admin": true
     },
-    "_id": "5e8d8366de81eda7f0cdea21",
+    "_id": "5e8d8ac520c677a9477f1407",
     "username": "tbushman",
     "email": "tracey.bushman@gmail.com",
     "__v": 0
@@ -41,15 +41,43 @@ exports["API calls/should edit a user(0)"] = [
   {
     "properties": {
       "time": {
-        "begin": "2020-04-08T07:55:18.020Z",
-        "end": "2020-04-08T07:55:18.020Z"
+        "begin": "2020-04-08T08:26:45.529Z",
+        "end": "2020-04-08T08:26:45.529Z"
       },
       "avatar": "/images/publish_logo_sq.svg",
       "admin": true
     },
-    "_id": "5e8d8366de81eda7f0cdea21",
+    "_id": "5e8d8ac520c677a9477f1407",
     "username": "tb",
     "email": "tbushman@pu.bli.sh",
+    "__v": 0
+  }
+];
+
+exports["API calls/should add a meeting with well-configured csrf tokens(0)"] = "EpyLkkx5-rTp05vFFTiHx6G90bpFxN6CthrY";
+
+exports["API calls/should get all meetings(0)"] = [
+  {
+    "_id": "5e8d8ac620c677a9477f1408",
+    "topic": "ecology",
+    "start_time": "2020-04-08T08:26:46.000Z",
+    "title": "should delete a user",
+    "description": "API calls should delete a user 1",
+    "created_at": "2020-04-08T08:26:46.000Z",
+    "start_url": "https://bli.sh/ecology",
+    "__v": 0
+  }
+];
+
+exports["API calls/should edit a meeting(0)"] = [
+  {
+    "_id": "5e8d8ac620c677a9477f1408",
+    "topic": "economy",
+    "start_time": "2020-04-08T08:26:46.000Z",
+    "title": "should delete a user",
+    "description": "API calls should delete a user 1",
+    "created_at": "2020-04-08T08:26:46.000Z",
+    "start_url": "https://bli.sh/economy",
     "__v": 0
   }
 ];

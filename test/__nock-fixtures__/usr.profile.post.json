@@ -1,6 +1,6 @@
 [
     {
-        "scope": "http://127.0.0.1:54948",
+        "scope": "http://127.0.0.1:65078",
         "method": "GET",
         "path": "/auth",
         "body": "",
@@ -14,9 +14,9 @@
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
             "Set-Cookie",
-            "XSRF-TOKEN=UEYWlzVN-tA25L-YjH-3akCRhSvcDS85Av1k; Path=/",
+            "XSRF-TOKEN=gjBHdncC-yN4XImwMg-s8Em0cbTyNAwSJYTg; Path=/",
             "Set-Cookie",
-            "nodecookie=s%3AILUxgl-lVhGF5FUH7_zTRlBj4COEwlxy.rmKQPuE%2FldeTFtx7p1GKeJkw397SBUXmzkHFbK6AQqs; Path=/; Expires=Wed, 08 Apr 2020 10:46:55 GMT; HttpOnly",
+            "nodecookie=s%3AXInT08v-6X9gLs4Myd2WrJezUd1ae-Dw.Spl9U545LUnx72lzR1z%2FXapJUCTznm5gmcmUmgnikgM; Path=/; Expires=Wed, 08 Apr 2020 11:26:46 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -32,19 +32,19 @@
             "Content-Length",
             "34",
             "Date",
-            "Wed, 08 Apr 2020 07:46:55 GMT",
+            "Wed, 08 Apr 2020 08:26:46 GMT",
             "Connection",
             "close"
         ],
         "responseIsBinary": false
     },
     {
-        "scope": "http://127.0.0.1:54950",
+        "scope": "http://127.0.0.1:65080",
         "method": "GET",
         "path": "/usr/profile",
         "body": "",
         "status": 200,
-        "response": "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge; charset=utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><meta name=\"format-detection\" content=\"telephone=no\"><title></title><link rel=\"stylesheet\" href=\"/stylesheets/style.css?version=0.6225095030630277\"><style id=\"style\" type=\"text/css\"></style><script type=\"text/javascript\" src=\"/scripts/jquery.min.js\"></script><script type=\"text/javascript\" src=\"/scripts/vue.js\"></script><script type=\"text/javascript\" src=\"/scripts/marked.min.js\"></script><script type=\"text/javascript\" src=\"/scripts/moment-with-locales.min.js\"></script><script type=\"text/javascript\" src=\"https://meet.jit.si/libs/lib-jitsi-meet.min.js\"></script><script type=\"text/javascript\" src=\"https://meet.jit.si/external_api.js\"></script></head><body><script type=\"text/javascript\" src=\"/scripts/jquery.min.js\"></script><script type=\"text/javascript\" src=\"/scripts/baseFunctions.js?v=0.6053451841961044\"></script><div id=\"vue\"><div class=\"wrapper row nav\"><nav><a class=\"mainmenu\" v-if=\"res\" title=\"Menu\" style=\"pointer-events: auto;\" @click=\"drop\"><svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"30.1px\" height=\"25px\" viewBox=\"0 0 30.1 28\" style=\"enable-background:new 0 0 30.1 28; padding: 0 0 0 8px;\" xml:space=\"preserve\"><path d=\"M1.103,4.464c-0.606,0-1.1-0.493-1.1-1.1v-2.3c0-0.606,0.493-1.1,1.1-1.1h27.893  c0.607,0,1.1,0.494,1.1,1.1v2.3c0,0.606-0.492,1.1-1.1,1.1H1.103z\"></path><path d=\"M1.103,16.464c-0.606,0-1.1-0.493-1.1-1.1v-2.3c0-0.606,0.493-1.101,1.1-1.101h27.893  c0.607,0,1.1,0.494,1.1,1.101v2.3c0,0.606-0.492,1.1-1.1,1.1H1.103z\"></path><path d=\"M1.103,27.962c-0.606,0-1.1-0.494-1.1-1.1v-2.301c0-0.605,0.493-1.1,1.1-1.1h27.893  c0.607,0,1.1,0.494,1.1,1.1v2.301c0,0.605-0.492,1.1-1.1,1.1H1.103z\"></path></svg></a><div class=\"dropdown\" v-cloak v-if=\"dropped || !res\"><ul><li><a href=\"/mtg/jitsi\">Meetings</a></li><li v-if=\"pu &amp;&amp; pu.properties.admin\"><a href=\"/api/createMeeting\">New Meeting</a></li><li v-if=\"pu &amp;&amp; pu !== ''\"><a href=\"/usr/profile\">Profile</a></li><li v-if=\"!pu\"><a href=\"/login\">Login</a></li></ul></div></nav></div><div class=\"container row\" v-if=\"pu &amp;&amp; pu !== ''\"><div class=\"tb-05-m0\"><div class=\"ui img\"><img :src=\"pu.pic_url\" style=\"width: 100%;height: 100%;\"></div></div><div class=\"grid-right\"><div class=\"tb-10-m0\"><p class=\"tb-font-xl\">Your information:</p><div id=\"registersection\" style=\"height:auto;overflow-y:hidden;\"><form id=\"form\" enctype=\"multipart/form-data\" method=\"POST\" :action=\"(menu === 'register' ? '/register' : (pu &amp;&amp; pu !== '' ? '/profile' : null))\" style=\"margin-bottom: 50px\"><input type=\"hidden\" name=\"_csrf\" value=\"mH34Www1-bA1jIqrsAw2KyS_7--qG5xl194w\"><input id=\"avatarurl\" type=\"hidden\" name=\"avatar\" :value=\"(pu &amp;&amp; pu !== '' ? pu.avatar : '')\"><div class=\"tb-10-m0 input-field\"><p v-text=\"(pu &amp;&amp; pu !== '' ? pu.username : '')\"></p></div><div class=\"tb-10-m0\" v-if=\"(!pu || pu === '')\"><label class=\"row\">Username</label><input class=\"row\" type=\"text\" name=\"username\" maxlength=\"40\" id=\"username\" aria-required=\"true\" @blur=\"checkNameValidity('username', 's!@#$%^*()+=-[]\\';,./{}|&lt;&gt;?:', 'Alpha-numeric characters only, please', $event)\" autocomplete=\"username\" :value=\"(pu &amp;&amp; pu !== '' ? pu.username : '')\" required></div><div class=\"tb-10-m0\"><label class=\"row\">Email</label><input class=\"row\" type=\"email\" name=\"email\" id=\"email\" aria-required=\"true\" :value=\"(pu &amp;&amp; pu !== '' ? pu.email : '')\" :placeholder=\"(pu &amp;&amp; pu !== '' ? pu.email : '')\" autocomplete=\"email\" required></div><div class=\"tb-10-m0\" v-if=\"(!pu || pu === '')\"><label class=\"row\">Password</label><input class=\"row\" type=\"password\" name=\"password\" aria-required=\"true\" autocomplete=\"new-password\" required></div><p></p><button class=\"tb-10-m0 tb-03-m2 block\" id=\"submitregister\" type=\"submit\" :ariaDescription=\"(menu === 'register' ? 'Register' : 'Submit')\" v-text=\"(menu === 'register' ? 'Register' : 'Submit')\"></button></form></div></div></div></div></div><script type=\"text/javascript\">Vue.prototype.$ = $;\nVue.prototype.window = window;\nnew Vue({\n\tel: '#vue',\n\tdata: function data(){\n\t\treturn {\n\t\t\tadmin: this.parseObj(),\n\t\t\tpu: this.parseObj({\"properties\":{\"time\":{\"begin\":\"2020-04-08T07:46:54.982Z\",\"end\":\"2020-04-08T07:46:54.982Z\"},\"avatar\":\"/images/publish_logo_sq.svg\",\"admin\":true},\"_id\":\"5e8d816ea74a1fa78839b125\",\"username\":\"tbushman\",\"email\":\"tracey.bushman@gmail.com\",\"__v\":0}),\n\t\t\tadminValidated: this.parseObj(),\n\t\t\tpu: this.parseObj({\"properties\":{\"time\":{\"begin\":\"2020-04-08T07:46:54.982Z\",\"end\":\"2020-04-08T07:46:54.982Z\"},\"avatar\":\"/images/publish_logo_sq.svg\",\"admin\":true},\"_id\":\"5e8d816ea74a1fa78839b125\",\"username\":\"tbushman\",\"email\":\"tracey.bushman@gmail.com\",\"__v\":0}),\n\t\t\tdropped: false,\n\t\t\tres: window.innerWidth < 600,\n\t\t\tmenu: this.parseObj(\"profile\")\n\t\t}\n\t},\n\tmounted: function(){\n\t\t$(document).ready(function(){\n\t\t\t//- document.addEventListener('keydown', function(event) {\n\t\t\t//- \tvar keyName = event.key;\n\t\t\t//- \tif (keyName === 'Enter') event.preventDefault()\n\t\t\t//- });\n\t\t})\n\n\t},\n\tmethods: Object.assign({}, baseFunctions)\n});</script></body></html>",
+        "response": "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge; charset=utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><meta name=\"format-detection\" content=\"telephone=no\"><title></title><link rel=\"stylesheet\" href=\"/stylesheets/style.css?version=0.2771143801617868\"><style id=\"style\" type=\"text/css\"></style><script type=\"text/javascript\" src=\"/scripts/jquery.min.js\"></script><script type=\"text/javascript\" src=\"/scripts/vue.js\"></script><script type=\"text/javascript\" src=\"/scripts/marked.min.js\"></script><script type=\"text/javascript\" src=\"/scripts/moment-with-locales.min.js\"></script><script type=\"text/javascript\" src=\"https://meet.jit.si/libs/lib-jitsi-meet.min.js\"></script><script type=\"text/javascript\" src=\"https://meet.jit.si/external_api.js\"></script></head><body><script type=\"text/javascript\" src=\"/scripts/jquery.min.js\"></script><script type=\"text/javascript\" src=\"/scripts/baseFunctions.js?v=0.9260522048556421\"></script><div id=\"vue\"><div class=\"wrapper row nav\"><nav><a class=\"mainmenu\" v-if=\"res\" title=\"Menu\" style=\"pointer-events: auto;\" @click=\"drop\"><svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"30.1px\" height=\"25px\" viewBox=\"0 0 30.1 28\" style=\"enable-background:new 0 0 30.1 28; padding: 0 0 0 8px;\" xml:space=\"preserve\"><path d=\"M1.103,4.464c-0.606,0-1.1-0.493-1.1-1.1v-2.3c0-0.606,0.493-1.1,1.1-1.1h27.893  c0.607,0,1.1,0.494,1.1,1.1v2.3c0,0.606-0.492,1.1-1.1,1.1H1.103z\"></path><path d=\"M1.103,16.464c-0.606,0-1.1-0.493-1.1-1.1v-2.3c0-0.606,0.493-1.101,1.1-1.101h27.893  c0.607,0,1.1,0.494,1.1,1.101v2.3c0,0.606-0.492,1.1-1.1,1.1H1.103z\"></path><path d=\"M1.103,27.962c-0.606,0-1.1-0.494-1.1-1.1v-2.301c0-0.605,0.493-1.1,1.1-1.1h27.893  c0.607,0,1.1,0.494,1.1,1.1v2.301c0,0.605-0.492,1.1-1.1,1.1H1.103z\"></path></svg></a><div class=\"dropdown\" v-cloak v-if=\"dropped || !res\"><ul><li><a href=\"/mtg/jitsi\">Meetings</a></li><li v-if=\"pu &amp;&amp; pu.properties.admin\"><a href=\"/api/createMeeting\">New Meeting</a></li><li v-if=\"pu &amp;&amp; pu !== ''\"><a href=\"/usr/profile\">Profile</a></li><li v-if=\"!pu\"><a href=\"/login\">Login</a></li></ul></div></nav></div><div class=\"container row\" v-if=\"pu &amp;&amp; pu !== ''\"><div class=\"tb-05-m0\"><div class=\"ui img\"><img :src=\"pu.pic_url\" style=\"width: 100%;height: 100%;\"></div></div><div class=\"grid-right\"><div class=\"tb-10-m0\"><p class=\"tb-font-xl\">Your information:</p><div id=\"registersection\" style=\"height:auto;overflow-y:hidden;\"><form id=\"form\" enctype=\"multipart/form-data\" method=\"POST\" :action=\"(menu === 'register' ? '/register' : (pu &amp;&amp; pu !== '' ? '/profile' : null))\" style=\"margin-bottom: 50px\"><input type=\"hidden\" name=\"_csrf\" value=\"0mHAVqQ4-r6V2T5Qx0Q9CeJUJzQFusYQk9KM\"><input id=\"avatarurl\" type=\"hidden\" name=\"avatar\" :value=\"(pu &amp;&amp; pu !== '' ? pu.avatar : '')\"><div class=\"tb-10-m0 input-field\"><p v-text=\"(pu &amp;&amp; pu !== '' ? pu.username : '')\"></p></div><div class=\"tb-10-m0\" v-if=\"(!pu || pu === '')\"><label class=\"row\">Username</label><input class=\"row\" type=\"text\" name=\"username\" maxlength=\"40\" id=\"username\" aria-required=\"true\" @blur=\"checkNameValidity('username', 's!@#$%^*()+=-[]\\';,./{}|&lt;&gt;?:', 'Alpha-numeric characters only, please', $event)\" autocomplete=\"username\" :value=\"(pu &amp;&amp; pu !== '' ? pu.username : '')\" required></div><div class=\"tb-10-m0\"><label class=\"row\">Email</label><input class=\"row\" type=\"email\" name=\"email\" id=\"email\" aria-required=\"true\" :value=\"(pu &amp;&amp; pu !== '' ? pu.email : '')\" :placeholder=\"(pu &amp;&amp; pu !== '' ? pu.email : '')\" autocomplete=\"email\" required></div><div class=\"tb-10-m0\" v-if=\"(!pu || pu === '')\"><label class=\"row\">Password</label><input class=\"row\" type=\"password\" name=\"password\" aria-required=\"true\" autocomplete=\"new-password\" required></div><p></p><button class=\"tb-10-m0 tb-03-m2 block\" id=\"submitregister\" type=\"submit\" :ariaDescription=\"(menu === 'register' ? 'Register' : 'Submit')\" v-text=\"(menu === 'register' ? 'Register' : 'Submit')\"></button></form></div></div></div></div></div><script type=\"text/javascript\">Vue.prototype.$ = $;\nVue.prototype.window = window;\nnew Vue({\n\tel: '#vue',\n\tdata: function data(){\n\t\treturn {\n\t\t\tadmin: this.parseObj(),\n\t\t\tpu: this.parseObj({\"properties\":{\"time\":{\"begin\":\"2020-04-08T08:26:45.529Z\",\"end\":\"2020-04-08T08:26:45.529Z\"},\"avatar\":\"/images/publish_logo_sq.svg\",\"admin\":true},\"_id\":\"5e8d8ac520c677a9477f1407\",\"username\":\"tbushman\",\"email\":\"tracey.bushman@gmail.com\",\"__v\":0}),\n\t\t\tadminValidated: this.parseObj(),\n\t\t\tpu: this.parseObj({\"properties\":{\"time\":{\"begin\":\"2020-04-08T08:26:45.529Z\",\"end\":\"2020-04-08T08:26:45.529Z\"},\"avatar\":\"/images/publish_logo_sq.svg\",\"admin\":true},\"_id\":\"5e8d8ac520c677a9477f1407\",\"username\":\"tbushman\",\"email\":\"tracey.bushman@gmail.com\",\"__v\":0}),\n\t\t\tdropped: false,\n\t\t\tres: window.innerWidth < 600,\n\t\t\tmenu: this.parseObj(\"profile\")\n\t\t}\n\t},\n\tmounted: function(){\n\t\t$(document).ready(function(){\n\t\t\t//- document.addEventListener('keydown', function(event) {\n\t\t\t//- \tvar keyName = event.key;\n\t\t\t//- \tif (keyName === 'Enter') event.preventDefault()\n\t\t\t//- });\n\t\t})\n\n\t},\n\tmethods: Object.assign({}, baseFunctions)\n});</script></body></html>",
         "rawHeaders": [
             "X-Powered-By",
             "Express",
@@ -53,9 +53,9 @@
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
             "Set-Cookie",
-            "XSRF-TOKEN=mH34Www1-bA1jIqrsAw2KyS_7--qG5xl194w; Path=/",
+            "XSRF-TOKEN=0mHAVqQ4-r6V2T5Qx0Q9CeJUJzQFusYQk9KM; Path=/",
             "Set-Cookie",
-            "nodecookie=s%3AILUxgl-lVhGF5FUH7_zTRlBj4COEwlxy.rmKQPuE%2FldeTFtx7p1GKeJkw397SBUXmzkHFbK6AQqs; Path=/; Expires=Wed, 08 Apr 2020 10:46:55 GMT; HttpOnly",
+            "nodecookie=s%3AXInT08v-6X9gLs4Myd2WrJezUd1ae-Dw.Spl9U545LUnx72lzR1z%2FXapJUCTznm5gmcmUmgnikgM; Path=/; Expires=Wed, 08 Apr 2020 11:26:46 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -69,20 +69,20 @@
             "Content-Length",
             "5263",
             "ETag",
-            "W/\"148f-J/SN1TnTI0fyytG6+DBVcfCdCdQ\"",
+            "W/\"148f-6XWiY4jPDg85Lvj8Vs00y2E3GBE\"",
             "Date",
-            "Wed, 08 Apr 2020 07:46:55 GMT",
+            "Wed, 08 Apr 2020 08:26:46 GMT",
             "Connection",
             "close"
         ],
         "responseIsBinary": false
     },
     {
-        "scope": "http://127.0.0.1:54952",
+        "scope": "http://127.0.0.1:65082",
         "method": "POST",
-        "path": "/usr/profile/5e8d816ea74a1fa78839b125",
+        "path": "/usr/profile/5e8d8ac520c677a9477f1407",
         "body": {
-            "_csrf": "mH34Www1-bA1jIqrsAw2KyS_7--qG5xl194w",
+            "_csrf": "0mHAVqQ4-r6V2T5Qx0Q9CeJUJzQFusYQk9KM",
             "username": "tb",
             "email": "tbushman@pu.bli.sh"
         },
@@ -96,7 +96,7 @@
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
             "Set-Cookie",
-            "nodecookie=s%3AILUxgl-lVhGF5FUH7_zTRlBj4COEwlxy.rmKQPuE%2FldeTFtx7p1GKeJkw397SBUXmzkHFbK6AQqs; Path=/; Expires=Wed, 08 Apr 2020 10:46:55 GMT; HttpOnly",
+            "nodecookie=s%3AXInT08v-6X9gLs4Myd2WrJezUd1ae-Dw.Spl9U545LUnx72lzR1z%2FXapJUCTznm5gmcmUmgnikgM; Path=/; Expires=Wed, 08 Apr 2020 11:26:46 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -112,14 +112,14 @@
             "Content-Length",
             "34",
             "Date",
-            "Wed, 08 Apr 2020 07:46:55 GMT",
+            "Wed, 08 Apr 2020 08:26:46 GMT",
             "Connection",
             "close"
         ],
         "responseIsBinary": false
     },
     {
-        "scope": "http://127.0.0.1:54954",
+        "scope": "http://127.0.0.1:65084",
         "method": "POST",
         "path": "/api/users",
         "body": "",
@@ -128,13 +128,13 @@
             {
                 "properties": {
                     "time": {
-                        "begin": "2020-04-08T07:46:54.982Z",
-                        "end": "2020-04-08T07:46:54.982Z"
+                        "begin": "2020-04-08T08:26:45.529Z",
+                        "end": "2020-04-08T08:26:45.529Z"
                     },
                     "avatar": "/images/publish_logo_sq.svg",
                     "admin": true
                 },
-                "_id": "5e8d816ea74a1fa78839b125",
+                "_id": "5e8d8ac520c677a9477f1407",
                 "username": "tb",
                 "email": "tbushman@pu.bli.sh",
                 "__v": 0
@@ -148,7 +148,7 @@
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
             "Set-Cookie",
-            "nodecookie=s%3AILUxgl-lVhGF5FUH7_zTRlBj4COEwlxy.rmKQPuE%2FldeTFtx7p1GKeJkw397SBUXmzkHFbK6AQqs; Path=/; Expires=Wed, 08 Apr 2020 10:46:55 GMT; HttpOnly",
+            "nodecookie=s%3AXInT08v-6X9gLs4Myd2WrJezUd1ae-Dw.Spl9U545LUnx72lzR1z%2FXapJUCTznm5gmcmUmgnikgM; Path=/; Expires=Wed, 08 Apr 2020 11:26:46 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -162,9 +162,9 @@
             "Content-Length",
             "233",
             "ETag",
-            "W/\"e9-RWIPVsCnH/VpM6L3h929deel2Ts\"",
+            "W/\"e9-sgyo27bSYbjri1969m4modsqxvs\"",
             "Date",
-            "Wed, 08 Apr 2020 07:46:55 GMT",
+            "Wed, 08 Apr 2020 08:26:46 GMT",
             "Connection",
             "close"
         ],

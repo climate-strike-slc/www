@@ -39,7 +39,7 @@ if (testing === undefined) {
 nockBack.setMode('record');
 
 describe('API calls', () => {
-  let key, agent, csrf, header = null, users, user;
+  let key, agent, csrf, header = null, users, user, meetings;
   before(async() => {
     // await ContentTest.deleteMany({}).catch(err => console.log(err));
     // await PublisherTest.deleteMany({}).catch(err => console.log(err));
@@ -252,6 +252,122 @@ describe('API calls', () => {
       nockDone()
     }
   })
+  
+  key = 'should add a meeting with well-configured csrf tokens';
+  it(key, async() => {
+    const snapKey = ('API calls '+key+' 1');
+    const { nockDone } = await nockBack(
+      'api.meeting.add.json'
+    );
+    nock.enableNetConnect('127.0.0.1');
+    csrf = (!mockSnapshots ? user : mockSnapshots[snapKey]);
+    
+    if (!recording) {
+      expect(csrf).to.matchSnapshot();
+      nockDone()
+
+    } else {
+      await agent
+      .get('/api/createMeeting')
+      .expect(200)
+      .then(async res => {
+        const cookie = res.header['set-cookie'];
+        const csf = cookie.filter((item) => {
+            return /(XSRF\-TOKEN=)/.test(item)
+          })[0].split('XSRF-TOKEN=')[1].split(';')[0];
+        if (!csf) throw new Error('missing csrf token');
+        expect(csf).to.matchSnapshot();
+        await agent
+        .post('/api/createMeeting')
+        .set('Cookie', cookies(res))
+        .send({
+          _csrf: csf,
+          topic: 'ecology',
+          start_time: moment().utc().format(),
+          title: key,
+          description: 'API calls '+key+' 1',
+          created_at: moment().utc().format(),
+          start_url: `https://bli.sh/ecology`
+        })
+        .expect(302)
+        .expect('Location', '/mtg/jitsi')
+      })
+    }
+  })
+  
+  key = 'should get all meetings';
+  it(key, async() => {
+    const snapKey = ('API calls '+key+' 1');
+    const { nockDone } = await nockBack(
+      'mtg.meetings.get.json'
+    );
+    nock.enableNetConnect('127.0.0.1');
+    meetings = (!mockSnapshots ? null : mockSnapshots[snapKey]);
+    
+    if (!recording) {
+      expect(user).to.matchSnapshot();
+      nockDone()
+
+    } else {
+      await agent
+      .post('/mtg/jitsi')
+      .expect(200)
+      .then(async res => {
+        expect(res.body).to.matchSnapshot()
+        meetings = res.body;
+      })
+    }
+  })
+  
+  key = 'should edit a meeting';
+  it(key, async() => {
+    const snapKey = ('API calls '+key+' 1');
+    const { nockDone } = await nockBack(
+      'api.meeting.edit.json'
+    );
+    nock.enableNetConnect('127.0.0.1');
+    meeting = (!mockSnapshots ? (!meetings ? null : meetings[0]) : mockSnapshots[snapKey]);
+    
+    if (!recording) {
+      expect(user).to.matchSnapshot();
+      nockDone()
+
+    } else {
+      await agent
+      .get(`/api/editMeeting/${meeting._id}`)
+      .expect(200)
+      .then(async res => {
+        const cookie = res.header['set-cookie'];
+        const csf = cookie.filter((item) => {
+            return /(XSRF\-TOKEN=)/.test(item)
+          })[0].split('XSRF-TOKEN=')[1].split(';')[0];
+        if (!csf) throw new Error('missing csrf token');
+        await agent
+        .post(`/api/editMeeting/${meeting._id}`)
+        .set('Cookie', cookies(res))
+        .send({
+          _csrf: csf,
+          topic: 'economy',
+          start_time: moment().utc().format(),
+          title: key,
+          description: 'API calls '+key+' 1',
+          created_at: moment().utc().format(),
+          start_url: `https://bli.sh/economy`
+        })
+        .expect(302)
+        .expect('Location', '/mtg/jitsi')
+        .then(async res => {
+          await agent
+          .post('/mtg/jitsi')
+          .expect(200)
+          .then(async res => {
+            expect(res.body).to.matchSnapshot()
+          })
+        })
+      })
+    }
+  })
+
   key = 'should delete a user';
   it(key, async() => {
     const userId = users[0]._id;
@@ -283,15 +399,7 @@ describe('API calls', () => {
       })
       nockDone()
     }
-  })  // {
-  //   _csrf: csf,
-  //   topic: 'ecology',
-  //   start_time: moment().utc().format(),
-  //   title: key,
-  //   description: 'API calls '+key+' 1',
-  //   created_at: moment().utc().format(),
-  //   start_url: `https://bli.sh/${topic}`
-  // }
+  })  
 })
 
 function cookies (res) {

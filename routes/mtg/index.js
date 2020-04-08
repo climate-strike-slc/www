@@ -34,4 +34,9 @@ router.get('/jitsi', async (req, res, next) => {
 	})
 });
 
+router.post('/jitsi', async(req, res, next) => {
+	const meetings = await ContentDB.find({}).then(data=>data).catch(err=>next(err));
+	return res.status(200).send(meetings)
+})
+
 module.exports = router;

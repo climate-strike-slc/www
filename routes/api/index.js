@@ -33,6 +33,7 @@ router.post('/users', async (req, res, next) => {
 })
 
 router.get('/createMeeting', csrfProtection, function(req, res) {
+	res.cookie('XSRF-TOKEN', req.csrfToken())
 	const outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath, 'GET');
 	if (process.env.TEST_ENV && process.env.RECORD_ENV) res.header('XSRF-TOKEN', req.csrfToken());
@@ -59,9 +60,8 @@ router.post('/createMeeting', upload.array(), parseBody, csrfProtection, async f
 	});
 });
 
-
-
-router.get('/editMeeting/:id', async (req, res, next) => {
+router.get('/editMeeting/:id', csrfProtection, async (req, res, next) => {
+	res.cookie('XSRF-TOKEN', req.csrfToken())
 	const outputPath = url.parse(req.url).pathname;
 	// console.log(outputPath, 'GET');
 	const meetingId = req.params.id;
@@ -72,5 +72,16 @@ router.get('/editMeeting/:id', async (req, res, next) => {
 		doc: doc
 	})
 })
+
+router.post('/editMeeting/:id', upload.array(), parseBody, csrfProtection, async function(req, res, next) {
+	const outputPath = url.parse(req.url).pathname;
+	const keys = Object.keys(req.body);
+	await keys.forEach(async(key) => {
+		const set = {$set:{}};
+		set.$set[key] = req.body[key];
+		await ContentDB.findOneAndUpdate({_id: req.params.id}, set, {safe:true}).then(pu=>console.log(pu)).catch(err=>next(err));
+	})
+	return res.redirect('/mtg/jitsi')
+});
 
 module.exports = router;
