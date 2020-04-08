@@ -292,6 +292,8 @@ describe('API calls', () => {
         .expect(302)
         .expect('Location', '/mtg/jitsi')
       })
+      nockDone()
+
     }
   })
   
@@ -316,6 +318,8 @@ describe('API calls', () => {
         expect(res.body).to.matchSnapshot()
         meetings = res.body;
       })
+      nockDone()
+
     }
   })
   
@@ -365,6 +369,7 @@ describe('API calls', () => {
           })
         })
       })
+      nockDone()
     }
   })
 

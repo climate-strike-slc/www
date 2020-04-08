@@ -1,6 +1,6 @@
 [
     {
-        "scope": "http://127.0.0.1:65068",
+        "scope": "http://127.0.0.1:49621",
         "method": "GET",
         "path": "/auth",
         "body": "",
@@ -14,9 +14,9 @@
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
             "Set-Cookie",
-            "XSRF-TOKEN=xyabzurn-QFJbVU2lxLGxX1_k6eovD54pMcI; Path=/",
+            "XSRF-TOKEN=HR8aMSHp-p-zTZJBPbyoc1gSDDVunsBoC9so; Path=/",
             "Set-Cookie",
-            "nodecookie=s%3AXInT08v-6X9gLs4Myd2WrJezUd1ae-Dw.Spl9U545LUnx72lzR1z%2FXapJUCTznm5gmcmUmgnikgM; Path=/; Expires=Wed, 08 Apr 2020 11:26:45 GMT; HttpOnly",
+            "nodecookie=s%3Aj9fjbkOZyu7m2BQfa8hyRR2_qPCgTUeR.CJag%2Be7pKdXuHDrPaGvXDyTNkwyDKwUR8TjVKtaxIAY; Path=/; Expires=Wed, 08 Apr 2020 11:30:24 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -32,18 +32,18 @@
             "Content-Length",
             "34",
             "Date",
-            "Wed, 08 Apr 2020 08:26:45 GMT",
+            "Wed, 08 Apr 2020 08:30:24 GMT",
             "Connection",
             "close"
         ],
         "responseIsBinary": false
     },
     {
-        "scope": "http://127.0.0.1:65070",
+        "scope": "http://127.0.0.1:49623",
         "method": "POST",
         "path": "/login",
         "body": {
-            "_csrf": "xyabzurn-QFJbVU2lxLGxX1_k6eovD54pMcI",
+            "_csrf": "HR8aMSHp-p-zTZJBPbyoc1gSDDVunsBoC9so",
             "username": "tbushman",
             "password": "password"
         },
@@ -57,7 +57,7 @@
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
             "Set-Cookie",
-            "nodecookie=s%3AXInT08v-6X9gLs4Myd2WrJezUd1ae-Dw.Spl9U545LUnx72lzR1z%2FXapJUCTznm5gmcmUmgnikgM; Path=/; Expires=Wed, 08 Apr 2020 11:26:46 GMT; HttpOnly",
+            "nodecookie=s%3Aj9fjbkOZyu7m2BQfa8hyRR2_qPCgTUeR.CJag%2Be7pKdXuHDrPaGvXDyTNkwyDKwUR8TjVKtaxIAY; Path=/; Expires=Wed, 08 Apr 2020 11:30:24 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -73,14 +73,14 @@
             "Content-Length",
             "34",
             "Date",
-            "Wed, 08 Apr 2020 08:26:46 GMT",
+            "Wed, 08 Apr 2020 08:30:24 GMT",
             "Connection",
             "close"
         ],
         "responseIsBinary": false
     },
     {
-        "scope": "http://127.0.0.1:65072",
+        "scope": "http://127.0.0.1:49625",
         "method": "POST",
         "path": "/api/users",
         "body": "",
@@ -89,13 +89,13 @@
             {
                 "properties": {
                     "time": {
-                        "begin": "2020-04-08T08:26:45.529Z",
-                        "end": "2020-04-08T08:26:45.529Z"
+                        "begin": "2020-04-08T08:30:23.851Z",
+                        "end": "2020-04-08T08:30:23.851Z"
                     },
                     "avatar": "/images/publish_logo_sq.svg",
                     "admin": true
                 },
-                "_id": "5e8d8ac520c677a9477f1407",
+                "_id": "5e8d8b9f37ae81a9815edda6",
                 "username": "tbushman",
                 "email": "tracey.bushman@gmail.com",
                 "__v": 0
@@ -109,7 +109,7 @@
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
             "Set-Cookie",
-            "nodecookie=s%3AXInT08v-6X9gLs4Myd2WrJezUd1ae-Dw.Spl9U545LUnx72lzR1z%2FXapJUCTznm5gmcmUmgnikgM; Path=/; Expires=Wed, 08 Apr 2020 11:26:46 GMT; HttpOnly",
+            "nodecookie=s%3Aj9fjbkOZyu7m2BQfa8hyRR2_qPCgTUeR.CJag%2Be7pKdXuHDrPaGvXDyTNkwyDKwUR8TjVKtaxIAY; Path=/; Expires=Wed, 08 Apr 2020 11:30:24 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -123,9 +123,9 @@
             "Content-Length",
             "245",
             "ETag",
-            "W/\"f5-0RyxkoX1Yp2iEIWvJsix2vi0Xqs\"",
+            "W/\"f5-N+a4hzzU9NgA62Gdy6AQvCzpXmc\"",
             "Date",
-            "Wed, 08 Apr 2020 08:26:46 GMT",
+            "Wed, 08 Apr 2020 08:30:24 GMT",
             "Connection",
             "close"
         ],
