@@ -10,7 +10,7 @@ function sessionReferrer(req, res, next) {
 	let referrer = req.get('Referrer');
 	if (!referrer) referrer = '/'
 	req.session.referrer = url.parse(referrer).pathname;
-	console.log(req.session.referrer)
+	// console.log(req.session.referrer)
 	return next()
 }
 

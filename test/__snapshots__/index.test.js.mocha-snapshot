@@ -3,33 +3,61 @@ exports["API calls/should get a header(0)"] = {
   "vary": "Origin",
   "set-cookie": [
     "site=cookie; Path=/; Secure; SameSite=None",
-    "_csrf=9iny6nbpBkQagUW57hfGSTO1; Path=/",
-    "XSRF-TOKEN=oNmiiyPu--KdM3fD74cf7TZVnw2vQvFSQVbM; Path=/",
-    "nodecookie=s%3A6MpAFNrCQ_XGmO-mdOhQbBaj1QnmtFYG.2Junk%2FK4yL7VKzSdJhBscEoQVakBnACArWudD8%2FgHk0; Path=/; Expires=Wed, 08 Apr 2020 22:46:16 GMT; HttpOnly"
+    "_csrf=kIrwnpWR21R3KJ84Z3rWWpM4; Path=/",
+    "XSRF-TOKEN=zjd7Y6rm--Pf4F8UmQFy6xykWpQVXHMW_RaQ; Path=/",
+    "nodecookie=s%3AqvuICw_oflM5n5KHAPLk9p4ch93x9mWK.Qd9w9n50y227%2FIRTEtlY3x%2BwuYVem5MGlLyLI6%2B8UHI; Path=/; Expires=Thu, 09 Apr 2020 10:15:10 GMT; HttpOnly"
   ],
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, HEAD, OPTIONS",
   "access-control-allow-headers": "Cache-Control, Origin, Content-Type, Accept, Set-Cookie",
   "access-control-allow-credentials": "true",
   "content-type": "text/html; charset=utf-8",
-  "content-length": "3639",
-  "etag": "W/\"e37-10E+czf68Nymwc+zzaDAcSYe5+0\"",
-  "date": "Wed, 08 Apr 2020 19:46:16 GMT",
+  "content-length": "3964",
+  "etag": "W/\"f7c-XxN/Mrv2ZAUVdWPBz+GnvYtVVIs\"",
+  "date": "Thu, 09 Apr 2020 07:15:09 GMT",
   "connection": "close"
 };
 
-exports["API calls/registration page should contain a well-configured csrf token(0)"] = "h0vo18xs-BWe1werRw2o7BLvI_HiyZcPxat8";
+exports["API calls/registration page should contain a well-configured csrf token(0)"] = "lLfwoScH-lXKP0QsuQv_K9ybsmilM7_VUgq4";
+
+exports["API calls/should add a meeting with well-configured csrf tokens(0)"] = "VkLS6yPi-sOZz1VEm841qeZZYrkO-CRFlmYk";
+
+exports["API calls/should get all meetings(0)"] = [
+  {
+    "_id": "5e8ecb7f4a5c07c446359423",
+    "topic": "ecology",
+    "start_time": "2020-04-09T07:15:11.000Z",
+    "title": "should delete a user",
+    "description": "API calls should delete a user 1",
+    "created_at": "2020-04-09T07:15:11.000Z",
+    "start_url": "https://bli.sh/ecology",
+    "__v": 0
+  }
+];
+
+exports["API calls/should edit a meeting(0)"] = [
+  {
+    "_id": "5e8ecb7f4a5c07c446359423",
+    "topic": "economy",
+    "start_time": "2020-04-09T07:15:11.000Z",
+    "title": "should delete a user",
+    "description": "API calls should delete a user 1",
+    "created_at": "2020-04-09T07:15:11.000Z",
+    "start_url": "https://bli.sh/economy",
+    "__v": 0
+  }
+];
 
 exports["API calls/Should get all users(0)"] = [
   {
     "time": {
-      "begin": "2020-04-08T19:46:16.514Z",
-      "end": "2020-04-08T19:46:16.514Z"
+      "begin": "2020-04-09T07:15:10.314Z",
+      "end": "2020-04-09T07:15:10.314Z"
     },
-    "_id": "5e8e2a084dda23ae6f1c0cfe",
+    "_id": "5e8ecb7e4a5c07c446359422",
     "username": "tbushman",
     "email": "tracey.bushman@gmail.com",
-    "avatar": "/images/publish_logo_sq.svg",
+    "avatar": "/public/images/publish_logo_sq.svg",
     "admin": true,
     "__v": 0
   }
@@ -38,42 +66,14 @@ exports["API calls/Should get all users(0)"] = [
 exports["API calls/should edit a user(0)"] = [
   {
     "time": {
-      "begin": "2020-04-08T19:46:16.514Z",
-      "end": "2020-04-08T19:46:16.514Z"
+      "begin": "2020-04-09T07:15:10.314Z",
+      "end": "2020-04-09T07:15:10.314Z"
     },
-    "_id": "5e8e2a084dda23ae6f1c0cfe",
+    "_id": "5e8ecb7e4a5c07c446359422",
     "username": "tb",
     "email": "tbushman@pu.bli.sh",
-    "avatar": "/images/publish_logo_sq.svg",
+    "avatar": "/public/images/publish_logo_sq.svg",
     "admin": true,
-    "__v": 0
-  }
-];
-
-exports["API calls/should add a meeting with well-configured csrf tokens(0)"] = "qX3H6Mh6-Si71UjUSV8uvmJEcpYIpDIhsOzM";
-
-exports["API calls/should get all meetings(0)"] = [
-  {
-    "_id": "5e8e2a094dda23ae6f1c0cff",
-    "topic": "ecology",
-    "start_time": "2020-04-08T19:46:17.000Z",
-    "title": "should delete a user",
-    "description": "API calls should delete a user 1",
-    "created_at": "2020-04-08T19:46:17.000Z",
-    "start_url": "https://bli.sh/ecology",
-    "__v": 0
-  }
-];
-
-exports["API calls/should edit a meeting(0)"] = [
-  {
-    "_id": "5e8e2a094dda23ae6f1c0cff",
-    "topic": "economy",
-    "start_time": "2020-04-08T19:46:17.000Z",
-    "title": "should delete a user",
-    "description": "API calls should delete a user 1",
-    "created_at": "2020-04-08T19:46:17.000Z",
-    "start_url": "https://bli.sh/economy",
     "__v": 0
   }
 ];

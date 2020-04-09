@@ -1,8 +1,8 @@
 [
     {
-        "scope": "http://127.0.0.1:63203",
+        "scope": "http://127.0.0.1:54913",
         "method": "POST",
-        "path": "/api/deleteMeeting/5e8e2a094dda23ae6f1c0cff",
+        "path": "/api/deleteMeeting/5e8ecb4030a9c0c4234596ff",
         "body": "",
         "status": 302,
         "response": "Found. Redirecting to /mtg/jitsi",
@@ -13,8 +13,6 @@
             "Origin, Accept",
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
-            "Set-Cookie",
-            "nodecookie=s%3A6MpAFNrCQ_XGmO-mdOhQbBaj1QnmtFYG.2Junk%2FK4yL7VKzSdJhBscEoQVakBnACArWudD8%2FgHk0; Path=/; Expires=Wed, 08 Apr 2020 22:46:17 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -30,7 +28,7 @@
             "Content-Length",
             "32",
             "Date",
-            "Wed, 08 Apr 2020 19:46:17 GMT",
+            "Thu, 09 Apr 2020 07:14:08 GMT",
             "Connection",
             "close"
         ],

@@ -1,18 +1,18 @@
 [
     {
-        "scope": "http://127.0.0.1:63194",
+        "scope": "http://127.0.0.1:54904",
         "method": "POST",
         "path": "/mtg/jitsi",
         "body": "",
         "status": 200,
         "response": [
             {
-                "_id": "5e8e2a094dda23ae6f1c0cff",
+                "_id": "5e8ecb4030a9c0c4234596ff",
                 "topic": "ecology",
-                "start_time": "2020-04-08T19:46:17.000Z",
+                "start_time": "2020-04-09T07:14:08.000Z",
                 "title": "should delete a user",
                 "description": "API calls should delete a user 1",
-                "created_at": "2020-04-08T19:46:17.000Z",
+                "created_at": "2020-04-09T07:14:08.000Z",
                 "start_url": "https://bli.sh/ecology",
                 "__v": 0
             }
@@ -24,8 +24,6 @@
             "Origin",
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
-            "Set-Cookie",
-            "nodecookie=s%3A6MpAFNrCQ_XGmO-mdOhQbBaj1QnmtFYG.2Junk%2FK4yL7VKzSdJhBscEoQVakBnACArWudD8%2FgHk0; Path=/; Expires=Wed, 08 Apr 2020 22:46:17 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -39,9 +37,9 @@
             "Content-Length",
             "259",
             "ETag",
-            "W/\"103-phwTrS27IEE+Q/oLqziXDflGV44\"",
+            "W/\"103-YAlhtbXXkLJtWBlnxPizfg/4lME\"",
             "Date",
-            "Wed, 08 Apr 2020 19:46:17 GMT",
+            "Thu, 09 Apr 2020 07:14:08 GMT",
             "Connection",
             "close"
         ],

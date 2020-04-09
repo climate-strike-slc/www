@@ -1,11 +1,11 @@
 [
     {
-        "scope": "http://127.0.0.1:63176",
+        "scope": "http://127.0.0.1:55001",
         "method": "GET",
         "path": "/auth",
         "body": "",
         "status": 302,
-        "response": "Found. Redirecting to /usr/profile",
+        "response": "Found. Redirecting to /",
         "rawHeaders": [
             "X-Powered-By",
             "Express",
@@ -14,9 +14,9 @@
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
             "Set-Cookie",
-            "XSRF-TOKEN=zQzmdaG2--zQGbEpkKD44HpuqPpqk7uC9z2c; Path=/",
+            "XSRF-TOKEN=PaQsiULS-iYvEInK8nXV_ezYaoDZMArtHhIw; Path=/",
             "Set-Cookie",
-            "nodecookie=s%3A6MpAFNrCQ_XGmO-mdOhQbBaj1QnmtFYG.2Junk%2FK4yL7VKzSdJhBscEoQVakBnACArWudD8%2FgHk0; Path=/; Expires=Wed, 08 Apr 2020 22:46:17 GMT; HttpOnly",
+            "nodecookie=s%3AqvuICw_oflM5n5KHAPLk9p4ch93x9mWK.Qd9w9n50y227%2FIRTEtlY3x%2BwuYVem5MGlLyLI6%2B8UHI; Path=/; Expires=Thu, 09 Apr 2020 10:15:10 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -26,29 +26,29 @@
             "Access-Control-Allow-Credentials",
             "true",
             "Location",
-            "/usr/profile",
+            "/",
             "Content-Type",
             "text/plain; charset=utf-8",
             "Content-Length",
-            "34",
+            "23",
             "Date",
-            "Wed, 08 Apr 2020 19:46:16 GMT",
+            "Thu, 09 Apr 2020 07:15:10 GMT",
             "Connection",
             "close"
         ],
         "responseIsBinary": false
     },
     {
-        "scope": "http://127.0.0.1:63178",
+        "scope": "http://127.0.0.1:55003",
         "method": "POST",
         "path": "/login",
         "body": {
-            "_csrf": "zQzmdaG2--zQGbEpkKD44HpuqPpqk7uC9z2c",
+            "_csrf": "PaQsiULS-iYvEInK8nXV_ezYaoDZMArtHhIw",
             "username": "tbushman",
             "password": "password"
         },
         "status": 302,
-        "response": "Found. Redirecting to /usr/profile",
+        "response": "Found. Redirecting to /",
         "rawHeaders": [
             "X-Powered-By",
             "Express",
@@ -56,8 +56,6 @@
             "Origin, Accept",
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
-            "Set-Cookie",
-            "nodecookie=s%3A6MpAFNrCQ_XGmO-mdOhQbBaj1QnmtFYG.2Junk%2FK4yL7VKzSdJhBscEoQVakBnACArWudD8%2FgHk0; Path=/; Expires=Wed, 08 Apr 2020 22:46:17 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -67,20 +65,20 @@
             "Access-Control-Allow-Credentials",
             "true",
             "Location",
-            "/usr/profile",
+            "/",
             "Content-Type",
             "text/plain; charset=utf-8",
             "Content-Length",
-            "34",
+            "23",
             "Date",
-            "Wed, 08 Apr 2020 19:46:17 GMT",
+            "Thu, 09 Apr 2020 07:15:11 GMT",
             "Connection",
             "close"
         ],
         "responseIsBinary": false
     },
     {
-        "scope": "http://127.0.0.1:63180",
+        "scope": "http://127.0.0.1:55005",
         "method": "POST",
         "path": "/api/users",
         "body": "",
@@ -88,13 +86,13 @@
         "response": [
             {
                 "time": {
-                    "begin": "2020-04-08T19:46:16.514Z",
-                    "end": "2020-04-08T19:46:16.514Z"
+                    "begin": "2020-04-09T07:15:10.314Z",
+                    "end": "2020-04-09T07:15:10.314Z"
                 },
-                "_id": "5e8e2a084dda23ae6f1c0cfe",
+                "_id": "5e8ecb7e4a5c07c446359422",
                 "username": "tbushman",
                 "email": "tracey.bushman@gmail.com",
-                "avatar": "/images/publish_logo_sq.svg",
+                "avatar": "/public/images/publish_logo_sq.svg",
                 "admin": true,
                 "__v": 0
             }
@@ -107,7 +105,7 @@
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
             "Set-Cookie",
-            "nodecookie=s%3A6MpAFNrCQ_XGmO-mdOhQbBaj1QnmtFYG.2Junk%2FK4yL7VKzSdJhBscEoQVakBnACArWudD8%2FgHk0; Path=/; Expires=Wed, 08 Apr 2020 22:46:17 GMT; HttpOnly",
+            "nodecookie=s%3AqvuICw_oflM5n5KHAPLk9p4ch93x9mWK.Qd9w9n50y227%2FIRTEtlY3x%2BwuYVem5MGlLyLI6%2B8UHI; Path=/; Expires=Thu, 09 Apr 2020 10:15:11 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -119,11 +117,11 @@
             "Content-Type",
             "application/json; charset=utf-8",
             "Content-Length",
-            "230",
+            "237",
             "ETag",
-            "W/\"e6-fn7Ts/7B7/40/sEqmKLhuVVt7WY\"",
+            "W/\"ed-1Bv3yclDnkQdkPLTZhCa2qqvo08\"",
             "Date",
-            "Wed, 08 Apr 2020 19:46:17 GMT",
+            "Thu, 09 Apr 2020 07:15:11 GMT",
             "Connection",
             "close"
         ],
