@@ -8,7 +8,7 @@ var baseFunctions = {
 	appendStyleRoot: function(){
 		var self = this;
 		var yearh, monthh, dayh;
-		if (self.years.length) {
+		if (self.years && self.years.length) {
 			yearh = 1 / self.years.length;
 			console.log(yearh)
 			monthh = yearh / self.months.length;
@@ -24,7 +24,7 @@ var baseFunctions = {
 				--yearh: ${yearh * 100}vh;
 				--monthh: ${monthh * 100}vh;
 				--dayh: ${dayh * 100}vh;
-				--gutter: 42px;
+				--gutter: 12px;
 				--thumbw: 42px;
 			}`
 		)

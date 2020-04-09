@@ -2,11 +2,11 @@ extends layout
 block page
 	- var menu = 'meetings'
 block content
-	script(type="text/javascript" src="/scripts/jquery.min.js")
-	script(src="/scripts/strophe/strophe.js")
-	script(src="/scripts/strophe/strophe.disco.min.js?v=1")
-	script(type="text/javascript", src="/scripts/baseFunctions.js?v="+Math.random())
-	script(type="text/javascript", src="/scripts/jitsiFunctions.js?v="+Math.random())
+	script(type="text/javascript" src="/public/scripts/jquery.min.js")
+	script(src="/public/scripts/strophe/strophe.js")
+	script(src="/public/scripts/strophe/strophe.disco.min.js?v=1")
+	script(type="text/javascript", src="/public/scripts/baseFunctions.js?v="+Math.random())
+	script(type="text/javascript", src="/public/scripts/jitsiFunctions.js?v="+Math.random())
 
 	div#vue
 		div.nav
@@ -25,50 +25,40 @@ block content
 					:class="(!active ? '' : 'active')"
 					style="pointer-events:none;"
 				)
-					div.ui(v-text="monthtext[month]+' '+date+', '+year")
+					div.ui
+						div.row(style="position:relative;z-index:1;")
+							h3(v-text="monthtext[month]+' '+date+', '+year")
+							h1.headline(v-text="schedule[m].title")
+							h2(v-text="schedule[m].subtitle")
+							p(v-text="schedule[m].description")
+						img(:src="schedule[m].img" style="height:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.4;")
 					div.ui.img(
 						v-for="(doc, i) in data"
 						v-if="(new Date(doc.start_time).getDate() === date)"
-						@click="dialog(i, $event)"
 						@mouseover="hover"
 						@mouseleave="unhover"
 						@touchstart="hover"
-						@touchend="dialog(i)"
 						:class="i === parseInt(active,10) ? 'active' : ''"
 						:id="'meeting'+i"
 						:style="{'background-color': (!doc ? c[i] : c[cats.indexOf(doc.topic)]) }"
 						style="pointer-events: auto;"
 					)
-						//- https://zoom.us/wc/{{ meetindID }}/join?prefer=1&un={{ base64Encoded Name }} 
-						//- embed(
-						//- 	v-if="!isFirefox && !isSafari && i === parseInt(active,10)"
-						//- 	:height="(!res ? ((wWidth * 0.66) * 0.72) : 400)"
-						//- 	:width="(!res ? wWidth * 0.66 : wWidth)" 
-						//- 	type="text/html" 
-						//- 	style="pointer-events:all; z-index: 2; position: relative;" 
-						//- 	:src="'https://bli.sh/'+data[i].title.split(' ').join('_')"
-						//- 	)
-						//- iframe(v-if="k === active" :src="'/meeting/'+data[i].id")
 						div.row(v-if="i !== parseInt(active,10)" style="position:relative;z-index:1;")
 							div.tb-10-m0
-								p(v-html="marked('# '+moment(data[i].start_time).format('LT'))")
-								p(v-if="data && data[i].title" v-html="data[i].title" style="color: #555;")
-								p(v-if="data && data[i].description" v-html="marked(data[i].description)")
-							//- div.tb-10-m0
-							//- 	div.row
-							//- 		div.tb-05-m0
-							//- 			a.fit(@click="deactivate(i)" role="button" target="_blank" :href="data[i].join_url" v-text="'Join in Zoom app'")
-							//- 			//- a(:href="'/mtg/meeting/'+data[i].id")
-							//- 		div.tb-05-m0
-							//- 			a.fit(role="button" :href="'/api/editMeeting/'+ doc.id") Edit
-						img(v-if="i !== parseInt(active,10)" :src="'/images/icons/'+data[i].topic+'.svg'" style="width:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.4;")
-						a(v-if="pu && pu.properties.admin" :href="'/api/deleteMeeting/'+data[i].id" v-text="'x'" style="z-index: 3; position: absolute;")
-
-		//- div#meet
-		//- 	embed(v-if="!isSafari" :height="(!res ? ((wWidth * 0.66) * 0.72) : 400)" :width="(!res ? wWidth * 0.66 : wWidth)" type="text/html" style="pointer-events:all; z-index: 2; position: relative;" :src="'https://bli.sh/Tryingthisout'")
-			//- a(href="#" @click="unload()") Unload
-			//- a(href="#" @click="switchVideo()") switchVideo
-			//- div#audioOutputSelectWrapper(style="display: none;") 
-			//- 	span Change audio output device
-			//- 	select#audioOutputSelect(@change="changeAudioOutput")
+								h3(v-html="marked('### '+moment(data[i].start_time).format('LT'))")
+								h4(v-if="data && data[i].title" v-html="data[i].title" style="color: #222;")
+								div.description(v-if="data && data[i].description" v-html="marked(data[i].description)" style="color: #222;")
+						img(v-if="i !== parseInt(active,10)" :src="'/public/images/icons/'+data[i].topic+'.svg'" style="height:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.3;")
+						div.row(v-if="i !== parseInt(active,10)")
+							div.tb-10-m0
+								//- (:class="(!pu || !pu.admin ? 'tb-10-m0' : 'tb-06-m0')")
+								a.block(role="button" v-if="pu" 
+									@click="dialog(i, $event)" 
+									@touchend="dialog(i, $event)"
+									v-text="'Join meeting'" 
+									style="z-index: 3; position: absolute;"
+								)
+							div(v-if="pu && pu.admin" style="position: absolute; top: 24px; top: calc(var(--gutter) * 2); right: 24px; right: calc(var(--gutter) * 2);width: 2rem;")
+								a.img(role="button" :href="'/api/editMeeting/'+doc._id" style="z-index: 3; position: absolute;")
+									img(src="/public/images/icons/edit.svg" style="width: 80%;height: 80%;position: absolute;display: block;top: 0;left: 0;right: 0;bottom: 0;margin: auto;")
 	include vue/jitsi.vue.pug

@@ -16,14 +16,12 @@ var schema = new Schema({
 	slack: {
 		oauthID: String
 	},
-	properties: {
-		avatar: String,
-		admin: Boolean,
-		givenName: String,
-		time: {
-			begin: Date,
-			end: Date
-		}
+	avatar: String,
+	admin: Boolean,
+	givenName: String,
+	time: {
+		begin: Date,
+		end: Date
 	}
 	
 }, { collection: 'soclogintest' });

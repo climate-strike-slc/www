@@ -2,6 +2,8 @@ script(type="text/javascript").
 	Vue.prototype.$ = $;
 	Vue.prototype.window = window;
 	Vue.prototype.moment = moment;
+	Vue.prototype.marked = marked;
+	if (typeof tinymce === 'object') Vue.prototype.tinymce = tinymce;
 	new Vue({
 		el: '#vue',
 		data: function data(){
@@ -29,7 +31,9 @@ script(type="text/javascript").
 				thirtyone: [0,2,4,6,7,9,11],
 				twentyeight: [1],
 				monthstr: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-				pm: 0
+				pm: 0,
+				menu: this.parseObj(!{JSON.stringify(menu)}),
+				tinymce: null
 
 			}
 		},
@@ -56,7 +60,37 @@ script(type="text/javascript").
 				self.day = docDate.getDate()
 				self.hour = docDate.getHours()
 				self.minute = docDate.getMinutes() >= 30 ? 30 : 0
-				console.log(self.year, self.month, self.day, self.hour, self.hour, self.minute)
+				console.log(self.year, self.month, self.day, self.hour, self.hour, self.minute);
+				self.appendStyleRoot();
+
+				if (!self.tinymce && $('#description')[0] && typeof tinymce === 'object') {
+					//- console.log($('#description')[0])
+					self.tinymce = tinymce.init({
+						menubar: false,
+						statusbar: false,
+						theme: 'inlite',
+						inline: true,
+						selector: "#description",
+						plugins: 'lists',
+						valid_elements: '*[*]',
+						setup: function (editor) {
+							//- editor.ui.registry.addButton('footnote', {
+							editor.addButton('footnote', {
+								text: 'Add footnote',
+								icon: 'link',
+								onclick: function(){
+									self.doc.properties.footnotes.push(
+										''
+									);
+									editor.insertContent('<a v-if="doc.properties.footnotes && doc.properties.footnotes['+(self.doc.properties.footnotes.length - 1)+']" href="ftnref'+(self.doc.properties.footnotes.length)+'"><span class="super">'+(self.doc.properties.footnotes.length)+'</span></a>')
+									//editor.insertContent('<span v-if="doc.properties.footnotes && doc.properties.footnotes['+(self.doc.properties.footnotes.length - 1)+']" class="super">'+(self.doc.properties.footnotes.length)+'</span>')
+									$('#footnote'+self.doc.properties.footnotes.length - 1).focus()
+								}
+							})
+						},
+						selection_toolbar: 'bold italic underline strikethrough | bullist numlist | outdent indent blockquote | subscript superscript | footnote'
+					});
+				}
 			},1000)
 		},
 		methods: Object.assign({}, adminFunctions, baseFunctions)

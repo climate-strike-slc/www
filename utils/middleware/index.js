@@ -2,35 +2,43 @@ require('dotenv').config();
 const config = require('../config');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
-const request = require('request')
+const request = require('request');
+const url = require('url')
 
 function sessionReferrer(req, res, next) {
-	const referrer = req.get('Referrer');
-	req.session.referrer = referrer;
+	console.log('sessionReferrer')
+	let referrer = req.get('Referrer');
+	if (!referrer) referrer = '/'
+	req.session.referrer = url.parse(referrer).pathname;
+	console.log(req.session.referrer)
 	return next()
 }
 
 function sessionAdmin(req, res, next) {
-	if (req.user && req.user.properties) {
-		req.session.admin = req.user.properties.admin;
+	console.log('sessionAdmin')
+	if (req.user) {
+		req.session.userName = config.userName;
+		req.session.admin = req.user.admin;
 	} else {
 		req.session.admin = false;
 	}
-	if (req.session.admin) {
-		req.session.userSecret = config.wt;
-	} else {
-		req.session.userSecret = null;
-	}
+	// console.log(req.session.admin)
+	// if (req.session.admin) {
+	// 	req.session.userSecret = config.wt;
+	// } else {
+	// 	req.session.userSecret = null;
+	// }
 	return next();
 }
 
 function ensureAuthenticated(req, res, next) {
-	// console.log(req.isAuthenticated())
+	console.log('ensureAuthenticated')
+	console.log(req.isAuthenticated())
 	if (req.isAuthenticated()) {
 		req.session.userId = req.user._id;
 		req.session.loggedin = req.user.username;
 		req.session.username = req.user.username;
-		req.session.admin = req.user.properties.admin;
+		req.session.admin = req.user.admin;
 		return next();
 	} else {
 		return res.redirect('/login');
@@ -41,7 +49,7 @@ function ensureAdmin(req, res, next) {
 	const admins = config.admins.split(/\,\s{0,5}/);
 	// console.log(admins.indexOf(req.user.email))
 	const user = req.user;
-	const isAdmin = (!user || !user.properties.admin ? false : user.properties.admin)
+	const isAdmin = (!user || !user.admin ? false : user.admin)
 	if (isAdmin || admins.indexOf(user.email) !== -1 || admins.indexOf(user.username) !== -1) {
 		req.session.userSecret = config.userSecret;
 		req.session.admin = true;

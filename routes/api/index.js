@@ -25,7 +25,7 @@ const { Content, ContentTest, Publisher, PublisherTest } = require('../../models
 const PublisherDB = (!testenv ? Publisher : PublisherTest);
 const ContentDB = (!testenv ? Content : ContentTest);
 
-router.all(/(.+)/, ensureAuthenticated)
+router.all(/(.+)/, ensureAuthenticated, ensureAdmin)
 
 router.post('/users', async (req, res, next) => {
 	const users = await PublisherDB.find({}).then(data=>data).catch(err=>next(err));
@@ -39,6 +39,7 @@ router.get('/createMeeting', csrfProtection, function(req, res) {
 	// console.log(res.header['xsrf-token'])
 	res.render('edit', {
 		pu: req.user,
+		menu: 'new',
 		admin: req.session.admin,
 		csrfToken: req.csrfToken(),
 		title: 'Manage Meetings'
@@ -67,7 +68,9 @@ router.get('/editMeeting/:id', csrfProtection, async (req, res, next) => {
 	const doc = await ContentDB.findOne({_id: meetingId}).then(doc=>doc).catch(err=>next(err));
 	return res.render('edit', {
 		pu: req.user,
+		menu: 'edit',
 		admin: req.session.admin,
+		csrfToken: req.csrfToken(),
 		doc: doc
 	})
 })
@@ -78,9 +81,18 @@ router.post('/editMeeting/:id', upload.array(), parseBody, csrfProtection, async
 	await keys.forEach(async(key) => {
 		const set = {$set:{}};
 		set.$set[key] = req.body[key];
-		await ContentDB.findOneAndUpdate({_id: req.params.id}, set, {safe:true}).then(pu=>console.log(pu)).catch(err=>next(err));
+		await ContentDB.findOneAndUpdate({_id: req.params.id}, set, {safe:true}).then(pu=>{}).catch(err=>next(err));
 	})
 	return res.redirect('/mtg/jitsi')
 });
+
+router.all('/deleteMeeting/:id', async(req, res, next) => {
+	ContentDB.deleteOne({_id: req.params.id}, (err, doc) => {
+		if (err) {
+			return next(err)
+		}
+		return res.redirect('/mtg/jitsi')
+	})
+})
 
 module.exports = router;

@@ -48,7 +48,7 @@ router.post('/profile/:id', upload.array(), parseBody, csrfProtection, async(req
 	await keys.forEach(async(key) => {
 		const set = {$set:{}};
 		set.$set[key] = req.body[key];
-		await PublisherDB.findOneAndUpdate({_id: req.params.id}, set, {safe:true}).then(pu=>console.log(pu)).catch(err=>next(err));
+		await PublisherDB.findOneAndUpdate({_id: req.params.id}, set, {safe:true}).then(pu=>{}).catch(err=>next(err));
 	})
 	return res.redirect('/usr/profile')
 })
@@ -75,7 +75,7 @@ router.post('/checkAdmin/:userid', async (req, res, next) => {
 	const user = await PublisherDB.findOne({_id: req.params.userid}).then(pu=>pu).catch(err=>next(err));
 	let amIAdmin = false;
 	if (user) {
-		amIAdmin = (!user.properties.admin ? false : true)
+		amIAdmin = (!user.admin ? false : true)
 	} else {
 		amIAdmin = false;
 	}

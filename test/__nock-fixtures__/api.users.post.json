@@ -1,6 +1,6 @@
 [
     {
-        "scope": "http://127.0.0.1:49621",
+        "scope": "http://127.0.0.1:63176",
         "method": "GET",
         "path": "/auth",
         "body": "",
@@ -14,9 +14,9 @@
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
             "Set-Cookie",
-            "XSRF-TOKEN=HR8aMSHp-p-zTZJBPbyoc1gSDDVunsBoC9so; Path=/",
+            "XSRF-TOKEN=zQzmdaG2--zQGbEpkKD44HpuqPpqk7uC9z2c; Path=/",
             "Set-Cookie",
-            "nodecookie=s%3Aj9fjbkOZyu7m2BQfa8hyRR2_qPCgTUeR.CJag%2Be7pKdXuHDrPaGvXDyTNkwyDKwUR8TjVKtaxIAY; Path=/; Expires=Wed, 08 Apr 2020 11:30:24 GMT; HttpOnly",
+            "nodecookie=s%3A6MpAFNrCQ_XGmO-mdOhQbBaj1QnmtFYG.2Junk%2FK4yL7VKzSdJhBscEoQVakBnACArWudD8%2FgHk0; Path=/; Expires=Wed, 08 Apr 2020 22:46:17 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -32,18 +32,18 @@
             "Content-Length",
             "34",
             "Date",
-            "Wed, 08 Apr 2020 08:30:24 GMT",
+            "Wed, 08 Apr 2020 19:46:16 GMT",
             "Connection",
             "close"
         ],
         "responseIsBinary": false
     },
     {
-        "scope": "http://127.0.0.1:49623",
+        "scope": "http://127.0.0.1:63178",
         "method": "POST",
         "path": "/login",
         "body": {
-            "_csrf": "HR8aMSHp-p-zTZJBPbyoc1gSDDVunsBoC9so",
+            "_csrf": "zQzmdaG2--zQGbEpkKD44HpuqPpqk7uC9z2c",
             "username": "tbushman",
             "password": "password"
         },
@@ -57,7 +57,7 @@
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
             "Set-Cookie",
-            "nodecookie=s%3Aj9fjbkOZyu7m2BQfa8hyRR2_qPCgTUeR.CJag%2Be7pKdXuHDrPaGvXDyTNkwyDKwUR8TjVKtaxIAY; Path=/; Expires=Wed, 08 Apr 2020 11:30:24 GMT; HttpOnly",
+            "nodecookie=s%3A6MpAFNrCQ_XGmO-mdOhQbBaj1QnmtFYG.2Junk%2FK4yL7VKzSdJhBscEoQVakBnACArWudD8%2FgHk0; Path=/; Expires=Wed, 08 Apr 2020 22:46:17 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -73,31 +73,29 @@
             "Content-Length",
             "34",
             "Date",
-            "Wed, 08 Apr 2020 08:30:24 GMT",
+            "Wed, 08 Apr 2020 19:46:17 GMT",
             "Connection",
             "close"
         ],
         "responseIsBinary": false
     },
     {
-        "scope": "http://127.0.0.1:49625",
+        "scope": "http://127.0.0.1:63180",
         "method": "POST",
         "path": "/api/users",
         "body": "",
         "status": 200,
         "response": [
             {
-                "properties": {
-                    "time": {
-                        "begin": "2020-04-08T08:30:23.851Z",
-                        "end": "2020-04-08T08:30:23.851Z"
-                    },
-                    "avatar": "/images/publish_logo_sq.svg",
-                    "admin": true
+                "time": {
+                    "begin": "2020-04-08T19:46:16.514Z",
+                    "end": "2020-04-08T19:46:16.514Z"
                 },
-                "_id": "5e8d8b9f37ae81a9815edda6",
+                "_id": "5e8e2a084dda23ae6f1c0cfe",
                 "username": "tbushman",
                 "email": "tracey.bushman@gmail.com",
+                "avatar": "/images/publish_logo_sq.svg",
+                "admin": true,
                 "__v": 0
             }
         ],
@@ -109,7 +107,7 @@
             "Set-Cookie",
             "site=cookie; Path=/; Secure; SameSite=None",
             "Set-Cookie",
-            "nodecookie=s%3Aj9fjbkOZyu7m2BQfa8hyRR2_qPCgTUeR.CJag%2Be7pKdXuHDrPaGvXDyTNkwyDKwUR8TjVKtaxIAY; Path=/; Expires=Wed, 08 Apr 2020 11:30:24 GMT; HttpOnly",
+            "nodecookie=s%3A6MpAFNrCQ_XGmO-mdOhQbBaj1QnmtFYG.2Junk%2FK4yL7VKzSdJhBscEoQVakBnACArWudD8%2FgHk0; Path=/; Expires=Wed, 08 Apr 2020 22:46:17 GMT; HttpOnly",
             "Access-Control-Allow-Origin",
             "*",
             "Access-Control-Allow-Methods",
@@ -121,11 +119,11 @@
             "Content-Type",
             "application/json; charset=utf-8",
             "Content-Length",
-            "245",
+            "230",
             "ETag",
-            "W/\"f5-N+a4hzzU9NgA62Gdy6AQvCzpXmc\"",
+            "W/\"e6-fn7Ts/7B7/40/sEqmKLhuVVt7WY\"",
             "Date",
-            "Wed, 08 Apr 2020 08:30:24 GMT",
+            "Wed, 08 Apr 2020 19:46:17 GMT",
             "Connection",
             "close"
         ],

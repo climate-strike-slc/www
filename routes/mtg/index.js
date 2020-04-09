@@ -29,6 +29,7 @@ router.get('/jitsi', async (req, res, next) => {
 	const meetings = await ContentDB.find({}).then(data=>data).catch(err=>next(err));
 	return res.render('jitsi', {
 		pu: req.user,
+		menu: 'meetings',
 		admin: req.session.admin,
 		data: meetings
 	})

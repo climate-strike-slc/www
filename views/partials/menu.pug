@@ -1,4 +1,4 @@
-nav
+nav(v-if="!/(login)/.test(menu) && !/(register)/.test(menu)")
 	a.mainmenu(v-if="res" title="Menu" style="pointer-events: auto;" @click="drop")
 		
 		svg(version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30.1px" height="25px" viewBox="0 0 30.1 28" style="enable-background:new 0 0 30.1 28; padding: 0 0 0 8px;" xml:space="preserve")
@@ -7,14 +7,18 @@ nav
 			path(d="M1.103,27.962c-0.606,0-1.1-0.494-1.1-1.1v-2.301c0-0.605,0.493-1.1,1.1-1.1h27.893  c0.607,0,1.1,0.494,1.1,1.1v2.301c0,0.605-0.492,1.1-1.1,1.1H1.103z")
 	
 	div.dropdown(v-cloak v-if="dropped || !res")
-		ul
+		ul(style="margin:12px 0 8px 0;")
 			//- li
 			//- 	a(href="/") Home  
-			li
-				a(href="/mtg/jitsi") Meetings
-			li(v-if="pu && pu.properties.admin")
-				a(href="/api/createMeeting") New Meeting
+			li(v-if="!/(login)/.test(menu) && !/(register)/.test(menu)")
+				a(href="/mtg/jitsi")
+					span.tb-font-m Meetings
+			li(v-if="pu && pu.admin")
+				a(href="/api/createMeeting")
+					span.tb-font-m New Meeting
 			li(v-if="pu && pu !== ''")
-				a(href="/usr/profile") Profile
+				a(href="/usr/profile")
+					span.tb-font-m Profile
 			li(v-if="!pu")
-				a(href="/login") Login
+				a(href="/login")
+					span.tb-font-m Login

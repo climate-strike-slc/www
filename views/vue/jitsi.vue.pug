@@ -56,8 +56,38 @@ script(type="text/javascript").
 				apis: {},
 				keys: [],
 				monthtext: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-				c: ["#1f78b4","#b2df8a","#33a02c","#6a3d9a","#b15928","#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"],
+				c: ["#1f78b4","#33a02c","#6a3d9a","#b15928","#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"],
 				cats: ['ecology', 'economy', 'politics', 'community'],
+				menu: this.parseObj(!{JSON.stringify(menu)}),
+				schedule: [
+					{
+						day: 0,
+						title: 'past',
+						subtitle: 'strike!',
+						description: '',
+						link: 'https://www.earthdaylive2020.org/',
+						linkText: 'Earth Day Live 2020',
+						img: '/public/images/Earth-Day-1970_AP.jpg'
+					},
+					{
+						day: 1,
+						title: 'present',
+						subtitle: 'divest!',
+						description: '',
+						link: 'https://stopthemoneypipeline.com/',
+						linkText: 'Stop the Money Pipeline',
+						img: '/public/images/Earth-Day-crowd.jpg'
+					},
+					{
+						day: 2,
+						title: 'future',
+						subtitle: 'vote!',
+						description: '',
+						link: '',
+						linkText: '',
+						img: '/public/images/HO_NASA_Earth.jpg'
+					},
+				]
 
 			}
 		},

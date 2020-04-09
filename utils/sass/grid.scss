@@ -70,7 +70,12 @@
 	padding: 1rem;
 	position: relative;
 	pointer-events: auto;
-	
+	.description {
+		transition-property: width,height;
+		transition-duration: 0.4s;
+		transition-delay: 0.1s;
+		// @include vendor('transition', 'height 2s ease-in-out, color 2s ease-in-out');
+	}
 	&.active {
 		padding: 0;
 		pointer-events: none;
@@ -211,9 +216,15 @@
 		width: 15.89vw;
 		height: 15.89vw;
 		margin: 2vw 2vw 0 0;
+		.description {
+			height: 1.72rem;
+		}
 		&:hover {
 			width: 26vw;
 			height: 26vw;
+			.description {
+				height: auto;
+			}
 		}
 		&.active {
 			width: 66vw!important;

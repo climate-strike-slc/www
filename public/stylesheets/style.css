@@ -436,13 +436,24 @@ body {
   width: 100vw;
   height: 100vh; }
 
-input, select, textarea {
+input, select, textarea, .textarea {
+  -webkit-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
   color: #181818;
   font-family: "Roboto", sans-serif !important;
   font-weight: 300;
   font-size: 1rem;
   line-height: 1.65;
   margin: 0 0 1rem 0; }
+
+.textarea {
+  padding: 12px 6px;
+  padding: var(--gutter) 0 calc(var(--gutter) * 0.5) 0;
+  background-color: #dadce0; }
+  .textarea > p {
+    padding: 12px 6px;
+    padding: var(--gutter) calc(var(--gutter) * 0.5); }
 
 strong, b {
   font-weight: 500; }
@@ -458,9 +469,9 @@ small {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "Oswald", sans-serif !important;
-  color: #343536;
+  color: #dadce0;
   font-weight: 200;
-  line-height: 1.5;
+  line-height: 0.8;
   margin: 0 0 var(--gutter) 0;
   letter-spacing: 0.03em;
   padding-top: 0.2rem; }
@@ -476,27 +487,27 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 0 var(--gutter) 0;
     z-index: 9; }
 
-h1 {
-  font-family: "Oswald", sans-serif !important;
-  font-size: 1rem;
+h1, .tb-font-xl {
+  font-size: 2.2rem;
+  opacity: 0.5;
   color: #dadce0; }
 
-h2 {
-  font-size: 0.8rem;
+h2, .tb-font-l {
+  font-size: 1.4rem;
   line-height: 1.4;
   letter-spacing: 0.02em; }
 
-h3 {
-  font-size: 0.7rem; }
+h3, .tb-font-m {
+  font-size: 1rem; }
 
-h4 {
-  font-size: 0.6rem; }
+h4, .tb-font-s {
+  font-size: 0.8rem; }
 
-h5 {
-  font-size: 0.5rem; }
+h5, .tb-font-xs {
+  font-size: 0.74rem; }
 
 h6 {
-  font-size: 0.4rem; }
+  font-size: 0.6rem; }
 
 p {
   font-family: "Roboto", sans-serif !important;
@@ -554,6 +565,23 @@ a[role="button"],
   .button.fit {
     display: block;
     margin: 0 0 1em 0; }
+  input[type="submit"].special,
+  input[type="reset"].special,
+  input[type="button"].special,
+  button.special,
+  a[role="button"].special,
+  .button.special {
+    background-color: #dadce0;
+    color: #181818;
+    margin: var(--thumbw) 0; }
+    input[type="submit"].special:hover,
+    input[type="reset"].special:hover,
+    input[type="button"].special:hover,
+    button.special:hover,
+    a[role="button"].special:hover,
+    .button.special:hover {
+      background-color: #fff;
+      color: black; }
   input[type="submit"].disabled, input[type="submit"]:disabled,
   input[type="reset"].disabled,
   input[type="reset"]:disabled,
@@ -590,7 +618,7 @@ nav {
     box-shadow: 0px 0px 1rem 1rem rgba(0,0,0,0.5); }
     nav .dropdown ul li {
       list-style-type: none;
-      height: 1.5rem; }
+      height: 2rem; }
       nav .dropdown ul li a {
         text-decoration: none;
         color: #dadce0;
@@ -606,7 +634,8 @@ nav {
         padding: 0.15rem 0; }
         nav .dropdown li {
           display: inline-block;
-          margin: 0 1.5rem; } }
+          margin: 0 1.5rem;
+          height: 1.5rem; } }
 
 div[aria-label="Chat Message List"] {
   height: auto;
@@ -690,6 +719,10 @@ div[aria-label="Chat Message List"] {
   padding: 1rem;
   position: relative;
   pointer-events: auto; }
+  .ui .description {
+    transition-property: width,height;
+    transition-duration: 0.4s;
+    transition-delay: 0.1s; }
   .ui.active {
     padding: 0;
     pointer-events: none;
@@ -812,9 +845,13 @@ div[aria-label="Chat Message List"] {
     width: 15.89vw;
     height: 15.89vw;
     margin: 2vw 2vw 0 0; }
+    .ui .description {
+      height: 1.72rem; }
     .ui:hover {
       width: 26vw;
       height: 26vw; }
+      .ui:hover .description {
+        height: auto; }
     .ui.active {
       width: 66vw !important;
       height: calc(66vw * 0.72);

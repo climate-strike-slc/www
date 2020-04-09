@@ -365,10 +365,34 @@ describe('API calls', () => {
           .post('/mtg/jitsi')
           .expect(200)
           .then(async res => {
-            expect(res.body).to.matchSnapshot()
+            expect(res.body).to.matchSnapshot();
+            meetings = res.body;
           })
         })
       })
+      nockDone()
+    }
+  })
+
+  key = 'should delete a meeting';
+  it(key, async() => {
+    const meetingId = meetings[0]._id;
+    const snapKey = ('API calls '+key+' 1');
+    const { nockDone } = await nockBack(
+      'api.meeting.delete.json'
+    );
+    nock.enableNetConnect('127.0.0.1');
+    meeting = (!mockSnapshots ? meeting : mockSnapshots[snapKey]);
+    
+    if (!recording) {
+      expect(user).to.matchSnapshot();
+      nockDone()
+
+    } else {
+      await agent
+      .post(`/api/deleteMeeting/${meeting._id}`)
+      .expect(302)
+      .expect('Location', '/mtg/jitsi')
       nockDone()
     }
   })
