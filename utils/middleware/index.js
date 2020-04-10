@@ -146,7 +146,7 @@ const getAuthCode = async(req, res, next) => {
 	const clientID = process.env.TEST_ENV || config.env !== 'production' ? config.clientIDTest : config.clientID;
 	const clientSecret = process.env.TEST_ENV || config.env !== 'production' ? config.clientSecretTest : config.clientSecret;
 	const redirectURL = process.env.TEST_ENV || config.env !== 'production' ? config.redirectURLTest : config.redirectURL;
-	if (/localhost/.test(redirectUrl)) {
+	if (/localhost/.test(redirectURL)) {
 		return next()
 	}
 	// Check if the code parameter is in the url 
