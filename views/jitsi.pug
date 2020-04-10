@@ -27,9 +27,9 @@ block content
 				)
 					div.ui
 						div.row(style="position:relative;z-index:1;")
-							h3(v-text="monthtext[month]+' '+date+', '+year")
-							h1.headline(v-text="schedule[m].title")
-							h2(v-text="schedule[m].subtitle")
+							h4(v-text="monthtext[month]+' '+date+', '+year")
+							h2(v-text="schedule[m].title")
+							h3(v-text="schedule[m].subtitle")
 							p(v-text="schedule[m].description")
 						img(:src="schedule[m].img" style="height:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.4;")
 					div.ui.img(
@@ -45,20 +45,23 @@ block content
 					)
 						div.row(v-if="i !== parseInt(active,10)" style="position:relative;z-index:1;")
 							div.tb-10-m0
-								h3(v-html="marked('### '+moment(data[i].start_time).format('LT'))")
-								h4(v-if="data && data[i].title" v-html="data[i].title" style="color: #222;")
-								div.description(v-if="data && data[i].description" v-html="marked(data[i].description)" style="color: #222;")
+								h4(v-html="marked('### '+moment(data[i].start_time).format('LT'))")
+								h5(v-if="data && data[i].title" v-html="data[i].title" style="color: #222;")
+								h6.description(v-if="data && data[i].description" v-html="marked(data[i].description)" style="color: #222;")
 						img(v-if="i !== parseInt(active,10)" :src="'/public/images/icons/'+data[i].topic+'.svg'" style="height:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.3;")
 						div.row(v-if="i !== parseInt(active,10)")
-							div.tb-10-m0
+							//- div.tb-10-m0
 								//- (:class="(!pu || !pu.admin ? 'tb-10-m0' : 'tb-06-m0')")
-								a.block(role="button" v-if="pu" 
-									@click="dialog(i, $event)" 
-									@touchend="dialog(i, $event)"
-									v-text="'Join meeting'" 
-									style="z-index: 3; position: absolute;"
-								)
-							div(v-if="pu && pu.admin" style="position: absolute; top: 24px; top: calc(var(--gutter) * 2); right: 24px; right: calc(var(--gutter) * 2);width: 2rem;")
-								a.img(role="button" :href="'/api/editMeeting/'+doc._id" style="z-index: 3; position: absolute;")
+							a.block(role="button" v-if="pu" 
+								@click="dialog(i, $event)" 
+								@touchend="dialog(i, $event)"
+								v-text="'Join meeting'" 
+								style="z-index: 3; position: absolute;"
+							)
+							div(v-if="pu && pu.admin && i !== parseInt(active,10)" style="position: absolute; top: 0.5rem; right: 0.5rem;width: 2rem;")
+								a.img(role="button" :href="'/api/editMeeting/'+doc._id" style="z-index: 3; position: absolute;" title="edit meeting")
 									img(src="/public/images/icons/edit.svg" style="width: 80%;height: 80%;position: absolute;display: block;top: 0;left: 0;right: 0;bottom: 0;margin: auto;")
+							div(v-if="i === parseInt(active, 10)" style="position: absolute; top: 0.5rem; right: 0.5rem;width: 2rem;")
+								a.img(role="button" :href="'/mtg/jitsi'" style="z-index: 3; position: absolute;" title="leave meeting")
+									img(src="/public/images/icons/times.svg" style="width: 80%;height: 80%;position: absolute;display: block;top: 0;left: 0;right: 0;bottom: 0;margin: auto;")
 	include vue/jitsi.vue.pug

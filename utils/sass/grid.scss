@@ -56,6 +56,9 @@
 		// @include vendor('grid-column-end', '5');
 		width: 100vw;
 	}
+	> .ui {
+		padding: 0.5rem;
+	}
 }
 .ui {
 	width: 66vw;
@@ -110,7 +113,7 @@
 	}
 }
 *[class^='tb-1'], *[class^='tb-0'] {
-	padding-right: 1vw;
+	// padding-right: 1vw;
 	display: inline-block;
 	width: auto;
 	height: auto;
@@ -217,13 +220,14 @@
 		height: 15.89vw;
 		margin: 2vw 2vw 0 0;
 		.description {
-			height: 1.72rem;
+			min-height: 1.72rem;
+			max-height: 1.72rem;
 		}
 		&:hover {
 			width: 26vw;
 			height: 26vw;
 			.description {
-				height: auto;
+				max-height: 3rem;
 			}
 		}
 		&.active {

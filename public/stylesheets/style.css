@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Oswald:200,400,600|Roboto:300,300i,400,400i,700,700i&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Poppins:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600|Roboto:300,300i,400,400i,700,700i&display=swap");
 /*! normalize-scss | MIT/GPLv2 License | bit.ly/normalize-scss */
 /* Document
    ========================================================================== */
@@ -468,7 +468,7 @@ small {
   font-size: 0.6rem; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Oswald", sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
   color: #dadce0;
   font-weight: 200;
   line-height: 0.8;
@@ -507,11 +507,12 @@ h5, .tb-font-xs {
   font-size: 0.74rem; }
 
 h6 {
-  font-size: 0.6rem; }
+  font-size: 0.6rem;
+  line-height: 1; }
 
 p {
   font-family: "Roboto", sans-serif !important;
-  line-height: 150% !important;
+  line-height: 130% !important;
   height: auto;
   font-weight: 100 !important;
   letter-spacing: 0.03em;
@@ -529,7 +530,7 @@ button,
 a[role="button"],
 .button {
   color: #dadce0;
-  font-family: "Oswald", sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
   -webkit-appearance: none;
   -ms-appearance: none;
   appearance: none;
@@ -705,6 +706,8 @@ div[aria-label="Chat Message List"] {
   margin: 4rem auto; }
   .container.active {
     width: 100vw; }
+  .container > .ui {
+    padding: 0.5rem; }
 
 .ui {
   width: 66vw;
@@ -745,7 +748,6 @@ div[aria-label="Chat Message List"] {
     overflow: hidden; }
 
 *[class^='tb-1'], *[class^='tb-0'] {
-  padding-right: 1vw;
   display: inline-block;
   width: auto;
   height: auto;
@@ -846,12 +848,13 @@ div[aria-label="Chat Message List"] {
     height: 15.89vw;
     margin: 2vw 2vw 0 0; }
     .ui .description {
-      height: 1.72rem; }
+      min-height: 1.72rem;
+      max-height: 1.72rem; }
     .ui:hover {
       width: 26vw;
       height: 26vw; }
       .ui:hover .description {
-        height: auto; }
+        max-height: 3rem; }
     .ui.active {
       width: 66vw !important;
       height: calc(66vw * 0.72);

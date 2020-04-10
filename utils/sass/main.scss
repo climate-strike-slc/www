@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Oswald:200,400,600|Roboto:300,300i,400,400i,700,700i&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Poppins:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600|Roboto:300,300i,400,400i,700,700i&display=swap');
 @import "mixins/loader";
 @import './globals.scss';
 // Add custom styles here
@@ -127,11 +127,12 @@ h5, .tb-font-xs {
 
 h6 {
 	font-size: 0.6rem;
+	line-height: 1;
 }
 
 p {
 	font-family: $ffbody;
-	line-height: 150%!important;
+	line-height: 130%!important;
 	height: auto;
 	font-weight: 100!important;
 	letter-spacing: 0.03em;
