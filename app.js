@@ -32,6 +32,35 @@ var corsOpt = {
 }
 app.use(cors(corsOpt));
 app.options('*', cors(corsOpt))
+
+const store = new MongoDBStore(
+	{
+		mongooseConnection: mongoose.connection,
+		uri: config.DB,
+		collection: 'slccsSession',
+		autoRemove: 'interval',     
+		autoRemoveInterval: 3600
+	}
+);
+store.on('error', function(error){
+	console.log(error)
+});
+
+passport.use(new LocalStrategy(PublisherDB.authenticate()));
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+passport.deserializeUser(function(id, done) {
+	PublisherDB.findOne({_id: id}, function(err, user){
+
+		if(!err) {
+			done(null, user);
+		} else {
+			done(err, null);
+		}
+	});
+});
+
 app.use(function(req, res, next) {
 	res.cookie('site', 'cookie', {sameSite: 'None', secure: true});
 
@@ -49,33 +78,6 @@ app.set('view engine', 'pug');
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')));
 
-passport.use(new LocalStrategy(PublisherDB.authenticate()));
-passport.serializeUser(function(user, done) {
-  done(null, user._id);
-});
-passport.deserializeUser(function(id, done) {
-	PublisherDB.findOne({_id: id}, function(err, user){
-
-		if(!err) {
-			done(null, user);
-		} else {
-			done(err, null);
-		}
-	});
-});
-
-const store = new MongoDBStore(
-	{
-		mongooseConnection: mongoose.connection,
-		uri: config.DB,
-		collection: 'slccsSession',
-		autoRemove: 'interval',     
-		autoRemoveInterval: 3600
-	}
-);
-store.on('error', function(error){
-	console.log(error)
-});
 
 const sess = {
 	secret: config.secret,
