@@ -75,7 +75,7 @@ var baseFunctions = {
 		self.active = parseInt(i,10);
 		router.push({ path: `/mtg/jitsi#meeting${i}` });
 		const domain = 'bli.sh';
-		const roomName = moment(self.data[i].start_time).utc().format('LT') + ' ' + self.data[i].title
+		// const roomName = moment(self.data[i].start_time).utc().format('LT') + ' ' + self.data[i].title
 		const options = {
 			roomName: self.data[i].topic,
 			width: (!self.res ? (self.wWidth * 0.66) : (self.wWidth*0.86)) +'px',
