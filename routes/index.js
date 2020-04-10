@@ -41,7 +41,11 @@ routes.use('/usr', usr);
 // router.all(/(.+)/, sessionAdmin)
 
 router.all(/(.+)/, sessionAdmin, sessionReferrer);
-router.all('/', ensureAuthenticated)
+// router.all('/', ensureAuthenticated)
+
+router.get('/', (req, res, next) => {
+	return res.redirect('/mtg/jitsi')
+})
 
 router.get('/auth', csrfProtection, async (req, res, next) => {
 	res.cookie('XSRF-TOKEN', req.csrfToken())
@@ -136,7 +140,7 @@ router.post('/login', upload.array(), parseBody, csrfProtection, passport.authen
 	failureRedirect: '/login'
 }), async (req, res, next) => {
 	const outputPath = url.parse(req.url).pathname;
-	console.log(outputPath, 'POST');
+	// console.log(outputPath, 'POST');
 	req.session.userId = req.user._id;
 	req.session.loggedin = req.user.username;
 	var referrer = !req.session.referrer || /(\/login)/.test(req.session.referrer) || /(\/auth)/.test(req.session.referrer)  ? '/usr/profile' : req.session.referrer;
@@ -162,14 +166,14 @@ router.post('/login', upload.array(), parseBody, csrfProtection, passport.authen
 	} else {
 		req.session.admin = pu.admin;
 		req.session.referrer = referrer;
-		console.log(referrer)
+		// console.log(referrer)
 		return res.redirect(referrer);
 	}
 });
 
 function provideRoutes(app) {
   app.use(routes);
-  app.use('/meet', router);
+  app.use(router);
   return;
 }
 module.exports = provideRoutes;

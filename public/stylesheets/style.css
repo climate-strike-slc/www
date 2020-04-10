@@ -419,8 +419,8 @@ body {
   left: 0;
   right: 0;
   margin: 0;
-  color: #dadce0;
-  background-color: #181818;
+  color: var(--lightgray);
+  background-color: var(--black);
   font-family: "Roboto", sans-serif !important;
   font-weight: 300;
   font-size: 1rem; }
@@ -440,7 +440,6 @@ input, select, textarea, .textarea {
   -webkit-appearance: none;
   -ms-appearance: none;
   appearance: none;
-  color: #181818;
   font-family: "Roboto", sans-serif !important;
   font-weight: 300;
   font-size: 1rem;
@@ -450,7 +449,8 @@ input, select, textarea, .textarea {
 .textarea {
   padding: 12px 6px;
   padding: var(--gutter) 0 calc(var(--gutter) * 0.5) 0;
-  background-color: #dadce0; }
+  border: 1px solid var(--lightgray);
+  background-color: #fff; }
   .textarea > p {
     padding: 12px 6px;
     padding: var(--gutter) calc(var(--gutter) * 0.5); }
@@ -469,7 +469,7 @@ small {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "Poppins", sans-serif !important;
-  color: #dadce0;
+  color: var(--lightgray);
   font-weight: 200;
   line-height: 0.8;
   margin: 0 0 var(--gutter) 0;
@@ -490,7 +490,7 @@ h1, h2, h3, h4, h5, h6 {
 h1, .tb-font-xl {
   font-size: 2.2rem;
   opacity: 0.5;
-  color: #dadce0; }
+  color: var(--lightgray); }
 
 h2, .tb-font-l {
   font-size: 1.4rem;
@@ -529,7 +529,7 @@ input[type="button"],
 button,
 a[role="button"],
 .button {
-  color: #dadce0;
+  color: var(--lightgray);
   font-family: "Poppins", sans-serif !important;
   -webkit-appearance: none;
   -ms-appearance: none;
@@ -538,8 +538,8 @@ a[role="button"],
   -ms-transition: background-color 2s ease-in-out, color 2s ease-in-out;
   transition: background-color 2s ease-in-out, color 2s ease-in-out;
   background-color: transparent;
-  border: 1px solid #dadce0;
-  box-shadow: inset 0 0 0 1px #181818;
+  border: 1px solid var(--lightgray);
+  box-shadow: inset 0 0 0 0 var(--black);
   cursor: pointer;
   display: inline-block;
   font-size: 0.8rem;
@@ -572,8 +572,8 @@ a[role="button"],
   button.special,
   a[role="button"].special,
   .button.special {
-    background-color: #dadce0;
-    color: #181818;
+    background-color: var(--lightgray);
+    color: var(--black);
     margin: var(--thumbw) 0; }
     input[type="submit"].special:hover,
     input[type="reset"].special:hover,
@@ -581,7 +581,7 @@ a[role="button"],
     button.special:hover,
     a[role="button"].special:hover,
     .button.special:hover {
-      background-color: #fff;
+      background-color: var(--white);
       color: black; }
   input[type="submit"].disabled, input[type="submit"]:disabled,
   input[type="reset"].disabled,
@@ -611,21 +611,22 @@ nav {
   position: fixed;
   width: calc(100% - 1rem); }
   nav path {
-    fill: #dadce0; }
+    fill: var(--lightgray); }
   nav .dropdown {
-    background-color: #343536;
+    background-color: var(--darkgray);
     padding: 1.5rem 0;
     margin: 0.5rem;
     box-shadow: 0px 0px 1rem 1rem rgba(0,0,0,0.5); }
     nav .dropdown ul li {
       list-style-type: none;
-      height: 2rem; }
+      height: 2rem;
+      line-height: 2rem; }
       nav .dropdown ul li a {
         text-decoration: none;
-        color: #dadce0;
+        color: var(--lightgray);
         line-height: 1.5rem; }
         nav .dropdown ul li a:hover {
-          color: #fff; }
+          color: var(--white); }
   @media (min-width: 600px) {
     nav {
       margin: 0;
@@ -718,7 +719,7 @@ div[aria-label="Chat Message List"] {
   transition-duration: 0.4s;
   transition-delay: 0.1s;
   cursor: pointer;
-  background-color: #555;
+  background-color: var(--gray);
   padding: 1rem;
   position: relative;
   pointer-events: auto; }
@@ -740,7 +741,6 @@ div[aria-label="Chat Message List"] {
   .ui:hover {
     z-index: 9; }
     .ui:hover p {
-      color: #222 !important;
       opacity: 1 !important; }
   .ui embed {
     position: relative;
@@ -765,9 +765,9 @@ div[aria-label="Chat Message List"] {
   margin: auto;
   width: 100%;
   height: 36px;
-  color: #fff;
+  color: var(--white);
   text-align: center;
-  background-color: #222;
+  background-color: var(--darkgray);
   padding: 0;
   margin: 20px auto 0 auto;
   position: sticky;

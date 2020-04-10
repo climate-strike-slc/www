@@ -6,16 +6,15 @@ const request = require('request');
 const url = require('url')
 
 function sessionReferrer(req, res, next) {
-	console.log('sessionReferrer')
-	let referrer = req.get('Referrer');
-	if (!referrer) referrer = '/'
-	req.session.referrer = url.parse(referrer).pathname;
+	// console.log('sessionReferrer')
+	const referrer = req.get('Referrer');
+	req.session.referrer = (!referrer ? '/mtg/jitsi' : url.parse(referrer).pathname);
 	// console.log(req.session.referrer)
 	return next()
 }
 
 function sessionAdmin(req, res, next) {
-	console.log('sessionAdmin')
+	// console.log('sessionAdmin')
 	if (req.user) {
 		req.session.userName = config.userName;
 		req.session.admin = req.user.admin;
@@ -32,8 +31,8 @@ function sessionAdmin(req, res, next) {
 }
 
 function ensureAuthenticated(req, res, next) {
-	console.log('ensureAuthenticated')
-	console.log(req.isAuthenticated())
+	// console.log('ensureAuthenticated')
+	// console.log(req.isAuthenticated())
 	if (req.isAuthenticated()) {
 		req.session.userId = req.user._id;
 		req.session.loggedin = req.user.username;

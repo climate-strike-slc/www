@@ -27,10 +27,10 @@ block content
 				)
 					div.ui
 						div.row(style="position:relative;z-index:1;")
-							h4(v-text="monthtext[month]+' '+date+', '+year")
-							h2(v-text="schedule[m].title")
-							h3(v-text="schedule[m].subtitle")
-							p(v-text="schedule[m].description")
+							h4(style="color:rgb(218, 220, 224);" v-text="monthtext[month]+' '+date+', '+year")
+							h1(style="color:rgb(218, 220, 224);" v-text="schedule[m].title")
+							h3(style="color:rgb(218, 220, 224);" v-text="schedule[m].subtitle")
+							p(style="color: #fff;" v-text="schedule[m].description")
 						img(:src="schedule[m].img" style="height:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.4;")
 					div.ui.img(
 						v-for="(doc, i) in data"
@@ -45,9 +45,9 @@ block content
 					)
 						div.row(v-if="i !== parseInt(active,10)" style="position:relative;z-index:1;")
 							div.tb-10-m0
-								h4(v-html="marked('### '+moment(data[i].start_time).format('LT'))")
-								h5(v-if="data && data[i].title" v-html="data[i].title" style="color: #222;")
-								h6.description(v-if="data && data[i].description" v-html="marked(data[i].description)" style="color: #222;")
+								h4(style="color:rgb(218, 220, 224);" v-text="moment(data[i].start_time).format('LT')")
+								h5(style="color:rgb(218, 220, 224);" v-if="data && data[i].title" v-html="data[i].title")
+								h6.description(v-if="data && data[i].description" v-html="marked(data[i].description)")
 						img(v-if="i !== parseInt(active,10)" :src="'/public/images/icons/'+data[i].topic+'.svg'" style="height:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.3;")
 						div.row(v-if="i !== parseInt(active,10)")
 							//- div.tb-10-m0

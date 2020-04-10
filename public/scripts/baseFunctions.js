@@ -18,6 +18,20 @@ var baseFunctions = {
 			monthh = 1;
 			dayh = 0.3;
 		}
+		var white, black, gray, darkgray, lightgray;
+		if (self.darkmode) {
+			white = '#fff';
+			black = '#181818';
+			darkgray = '#343536'
+			gray = 'rgb(52, 53, 54)';
+			lightgray = 'rgb(218, 220, 224)';
+		} else {
+			white = '#181818';
+			black = '#fff';
+			darkgray = 'rgb(218, 220, 224)'
+			gray = 'rgb(52, 53, 54)';
+			lightgray = '#343536';
+		}
 		$('#style').html(
 
 			`:root {
@@ -26,6 +40,11 @@ var baseFunctions = {
 				--dayh: ${dayh * 100}vh;
 				--gutter: 12px;
 				--thumbw: 42px;
+				--white: ${white};
+				--black: ${black};
+				--gray: ${gray};
+				--darkgray: ${darkgray};
+				--lightgray: ${lightgray};
 			}`
 		)
 	},
@@ -56,8 +75,9 @@ var baseFunctions = {
 		self.active = parseInt(i,10);
 		router.push({ path: `/mtg/jitsi#meeting${i}` });
 		const domain = 'bli.sh';
+		const roomName = moment(self.data[i].start_time).utc().format('LT') + ' ' + self.data[i].title
 		const options = {
-			roomName: self.keys[i],
+			roomName: self.data[i].title,
 			width: (!self.res ? (self.wWidth * 0.66) : (self.wWidth*0.86)) +'px',
 			height: (!self.res ? ((self.wWidth * 0.66) * 0.72) : ((self.wWidth * 0.72) * 0.95)) +'px',
 			parentNode: document.querySelector(`#meeting${i}`),
@@ -155,5 +175,11 @@ var baseFunctions = {
 			}
 			self.adminValidated = valid;
 		})//.test(val)
+	},
+	switchDarkmode: function() {
+		var self = this;
+		var darkmode = self.darkmode;
+		self.darkmode = !darkmode; 
+		self.appendStyleRoot()
 	}
 }
