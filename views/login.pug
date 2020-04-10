@@ -2,7 +2,8 @@ extends layout
 block page
 	- var menu = 'login'
 block content
-	script(type="text/javascript", src="/public/scripts/basefunctions.js")
+	script(type="text/javascript" src="/scripts/jquery.min.js")
+	script(type="text/javascript", src="/scripts/baseFunctions.js?v="+Math.random())
 	div#vue
 		div.wrapper.row.nav
 			include partials/menu.pug

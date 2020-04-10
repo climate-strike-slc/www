@@ -96,7 +96,7 @@ router.post('/register', upload.array(), parseBody/*, csrfProtection*/, (req, re
 		{ username : req.body.username, 
 			/*language: req.body.languages,*/ 
 			email: req.body.email, 
-			avatar: '/public/images/publish_logo_sq.svg', 
+			avatar: '/images/publish_logo_sq.svg', 
 			admin: admin, 
 			givenName: req.body.givenName, 
 			time: {

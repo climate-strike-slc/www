@@ -2,11 +2,11 @@ extends layout
 block page
 	- var menu = 'meetings'
 block content
-	script(type="text/javascript" src="/public/scripts/jquery.min.js")
-	script(src="/public/scripts/strophe/strophe.js")
-	script(src="/public/scripts/strophe/strophe.disco.min.js?v=1")
-	script(type="text/javascript", src="/public/scripts/baseFunctions.js?v="+Math.random())
-	script(type="text/javascript", src="/public/scripts/jitsiFunctions.js?v="+Math.random())
+	script(type="text/javascript" src="/scripts/jquery.min.js")
+	script(src="/scripts/strophe/strophe.js")
+	script(src="/scripts/strophe/strophe.disco.min.js?v=1")
+	script(type="text/javascript", src="/scripts/baseFunctions.js?v="+Math.random())
+	script(type="text/javascript", src="/scripts/jitsiFunctions.js?v="+Math.random())
 
 	div#vue
 		div.nav
@@ -48,7 +48,7 @@ block content
 								h4(style="color:rgb(218, 220, 224);" v-text="moment(data[i].start_time).format('LT')")
 								h5(style="color:rgb(218, 220, 224);" v-if="data && data[i].title" v-html="data[i].title")
 								h6.description(v-if="data && data[i].description" v-html="marked(data[i].description)")
-						img(v-if="i !== parseInt(active,10)" :src="'/public/images/icons/'+data[i].topic+'.svg'" style="height:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.3;")
+						img(v-if="i !== parseInt(active,10)" :src="'/images/icons/'+data[i].topic+'.svg'" style="height:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.3;")
 						div.row(v-if="i !== parseInt(active,10)")
 							//- div.tb-10-m0
 								//- (:class="(!pu || !pu.admin ? 'tb-10-m0' : 'tb-06-m0')")
@@ -60,8 +60,8 @@ block content
 							)
 							div(v-if="pu && pu.admin && i !== parseInt(active,10)" style="position: absolute; top: 0.5rem; right: 0.5rem;width: 2rem;")
 								a.img(role="button" :href="'/api/editMeeting/'+doc._id" style="z-index: 3; position: absolute;" title="edit meeting")
-									img(src="/public/images/icons/edit.svg" style="width: 80%;height: 80%;position: absolute;display: block;top: 0;left: 0;right: 0;bottom: 0;margin: auto;")
+									img(src="/images/icons/edit.svg" style="width: 80%;height: 80%;position: absolute;display: block;top: 0;left: 0;right: 0;bottom: 0;margin: auto;")
 							div(v-if="i === parseInt(active, 10)" style="position: absolute; top: 0.5rem; right: 0.5rem;width: 2rem;")
 								a.img(role="button" :href="'/mtg/jitsi'" style="z-index: 3; position: absolute;" title="leave meeting")
-									img(src="/public/images/icons/times.svg" style="width: 80%;height: 80%;position: absolute;display: block;top: 0;left: 0;right: 0;bottom: 0;margin: auto;")
+									img(src="/images/icons/times.svg" style="width: 80%;height: 80%;position: absolute;display: block;top: 0;left: 0;right: 0;bottom: 0;margin: auto;")
 	include vue/jitsi.vue.pug

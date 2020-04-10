@@ -75,7 +75,7 @@ app.use(function(req, res, next) {
 
 app.set('views', './views');
 app.set('view engine', 'pug');
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')));
 
 
