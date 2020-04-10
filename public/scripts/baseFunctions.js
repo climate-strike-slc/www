@@ -77,7 +77,7 @@ var baseFunctions = {
 		const domain = 'bli.sh';
 		const roomName = moment(self.data[i].start_time).utc().format('LT') + ' ' + self.data[i].title
 		const options = {
-			roomName: self.data[i].title,
+			roomName: self.data[i].topic,
 			width: (!self.res ? (self.wWidth * 0.66) : (self.wWidth*0.86)) +'px',
 			height: (!self.res ? ((self.wWidth * 0.66) * 0.72) : ((self.wWidth * 0.72) * 0.95)) +'px',
 			parentNode: document.querySelector(`#meeting${i}`),
