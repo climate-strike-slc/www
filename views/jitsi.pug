@@ -40,15 +40,15 @@ block content
 						@touchstart="hover"
 						:class="i === parseInt(active,10) ? 'active' : ''"
 						:id="'meeting'+i"
-						:style="{'background-color': (!doc ? c[i] : c[cats.indexOf(doc.topic)]) }"
-						style="pointer-events: auto;"
+						style="pointer-events: auto;background-color:#555;"
 					)
+						//- :style="{'background-color': (!doc ? c[i] : c[cats.indexOf(doc.topic)]) }"
 						div.row(v-if="i !== parseInt(active,10)" style="position:relative;z-index:1;")
 							div.tb-10-m0
 								h4(style="color:rgb(218, 220, 224);" v-text="moment(data[i].start_time).format('LT')")
 								h5(style="color:rgb(218, 220, 224);" v-if="data && data[i].title" v-html="data[i].title")
 								h6.description(v-if="data && data[i].description" v-html="marked(data[i].description)")
-						img(v-if="i !== parseInt(active,10)" :src="'/images/icons/'+data[i].topic+'.svg'" style="height:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.3;")
+						img(v-if="i !== parseInt(active,10)" :src="'/images/'+data[i].topic+'.jpg'" style="height:100%; top:0; left:0; position:absolute; z-index: 0;opacity:0.3;")
 						div.row(v-if="i !== parseInt(active,10)")
 							//- div.tb-10-m0
 								//- (:class="(!pu || !pu.admin ? 'tb-10-m0' : 'tb-06-m0')")

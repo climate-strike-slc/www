@@ -26,13 +26,16 @@ block content
 					//- a.block(v-text="'Add new Session'" href="/usr/profile#schedule")
 
 				div.row
-					label.tb-10-m0(for="topic") Topic
+					label.tb-10-m0(for="topic") Event type
 					select.tb-10-m0(name="topic" id="topic")
-						option(value="other" :selected="(!doc ? false : (doc.topic === 'other' ? true : false))") Other
-						option(value="ecology" :selected="(!doc ? false : (doc.topic === 'ecology' ? true : false))") Ecology
-						option(value="economy" :selected="(!doc ? false : (doc.topic === 'economy' ? true : false))") Economy
-						option(value="politics" :selected="(!doc ? false : (doc.topic === 'politics' ? true : false))") Politics
-						option(value="community" :selected="(!doc ? false : (doc.topic === 'community' ? true : false))") Community
+						option(value="action" :selected="(!doc ? false : (doc.topic === 'action' ? true : false))") Action
+						option(value="workshop" :selected="(!doc ? false : (doc.topic === 'workshop' ? true : false))") Workshop
+						option(value="keynote" :selected="(!doc ? false : (doc.topic === 'keynote' ? true : false))") Keynote
+						//- option(value="other" :selected="(!doc ? false : (doc.topic === 'other' ? true : false))") Other
+						//- option(value="ecology" :selected="(!doc ? false : (doc.topic === 'ecology' ? true : false))") Ecology
+						//- option(value="economy" :selected="(!doc ? false : (doc.topic === 'economy' ? true : false))") Economy
+						//- option(value="politics" :selected="(!doc ? false : (doc.topic === 'politics' ? true : false))") Politics
+						//- option(value="community" :selected="(!doc ? false : (doc.topic === 'community' ? true : false))") Community
 				div.row
 					p.tb-10-m0 Date and time
 					div.tb-03-m0.tb-02-m2

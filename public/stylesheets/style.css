@@ -453,7 +453,8 @@ input, select, textarea, .textarea {
   background-color: #fff; }
   .textarea > p {
     padding: 12px 6px;
-    padding: var(--gutter) calc(var(--gutter) * 0.5); }
+    padding: var(--gutter) calc(var(--gutter) * 0.5);
+    color: black; }
 
 strong, b {
   font-weight: 500; }
