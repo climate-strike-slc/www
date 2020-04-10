@@ -169,7 +169,7 @@ router.post('/login', upload.array(), parseBody, csrfProtection, passport.authen
 
 function provideRoutes(app) {
   app.use(routes);
-  app.use(router);
+  app.use('/meet', router);
   return;
 }
 module.exports = provideRoutes;

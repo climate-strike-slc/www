@@ -2,7 +2,6 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 const Content = new Schema({
 	puid: String,
-	scheduleId: String,
 	topic: String,
 	status: String,
 	start_time: Date,

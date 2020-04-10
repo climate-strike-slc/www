@@ -24,7 +24,7 @@ const provideRoutes = require('./routes');
 const app = express()
 
 //CORS middleware
-var whitelist = ['bli.sh', 'soc.bli.sh', 'localhost:9999', 'http://localhost:9999']
+var whitelist = ['bli.sh', 'meet.bli.sh', 'localhost:9999', 'http://localhost:9999']
 var corsOpt = {
 	origin: true,
 	methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
