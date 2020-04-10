@@ -36,7 +36,7 @@ app.options('*', cors(corsOpt))
 const store = new MongoDBStore(
 	{
 		mongooseConnection: mongoose.connection,
-		uri: config.DB,
+		uri: config.db,
 		collection: 'slccsSession',
 		autoRemove: 'interval',     
 		autoRemoveInterval: 3600
