@@ -741,6 +741,12 @@ div[aria-label="Chat Message List"] {
       padding: 0; }
   .ui:hover {
     z-index: 9; }
+    .ui:hover h3, .ui:hover .tb-font-m {
+      font-size: 1.2rem; }
+    .ui:hover h4, .ui:hover .tb-font-s {
+      font-size: 1rem; }
+    .ui:hover h5, .ui:hover .tb-font-xs {
+      font-size: 0.84rem; }
     .ui:hover p {
       opacity: 1 !important; }
   .ui embed {
