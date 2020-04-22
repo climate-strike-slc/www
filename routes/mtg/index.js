@@ -10,7 +10,7 @@ const testenv = config.testenv;
 const { Content, ContentTest } = require('../../models');
 const ContentDB = (!testenv ? Content : ContentTest);
 
-router.all(/(.+)/, ensureAuthenticated)
+// router.all(/(.+)/, ensureAuthenticated)
 
 // router.get('/meetings', async (req, res, next) => {
 // 	// console.log(req.cookies)
