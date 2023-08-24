@@ -7,24 +7,24 @@ block content
 	div#vue
 		div.wrapper.row.nav
 			include partials/menu.pug
-		div.container.row
-			p.tb-font-l Enter username and password
-			form.tb-10-m0(enctype="multipart/form-data", method="POST", action="/login" )
-				input(type="hidden", name="_csrf", value= csrfToken)
-
-				div.row
-					label.tb-10-m0(for="username") Username
-					input.tb-10-m0(type="text", name="username", id="username", autocomplete="username")
-				div.row
-					label.tb-10-m0(for="password") Password
-					input.tb-10-m0(type="password", name="password", id="password", autocomplete="current-password")
-				p
-				button.tb-10-m0.tb-03-m2.block(type="submit", ariaDescription="Log in")
-					span Log in
-				//-
-				p.tb-font-xl.head First time here?
-				a.block(href="/register", role="button", ariaDescription="Register") 
-					span Register
+		//- div.container.row
+		//- 	p.tb-font-l Enter username and password
+		//- 	form.tb-10-m0(enctype="multipart/form-data", method="POST", action="/login" )
+		//- 		input(type="hidden", name="_csrf", value= csrfToken)
+		//- 
+		//- 		div.row
+		//- 			label.tb-10-m0(for="username") Username
+		//- 			input.tb-10-m0(type="text", name="username", id="username", autocomplete="username")
+		//- 		div.row
+		//- 			label.tb-10-m0(for="password") Password
+		//- 			input.tb-10-m0(type="password", name="password", id="password", autocomplete="current-password")
+		//- 		p
+		//- 		button.tb-10-m0.tb-03-m2.block(type="submit", ariaDescription="Log in")
+		//- 			span Log in
+		//- 		//-
+		//- 		p.tb-font-xl.head First time here?
+		//- 		a.block(href="/register", role="button", ariaDescription="Register") 
+		//- 			span Register
 			
 			//- p.tb-font-xl or connect using Slack:
 			//- p &nbsp

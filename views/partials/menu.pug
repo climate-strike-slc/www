@@ -19,8 +19,8 @@ nav(v-if="!/(login)/.test(menu) && !/(register)/.test(menu)")
 			li(v-if="pu && pu !== ''")
 				a(href="/usr/profile")
 					span.tb-font-m Profile
-			li(v-if="!pu")
-				a(href="/login")
-					span.tb-font-m Login
+			//- li(v-if="!pu")
+			//- 	a(href="/login")
+			//- 		span.tb-font-m Login
 			li(style="float:right; margin-top: -10px;")
 				button(@click="switchDarkmode" v-text="(!darkmode ? 'dark' : 'light')")
